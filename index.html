@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
 <style>
   :root { --brand:#D6336C; --brand-soft:#FDEAF1; --bg:#FBF5F8; --card:#fff; --ink:#1F2937; --sub:#6B7280; --muted:#9CA3AF;
           --line:#F1E4EA; --inc:#0D9488; --inc-soft:#E6F6F4; --danger:#DC2626; --seg:#F4EEF1; --plain:#F3F4F6; --track:#F3E8EE;
@@ -75,8 +76,30 @@
   .sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-radius:22px 22px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom));
            z-index:21; max-height:88vh; overflow:auto; transform:translateY(105%); transition:transform .22s ease; max-width:560px; margin:0 auto; }
   .sheet.open { transform:none; }
-  .toast { position:fixed; left:50%; top:16px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 16px; border-radius:12px;
-           font-size:14px; z-index:30; display:none; max-width:90%; }
+  /* toast สไตล์ Sonner */
+  .toasts { position:fixed; left:50%; top:14px; transform:translateX(-50%); z-index:10000; display:flex; flex-direction:column; gap:8px; width:min(92vw,380px); pointer-events:none; }
+  .toast { display:flex; align-items:center; gap:10px; background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:14px;
+           padding:12px 14px; font-size:14px; box-shadow:0 10px 30px rgba(15,23,42,.14); pointer-events:auto; animation:tin .28s cubic-bezier(.21,1.02,.73,1); }
+  .toast.out { animation:tout .22s ease forwards; }
+  .toast .ti { flex:0 0 20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .toast.t-success .ti { color:#12B886; } .toast.t-error .ti { color:var(--danger,#E03131); }
+  .toast .tsub { font-size:12px; color:var(--sub,#6B7280); margin-top:1px; }
+  @keyframes tin { from { opacity:0; transform:translateY(-14px) scale(.96); } }
+  @keyframes tout { to { opacity:0; transform:translateY(-10px) scale(.96); } }
+  .spin { width:16px; height:16px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; display:inline-block; animation:sp .7s linear infinite; vertical-align:-3px; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  /* ปุ่มขณะรอ */
+  .is-busy { opacity:.75; cursor:progress !important; pointer-events:none; }
+  .is-busy .spin { margin-right:6px; }
+  body.busy .btn, body.busy .del, body.busy .fab, body.busy .chip, body.busy .seg button, body.busy nav button { pointer-events:none; }
+  body.busy .btn:not(.is-busy), body.busy .del:not(.is-busy) { opacity:.55; }
+  .busybar { position:fixed; top:0; left:0; right:0; height:3px; z-index:10001; overflow:hidden; display:none; }
+  body.busy .busybar { display:block; }
+  .busybar i { position:absolute; height:100%; width:40%; background:var(--brand); border-radius:3px; animation:bb 1.1s ease-in-out infinite; }
+  @keyframes bb { from { left:-40%; } to { left:100%; } }
+  .swal2-popup { font-family:'Noto Sans Thai',sans-serif !important; border-radius:20px !important; }
+  .swal2-confirm { border-radius:12px !important; }
+  .swal2-cancel { border-radius:12px !important; }
   .loading { text-align:center; padding:60px 0; color:var(--sub); }
   .hero { background:linear-gradient(135deg,var(--brand),#F58FB0); color:#fff; }
   .hero .muted, .hero .sub { color:#FFE4EE; }
@@ -94,7 +117,8 @@
 <nav id="nav"></nav>
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="sheet"></div>
-<div class="toast" id="toast"></div>
+<div class="toasts" id="toasts"></div>
+<div class="busybar"><i></i></div>
 
 <script>
 // ข้อมูลเริ่มต้นมาจากลิงก์ที่บอทส่งให้: ?t=<token>&tab=<แท็บ>&api=<URL Apps Script Web App>
@@ -126,18 +150,66 @@ const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'
 const catColor = (c, list) => PALETTE[Math.max(0, list.indexOf(c)) % PALETTE.length];
 const wallet = (id) => (D.settings.wallets.find((w) => w.id === id) || null);
 
-function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2600); }
+/* ---------- Toast สไตล์ Sonner: loading → success / error ในกล่องเดิม ---------- */
+let liveToast = null; // toast "กำลังดำเนินการ" ที่ยังค้างอยู่ จะถูกเปลี่ยนเป็นผลลัพธ์แทนการเด้งกล่องใหม่
+function toastEl(kind, msg, sub, el) {
+  el = el || document.createElement('div');
+  el.className = 'toast t-' + kind;
+  const icon = kind === 'loading' ? '<span class="spin"></span>' : kind === 'success' ? '✓' : kind === 'error' ? '!' : '•';
+  el.innerHTML = `<div class="ti">${icon}</div><div><div>${esc(msg)}</div>${sub ? `<div class="tsub">${esc(sub)}</div>` : ''}</div>`;
+  if (!el.parentNode) $('toasts').appendChild(el);
+  clearTimeout(el._h);
+  if (kind !== 'loading') el._h = setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 230); }, kind === 'error' ? 4200 : 2400);
+  return el;
+}
+function toast(msg) {
+  const m = String(msg), kind = /^⚠️/.test(m) ? 'error' : /^(✅|🗑️|🎯)/.test(m) ? 'success' : 'info';
+  const text = m.replace(/^(⚠️|✅)\s*/, '');
+  if (liveToast) { const el = liveToast; liveToast = null; return toastEl(kind, text, '', el); }
+  return toastEl(kind, text);
+}
+/* ---------- SweetAlert2: ยืนยัน / กรอกตัวเลข ---------- */
+async function ask(title, text, danger) {
+  if (!window.Swal) return confirm(title);
+  const r = await Swal.fire({ title, text, icon: danger ? 'warning' : 'question', showCancelButton: true, reverseButtons: true,
+    confirmButtonText: danger ? 'ลบเลย' : 'ยืนยัน', cancelButtonText: 'ยกเลิก', confirmButtonColor: danger ? '#E03131' : BOOT.brand });
+  return r.isConfirmed;
+}
+async function askAmount(title) {
+  if (!window.Swal) return prompt(title);
+  const r = await Swal.fire({ title, input: 'number', inputAttributes: { min: '0', step: '0.01', inputmode: 'decimal' }, inputPlaceholder: '0',
+    showCancelButton: true, reverseButtons: true, confirmButtonText: 'ตกลง', cancelButtonText: 'ยกเลิก',
+    inputValidator: (v) => !(Number(v) > 0) && 'กรุณาใส่จำนวนเงินมากกว่า 0' });
+  return r.isConfirmed ? r.value : null;
+}
+/* ---------- สถานะกำลังทำงาน: ปุ่มที่กดถูกล็อก + หมุน + แถบโหลด ป้องกันกดซ้ำ ---------- */
+let lastBtn = null, busy = false;
+document.addEventListener('click', (e) => { if (e.target.closest('.swal2-container')) return; const b = e.target.closest('button, .del'); if (b) lastBtn = b; }, true);
+function setBusy(on, btn) {
+  busy = on; document.body.classList.toggle('busy', on);
+  if (!btn || !btn.isConnected) return;
+  if (on) { btn._html = btn.innerHTML; btn.disabled = true; btn.classList.add('is-busy');
+    btn.innerHTML = '<span class="spin"></span>' + (btn.classList.contains('del') || btn.classList.contains('sm') ? 'รอสักครู่…' : 'กำลังดำเนินการ…'); }
+  else { btn.disabled = false; btn.classList.remove('is-busy'); if (btn._html != null) btn.innerHTML = btn._html; }
+}
 
 /** เรียก API บน Apps Script (POST แบบ text/plain = ไม่ต้อง preflight CORS) */
 async function call(fn, ...args) {
+  const action = fn !== 'dashLoad'; // โหลดข้อมูลมีหน้า "กำลังโหลด" อยู่แล้ว · ส่วนการบันทึก/ลบ/ส่งออก ใช้สถานะรอ
+  if (action && busy) { toastEl('info', 'กำลังดำเนินการรายการก่อนหน้าอยู่', 'กรุณารอสักครู่นะคะ'); throw new Error('busy'); }
+  const btn = action ? lastBtn : null;
+  if (action) { setBusy(true, btn); liveToast = toastEl('loading', fn === 'dashExport' ? 'กำลังสร้างไฟล์…' : 'กำลังดำเนินการ กรุณารอสักครู่', 'ระบบกำลังบันทึกข้อมูล อาจใช้เวลาสักครู่'); }
   try {
     const res = await fetch(BOOT.api, { method: 'POST', body: JSON.stringify({ api: fn, t: BOOT.token, args }) });
     const j = await res.json();
     if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
     return j.data;
   } catch (e) {
-    toast('⚠️ ' + (e.message || e));
+    toast('⚠️ ' + (e.message === 'Failed to fetch' ? 'เชื่อมต่อไม่ได้ ลองใหม่อีกครั้งนะคะ' : (e.message || e)));
     throw e;
+  } finally {
+    if (action) { setBusy(false, btn); // ถ้าโค้ดที่เรียกไม่ได้ขึ้นข้อความผลลัพธ์ ให้ปิด toast รอเป็น "เรียบร้อย"
+      setTimeout(() => { if (liveToast) toast('✅ เรียบร้อย'); }, 0); }
   }
 }
 function fatal(msg) {
@@ -359,8 +431,7 @@ function txRow(t) {
     <div class="amt ${t.type==='income'?'pos':t.type==='transfer'?'':'neg'}">${sign}${money(t.amount).replace('-','')}</div></div>`;
 }
 async function exportFile(fmt) {
-  toast('กำลังสร้างไฟล์…');
-  const url = await call('dashExport', range.start, range.end, fmt);
+    const url = await call('dashExport', range.start, range.end, fmt);
   openSheet(`<div class="h2">✅ สร้างไฟล์ ${fmt.toUpperCase()} แล้ว</div><div class="muted">ลิงก์ใช้ได้ 3 วัน</div>
     <a class="btn" style="display:block;text-align:center;text-decoration:none;margin-top:14px" href="${esc(url)}" target="_blank" rel="noopener">⬇️ ดาวน์โหลด</a>
     <button class="btn plain" style="margin-top:8px" onclick="closeSheet()">ปิด</button>`);
@@ -404,7 +475,7 @@ async function saveTx(id) {
   closeSheet(); render(); toast(id ? '✅ แก้ไขแล้ว' : '✅ เพิ่มรายการแล้ว');
 }
 async function delTx(id) {
-  if (!confirm('ลบรายการนี้?')) return;
+  if (!await ask('ลบรายการนี้?', 'ลบแล้วกู้คืนไม่ได้นะคะ', true)) return;
   D = await call('dashTx', 'delete', { id }, range); closeSheet(); render(); toast('🗑️ ลบแล้ว');
 }
 
@@ -472,11 +543,11 @@ async function saveGoal() {
   D = await call('dashSave', 'goal_add', p, range); closeSheet(); render(); toast('🎯 ตั้งเป้าแล้ว');
 }
 async function goalMove(id, sign) {
-  const v = prompt(sign > 0 ? 'ออมเพิ่มกี่บาท?' : 'ถอนออกกี่บาท?'); if (!v || !(Number(v) > 0)) return;
+  const v = await askAmount(sign > 0 ? 'ออมเพิ่มกี่บาท?' : 'ถอนออกกี่บาท?'); if (!v || !(Number(v) > 0)) return;
   D = await call('dashSave', 'goal_move', { id, amount: sign * Number(v) }, range); render(); toast('✅ อัปเดตแล้ว');
 }
-async function goalDel(id) { if (!confirm('ลบเป้าหมายนี้?')) return; D = await call('dashSave', 'goal_delete', { id }, range); render(); }
-async function debtClear(person) { if (!confirm('เคลียร์ยอดกับ ' + person + '?')) return; D = await call('dashSave', 'debt_clear', { person }, range); render(); toast('✅ เคลียร์แล้ว'); }
+async function goalDel(id) { if (!await ask('ลบเป้าหมายนี้?', '', true)) return; D = await call('dashSave', 'goal_delete', { id }, range); render(); }
+async function debtClear(person) { if (!await ask('เคลียร์ยอดกับ ' + person + '?', 'ยอดค้างทั้งหมดจะถือว่าชำระครบแล้ว')) return; D = await call('dashSave', 'debt_clear', { person }, range); render(); toast('✅ เคลียร์แล้ว'); }
 async function toggle(key, val) { const p = {}; p[key] = val; D = await call('dashSave', 'toggles', p, range); render(); toast('✅ บันทึกแล้ว'); }
 
 function editWallet(id) {
@@ -495,12 +566,12 @@ async function saveWallet(id) {
   D = await call('dashSave', id ? 'wallet_update' : 'wallet_add', p, range); closeSheet(); render(); toast('✅ บันทึกแล้ว');
 }
 async function walletOp(op, id) {
-  if (op === 'wallet_delete' && !confirm('ลบกระเป๋านี้? (รายการเดิมยังอยู่)')) return;
+  if (op === 'wallet_delete' && !await ask('ลบกระเป๋านี้?', 'รายการเดิมยังอยู่ครบค่ะ', true)) return;
   D = await call('dashSave', op, { id }, range); closeSheet(); render(); toast('✅ เรียบร้อย');
 }
 async function saveReminder() { D = await call('dashSave', 'reminder', { enabled: $('ren').value === '1', hour: Number($('rhr').value) }, range); render(); toast('✅ บันทึกแล้ว'); }
 async function recompute() { D = await call('dashSave', 'recompute', {}, range); render(); toast('✅ คำนวณยอดใหม่แล้ว'); }
-async function delRec(id) { if (!confirm('ลบรายการประจำนี้?')) return; D = await call('dashSave', 'recurring_delete', { id }, range); render(); }
+async function delRec(id) { if (!await ask('ลบรายการประจำนี้?', '', true)) return; D = await call('dashSave', 'recurring_delete', { id }, range); render(); }
 function newRec() {
   const WD = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสฯ','ศุกร์','เสาร์'];
   openSheet(`<div class="row between"><div class="h2" style="margin:0">เพิ่มรายการประจำ</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
