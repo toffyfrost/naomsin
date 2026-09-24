@@ -459,7 +459,9 @@ async function saveRec() {
 }
 
 Chart.defaults.font.family = 'Noto Sans Thai';
-if (!BOOT.token || !API_OK) fatal('ลิงก์ไม่ถูกต้อง'); else load();
+if (!BOOT.token) fatal('เปิดแดชบอร์ดจากลิงก์ในแชท LINE นะครับ');
+else if (!API_OK) fatal('ลิงก์ไม่สมบูรณ์ (ที่อยู่ API ต้องลงท้ายด้วย /exec)');
+else load();
 </script>
 </body>
 </html>
