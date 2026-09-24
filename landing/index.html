@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>N'AOMSIN · จดรายรับรายจ่ายง่ายๆ แค่แชท LINE</title>
+<meta name="description" content="น้องออมสิน ผู้ช่วยจดรายรับรายจ่ายบน LINE พิมพ์ ส่งรูปสลิป หรืออัดเสียง น้องออมสินจดให้ แยกหมวด และเทียบงบทันที">
+<link rel="icon" href="img/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --brand:#D6336C; --brand-d:#B02457; --soft:#FDEAF1; --bg:#FFF8FB; --card:#fff; --ink:#1F2937; --sub:#6B7280;
+          --line:#F3DCE6; --mint:#96F2D7; --mint-d:#087F5B; --line-green:#06C755; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans Thai',sans-serif; font-size:16px; line-height:1.6; overflow-x:hidden; }
+  a { color:inherit; text-decoration:none; }
+  img { max-width:100%; display:block; }
+  .wrap { max-width:1140px; margin:0 auto; padding:0 20px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 26px; border-radius:999px; font-weight:700; background:var(--brand); color:#fff; border:0; cursor:pointer; transition:.2s; }
+  .btn:hover { background:var(--brand-d); transform:translateY(-2px); }
+  .btn.line { background:var(--line-green); }
+  .btn.line:hover { background:#05a849; }
+  .btn.ghost { background:var(--soft); color:var(--brand); }
+
+  /* nav */
+  header { position:sticky; top:0; z-index:20; background:rgba(255,248,251,.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:68px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:var(--brand); }
+  .logo img { width:40px; height:40px; border-radius:12px; }
+  nav.menu { display:flex; gap:28px; font-weight:500; color:var(--sub); }
+  nav.menu a:hover { color:var(--brand); }
+  @media (max-width:760px) { nav.menu { display:none; } }
+
+  /* hero */
+  .hero { position:relative; padding:64px 0 40px; overflow:hidden; }
+  .hero::before { content:""; position:absolute; inset:-200px -200px auto auto; width:640px; height:640px; background:radial-gradient(circle,#FFD3E3 0%,transparent 65%); z-index:-1; }
+  .hero .wrap { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
+  .tag { display:inline-block; background:var(--soft); color:var(--brand); font-weight:600; font-size:14px; padding:6px 14px; border-radius:999px; }
+  h1 { font-size:clamp(34px,5vw,54px); line-height:1.25; margin:18px 0 16px; font-weight:800; }
+  h1 em { font-style:normal; color:var(--brand); }
+  .lead { font-size:18px; color:var(--sub); max-width:520px; }
+  .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin:28px 0 36px; }
+  .stats { display:flex; gap:36px; flex-wrap:wrap; }
+  .stats b { display:block; font-size:22px; color:var(--brand); line-height:1.2; }
+  .stats span { color:var(--sub); font-size:14px; }
+
+  .phone { position:relative; width:300px; margin:0 auto; border-radius:44px; padding:12px; background:#18121A;
+           box-shadow:0 40px 80px -20px rgba(214,51,108,.45),0 0 0 2px #2C2330 inset; }
+  .phone img { border-radius:34px; width:100%; }
+  .phone::before { content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%); width:90px; height:24px; background:#18121A; border-radius:20px; z-index:2; }
+  .float { position:absolute; background:#fff; border-radius:16px; padding:10px 14px; box-shadow:0 12px 30px rgba(214,51,108,.18); font-size:14px; font-weight:600; white-space:nowrap; animation:bob 4s ease-in-out infinite; }
+  .float.a { top:70px; left:-40px; }
+  .float.b { bottom:110px; right:-30px; animation-delay:-2s; }
+  @keyframes bob { 50% { transform:translateY(-10px); } }
+  @media (max-width:860px) { .hero .wrap { grid-template-columns:1fr; } .float.a { left:-6px; } .float.b { right:-6px; } }
+
+  section { padding:80px 0; }
+  .head { text-align:center; max-width:640px; margin:0 auto 48px; }
+  h2 { font-size:clamp(28px,3.6vw,40px); line-height:1.3; margin:10px 0 12px; font-weight:800; }
+  .head p { color:var(--sub); margin:0; }
+
+  /* chat demo */
+  .chat-sec .wrap { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+  .chat { background:#8CABD9; border-radius:28px; padding:22px 18px; max-width:400px; margin:0 auto; width:100%; box-shadow:0 30px 60px -20px rgba(31,41,55,.35); }
+  .chat-top { display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; margin-bottom:16px; }
+  .chat-top img { width:34px; height:34px; border-radius:50%; }
+  .msg { display:flex; margin:10px 0; opacity:0; transform:translateY(10px); transition:.45s; }
+  .msg.show { opacity:1; transform:none; }
+  .msg.me { justify-content:flex-end; }
+  .bub { max-width:82%; padding:9px 14px; border-radius:18px; font-size:15px; background:#fff; }
+  .me .bub { background:#06C755; color:#fff; border-bottom-right-radius:4px; }
+  .bot .bub { border-bottom-left-radius:4px; }
+  .rcpt { background:#fff; border-radius:18px; padding:14px 16px; width:82%; font-size:14px; }
+  .rcpt .t { color:var(--brand); font-weight:700; margin-bottom:6px; }
+  .rcpt .r { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #eee; }
+  .rcpt .r:last-of-type { border:0; }
+  .rcpt .bar { height:6px; background:#F3E8EE; border-radius:4px; margin-top:8px; overflow:hidden; }
+  .rcpt .bar i { display:block; height:100%; width:34%; background:var(--brand); }
+  .steps { list-style:none; padding:0; margin:24px 0 0; display:grid; gap:14px; }
+  .steps li { display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 16px; }
+  .steps .n { flex:0 0 36px; height:36px; border-radius:12px; background:var(--soft); color:var(--brand); font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .steps code { background:var(--soft); color:var(--brand); padding:1px 8px; border-radius:6px; font-family:inherit; font-weight:600; }
+  @media (max-width:860px) { .chat-sec .wrap { grid-template-columns:1fr; } }
+
+  /* features */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:18px; }
+  .feat { background:#fff; border:1px solid var(--line); border-radius:22px; padding:24px; transition:.25s; }
+  .feat:hover { transform:translateY(-4px); box-shadow:0 18px 40px -16px rgba(214,51,108,.3); }
+  .feat .ic { font-size:30px; width:56px; height:56px; border-radius:16px; background:var(--soft); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .feat h3 { margin:0 0 6px; font-size:18px; }
+  .feat p { margin:0; color:var(--sub); font-size:15px; }
+
+  /* rich menu */
+  .rich { background:linear-gradient(135deg,#D6336C,#E64980); color:#fff; border-radius:36px; padding:56px 40px; display:grid; grid-template-columns:.9fr 1.1fr; gap:40px; align-items:center; }
+  .rich h2 { color:#fff; }
+  .rich p { opacity:.9; }
+  .rich img { border-radius:22px; box-shadow:0 30px 60px -20px rgba(0,0,0,.4); }
+  @media (max-width:860px) { .rich { grid-template-columns:1fr; padding:36px 22px; } }
+
+  /* screens */
+  .tabs { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:36px; }
+  .tabs button { font:inherit; font-weight:600; border:1px solid var(--line); background:#fff; color:var(--sub); padding:9px 20px; border-radius:999px; cursor:pointer; }
+  .tabs button.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+  .screens { display:grid; grid-template-columns:1fr 300px 1fr; gap:36px; align-items:center; }
+  .screens .desc h3 { font-size:24px; margin:0 0 8px; }
+  .screens .desc p { color:var(--sub); margin:0; }
+  .screens .side { display:grid; gap:14px; }
+  .pill { background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px 16px; font-weight:600; }
+  .pill small { display:block; color:var(--sub); font-weight:400; }
+  #shot { transition:opacity .25s; }
+  @media (max-width:860px) { .screens { grid-template-columns:1fr; text-align:center; } .screens .side { display:none; } }
+
+  /* pricing */
+  .plans { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px; max-width:760px; margin:0 auto; }
+  .plan { background:#fff; border:1px solid var(--line); border-radius:28px; padding:32px 28px; position:relative; }
+  .plan.hot { border:2px solid var(--brand); box-shadow:0 24px 50px -20px rgba(214,51,108,.4); }
+  .plan .badge { position:absolute; top:-14px; right:24px; background:var(--brand); color:#fff; font-size:13px; font-weight:700; padding:4px 14px; border-radius:999px; }
+  .plan h3 { margin:0; font-size:24px; }
+  .plan .price { font-size:40px; font-weight:800; color:var(--brand); margin:10px 0 2px; }
+  .plan .price small { font-size:16px; color:var(--sub); font-weight:500; }
+  .plan ul { list-style:none; padding:0; margin:20px 0 26px; display:grid; gap:10px; }
+  .plan li::before { content:"✓"; color:var(--mint-d); font-weight:800; margin-right:10px; }
+
+  /* faq */
+  .faq { max-width:760px; margin:0 auto; display:grid; gap:12px; }
+  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px 22px; }
+  summary { font-weight:700; cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:12px; }
+  summary::after { content:"+"; color:var(--brand); font-size:22px; line-height:1; transition:.2s; }
+  details[open] summary::after { transform:rotate(45deg); }
+  details p { color:var(--sub); margin:12px 0 0; }
+
+  .final { text-align:center; background:var(--soft); border-radius:36px; padding:64px 24px; }
+  .final img { width:96px; height:96px; border-radius:28px; margin:0 auto 18px; box-shadow:0 16px 30px -10px rgba(214,51,108,.5); }
+  footer { padding:40px 0; color:var(--sub); font-size:14px; }
+  footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+
+  .reveal { opacity:0; transform:translateY(24px); transition:.7s ease; }
+  .reveal.in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce) { .reveal,.msg { opacity:1; transform:none; transition:none; } .float { animation:none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><img src="img/icon-512.png" alt="">N'AOMSIN</a>
+    <nav class="menu">
+      <a href="#how">วิธีใช้</a><a href="#features">ฟีเจอร์</a><a href="#dashboard">แดชบอร์ด</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a>
+    </nav>
+    <a class="btn line" href="#add">เพิ่มเพื่อน</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag">🐷 ผู้ช่วยจดเงินบน LINE</span>
+      <h1>จดรายรับรายจ่าย<br><em>แค่แชทกับน้องออมสิน</em></h1>
+      <p class="lead">พิมพ์ ส่งรูปสลิป หรืออัดเสียงบอก น้องออมสินจดให้ แยกหมวด เทียบงบ และสรุปให้ดูทันที ไม่ต้องโหลดแอปเพิ่ม</p>
+      <div class="cta-row">
+        <a class="btn line" href="#add">💬 เพิ่มเพื่อนใน LINE</a>
+        <a class="btn ghost" href="#how">ดูวิธีใช้</a>
+      </div>
+      <div class="stats">
+        <div><b>3 วิ</b><span>จดเสร็จหนึ่งรายการ</span></div>
+        <div><b>ข้อความ · รูป · เสียง</b><span>จดได้ทุกแบบ</span></div>
+        <div><b>🔒 เข้ารหัส</b><span>ข้อมูลของคุณ</span></div>
+      </div>
+    </div>
+    <div style="position:relative">
+      <div class="phone"><img src="img/dash-summary.png" alt="หน้าสรุปในแดชบอร์ด N'AOMSIN"></div>
+      <div class="float a">🔥 จดต่อเนื่อง 27 วัน</div>
+      <div class="float b">🎯 เหลืองบ ฿10,107</div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="chat-sec">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="tag">จดรายการ</span>
+      <h2>พิมพ์เหมือนแชทปกติ</h2>
+      <p style="color:var(--sub)">พิมพ์ยาวๆ รวดเดียวก็ได้ AI จะแยกเป็นรายการ เดาหมวด และบอกยอดเทียบงบให้ทันที</p>
+      <ol class="steps">
+        <li><span class="n">1</span><div><b>เพิ่มเพื่อนน้องออมสิน</b><br><span style="color:var(--sub)">กดยอมรับเงื่อนไข แล้วเริ่มจดได้เลย</span></div></li>
+        <li><span class="n">2</span><div><b>บอกว่าใช้อะไรไป</b><br><span style="color:var(--sub)">เช่น <code>ข้าวมันไก่ 50</code> หรือส่งรูปสลิปโอนเงิน</span></div></li>
+        <li><span class="n">3</span><div><b>ดูสรุปเมื่อไหร่ก็ได้</b><br><span style="color:var(--sub)">พิมพ์ <code>สรุปเดือนนี้</code> หรือเปิดแดชบอร์ดจากเมนู</span></div></li>
+      </ol>
+    </div>
+    <div class="chat" id="chat">
+      <div class="chat-top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
+      <div class="msg me"><div class="bub">เช้าข้าวมันไก่50 กาแฟ45 เที่ยงก๋วยเตี๋ยว60 ค่าวิน20</div></div>
+      <div class="msg bot"><div class="rcpt">
+        <div class="t">✅ จดแล้ว 4 รายการ</div>
+        <div class="r"><span>🍚 ข้าวมันไก่</span><b>฿50</b></div>
+        <div class="r"><span>☕ กาแฟ</span><b>฿45</b></div>
+        <div class="r"><span>🍜 ก๋วยเตี๋ยว</span><b>฿60</b></div>
+        <div class="r"><span>🛵 ค่าวิน</span><b>฿20</b></div>
+        <div style="margin-top:8px;font-size:13px;color:#6B7280">อาหาร ฿1,129 / ฿5,000</div>
+        <div class="bar"><i></i></div>
+      </div></div>
+      <div class="msg me"><div class="bub">เดือนนี้ใช้กับกาแฟไปเท่าไหร่</div></div>
+      <div class="msg bot"><div class="bub">เดือนนี้กาแฟไป ฿585 จาก 13 แก้วค่ะ ☕ ลดลง 12% จากเดือนก่อนนะคะ เก่งมาก!</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head reveal"><span class="tag">ฟีเจอร์</span><h2>น้องออมสินทำอะไรได้อีกเยอะ</h2><p>ครบตั้งแต่จดรายวันไปจนถึงเป้าหมายการออม</p></div>
+    <div class="grid">
+      <div class="feat reveal"><div class="ic">🧾</div><h3>อ่านรูปสลิป</h3><p>ส่งรูปสลิปหรือใบเสร็จ ดึงยอด วันที่ ร้าน และกันสลิปซ้ำให้</p></div>
+      <div class="feat reveal"><div class="ic">🎙️</div><h3>จดด้วยเสียง</h3><p>ขี้เกียจพิมพ์ ก็อัดเสียงบอกได้เลย</p></div>
+      <div class="feat reveal"><div class="ic">🎯</div><h3>งบและรอบงบ</h3><p>ตั้งงบรวมหรือแยกหมวด เลือกวันเริ่มรอบได้ เตือนเมื่อใกล้เกิน</p></div>
+      <div class="feat reveal"><div class="ic">👛</div><h3>กระเป๋าเงิน</h3><p>เงินสด ธนาคาร บัตร e-wallet เห็นยอดคงเหลือแต่ละใบ</p></div>
+      <div class="feat reveal"><div class="ic">🔁</div><h3>รายการประจำ</h3><p>ค่าเช่า ค่าสมาชิก เงินเดือน จดให้อัตโนมัติ</p></div>
+      <div class="feat reveal"><div class="ic">🔔</div><h3>เตือนจดรายวัน</h3><p>ส่งเตือนตามเวลาที่ตั้ง เฉพาะวันที่ยังไม่ได้จด</p></div>
+      <div class="feat reveal"><div class="ic">👨‍👩‍👧</div><h3>จดร่วมกันในกลุ่ม</h3><p>สมุดกลุ่มสำหรับครอบครัวหรือเพื่อน พร้อมหารบิล</p></div>
+      <div class="feat reveal"><div class="ic">📄</div><h3>รายงาน PDF & Excel</h3><p>รายงานรายเดือนพร้อมกราฟ และส่งออก Excel/CSV</p></div>
+      <div class="feat reveal"><div class="ic">💬</div><h3>ถามเรื่องเงินได้</h3><p>"ร้านไหนจ่ายบ่อยสุด" น้องออมสินค้นจากรายการจริงแล้วตอบ</p></div>
+      <div class="feat reveal"><div class="ic">✈️</div><h3>เป้าหมายการออม</h3><p>ตั้งเป้า บอกว่าต้องเก็บวันละเท่าไหร่ถึงจะทัน</p></div>
+      <div class="feat reveal"><div class="ic">💳</div><h3>บัตรเครดิต & ผ่อน</h3><p>เตือนก่อนวันจ่ายบัตร และติดตามงวดผ่อน</p></div>
+      <div class="feat reveal"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้านเล็กๆ</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rich reveal">
+      <div>
+        <span class="tag" style="background:rgba(255,255,255,.2);color:#fff">เมนูลัด</span>
+        <h2>ทุกอย่างอยู่ใต้แชท<br>กดทีเดียวถึง</h2>
+        <p>เมนูด้านล่างห้องแชทพาไปจด ดูสรุป วิเคราะห์ ตั้งงบ ดูรายการ และกระเป๋าเงินได้ในคลิกเดียว</p>
+      </div>
+      <img src="img/richmenu.png" alt="Rich Menu ของ N'AOMSIN ใน LINE">
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="wrap">
+    <div class="head reveal"><span class="tag">แดชบอร์ด</span><h2>เห็นภาพรวมเงินแบบแอป</h2><p>เปิดจากลิงก์ในแชท เพิ่มไว้หน้าจอโฮมได้ รองรับโหมดมืด</p></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="screens">
+      <div class="side">
+        <div class="pill">📊 กราฟ 6 เดือน<small>เทียบรายรับ รายจ่าย และเส้นงบ</small></div>
+        <div class="pill">🍩 แยกตามหมวด<small>รู้ทันทีว่าเงินไหลไปไหน</small></div>
+      </div>
+      <div class="phone"><img id="shot" src="img/dash-summary.png" alt=""></div>
+      <div class="desc" id="desc"></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="head reveal"><span class="tag">ราคา</span><h2>เริ่มใช้ฟรีได้ทันที</h2><p>ฟีเจอร์หลักใช้ได้ฟรี อยากได้มากกว่านี้ค่อยอัปเกรด</p></div>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>Free</h3><div class="price">0 <small>บาท</small></div><div style="color:var(--sub)">เริ่มจดง่ายๆ บน LINE</div>
+        <ul><li>จดด้วยข้อความ</li><li>ตั้งหมวดและงบ</li><li>ดูสรุปรายวัน/เดือน</li><li>แดชบอร์ดเว็บ</li></ul>
+        <a class="btn ghost" href="#add" style="width:100%;justify-content:center">เริ่มใช้ฟรี</a>
+      </div>
+      <div class="plan hot reveal">
+        <span class="badge">แนะนำ</span>
+        <h3>Pro</h3><div class="price">เร็วๆ นี้</div><div style="color:var(--sub)">สำหรับคนที่อยากจัดการเงินจริงจัง</div>
+        <ul><li>จดด้วยรูปสลิปและเสียง</li><li>รายการประจำอัตโนมัติ</li><li>รายงาน PDF และส่งออก Excel</li><li>สมุดกลุ่มและหารบิล</li></ul>
+        <a class="btn" href="#add" style="width:100%;justify-content:center">เพิ่มเพื่อนรอรับข่าว</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="head reveal"><span class="tag">คำถามที่พบบ่อย</span><h2>เรื่องที่อยากรู้</h2></div>
+    <div class="faq">
+      <details open><summary>N'AOMSIN คืออะไร?</summary><p>น้องออมสินคือบอทจดรายรับรายจ่ายบน LINE แค่พิมพ์บอกเหมือนคุยกับเพื่อน ไม่ต้องเปิดแอปหรือกรอกฟอร์ม</p></details>
+      <details><summary>ต้องโหลดแอปไหม?</summary><p>ไม่ต้อง ใช้ผ่าน LINE ที่มีอยู่แล้ว ส่วนแดชบอร์ดเปิดผ่านเบราว์เซอร์และเพิ่มไว้หน้าจอโฮมได้</p></details>
+      <details><summary>จดย้อนหลังได้ไหม?</summary><p>ได้ พิมพ์วันที่ไปด้วย เช่น "เมื่อวาน ค่าไฟ 1280" หรือแก้วันที่ในแดชบอร์ด</p></details>
+      <details><summary>AI คิดเลขผิดไหม?</summary><p>AI ทำหน้าที่อ่านข้อความเท่านั้น ยอดสรุปทั้งหมดคำนวณด้วยโค้ดจากข้อมูลจริง ตัวเลขจึงถูกต้องเสมอ</p></details>
+      <details><summary>ข้อมูลปลอดภัยไหม?</summary><p>ข้อมูลการเงินถูกเข้ารหัสก่อนบันทึก ลิงก์แดชบอร์ดเป็นของแต่ละคนและหมดอายุใน 24 ชั่วโมง ถ้าไม่ยอมรับเงื่อนไข ระบบจะไม่เก็บข้อมูลใดๆ</p></details>
+      <details><summary>ลบรายการที่จดผิดได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="add" style="padding-top:20px">
+  <div class="wrap">
+    <div class="final reveal">
+      <img src="img/icon-512.png" alt="">
+      <h2>เริ่มจดวันนี้ แล้วจะเห็นว่าเงินไปไหน</h2>
+      <p style="color:var(--sub);margin:0 0 26px">เพิ่มเพื่อนน้องออมสินใน LINE แล้วส่งรายการแรกได้เลย</p>
+      <a class="btn line" href="https://line.me/R/ti/p/@YOUR_LINE_ID" target="_blank" rel="noopener">💬 เพิ่มเพื่อน N'AOMSIN</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><b style="color:var(--brand)">N'AOMSIN</b> · ผู้ช่วยจดรายรับรายจ่าย</div>
+    <div>© 2026 N'AOMSIN. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  const SCREENS = [
+    ['summary','สรุป','ยอดเหลือเก็บ รายรับ รายจ่าย และงบคงเหลือของรอบนี้ ในหน้าเดียว'],
+    ['analysis','วิเคราะห์','กราฟรายรับรายจ่ายย้อนหลัง 6 เดือน พร้อมค่าเฉลี่ยต่อเดือน'],
+    ['budget','หมวด / งบ','ตั้งงบรายหมวด ดูว่าหมวดไหนใกล้เกินงบ'],
+    ['list','รายการ','ค้นหา แก้ไข เพิ่ม และส่งออกเป็น Excel/CSV'],
+    ['settings','ตั้งค่า','จัดการกระเป๋าเงิน เวลาเตือน รายการประจำ และเป้าหมายการออม'],
+  ];
+  const tabs = document.getElementById('tabs'), shot = document.getElementById('shot'), desc = document.getElementById('desc');
+  function show(i) {
+    const [k, name, text] = SCREENS[i];
+    [...tabs.children].forEach((b, j) => b.classList.toggle('on', j === i));
+    shot.style.opacity = 0;
+    setTimeout(() => { shot.src = 'img/dash-' + k + '.png'; shot.alt = 'หน้า' + name + 'ในแดชบอร์ด'; shot.style.opacity = 1; }, 180);
+    desc.innerHTML = '<h3>' + name + '</h3><p>' + text + '</p>';
+  }
+  SCREENS.forEach((s, i) => { const b = document.createElement('button'); b.textContent = s[1]; b.onclick = () => show(i); tabs.appendChild(b); });
+  show(0);
+
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    if (e.target.id === 'chat') [...e.target.querySelectorAll('.msg')].forEach((m, i) => setTimeout(() => m.classList.add('show'), i * 700));
+    else e.target.classList.add('in');
+    io.unobserve(e.target);
+  }), { threshold: .2 });
+  document.querySelectorAll('.reveal, #chat').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>
