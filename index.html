@@ -4,17 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#D6336C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="N'AOMSIN">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>N'AOMSIN · แดชบอร์ด</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   :root { --brand:#D6336C; --brand-soft:#FDEAF1; --bg:#FBF5F8; --card:#fff; --ink:#1F2937; --sub:#6B7280; --muted:#9CA3AF;
-          --line:#F1E4EA; --inc:#0D9488; --inc-soft:#E6F6F4; --danger:#DC2626; }
+          --line:#F1E4EA; --inc:#0D9488; --inc-soft:#E6F6F4; --danger:#DC2626; --seg:#F4EEF1; --plain:#F3F4F6; --track:#F3E8EE;
+          --topbg:rgba(251,245,248,.92); color-scheme:light; }
+  @media (prefers-color-scheme: dark) {
+    :root { --brand-soft:#3A1B29; --bg:#141015; --card:#1F1A21; --ink:#F4F4F5; --sub:#B4B4BC; --muted:#8A8A94; --line:#342A33;
+            --inc:#2DD4BF; --inc-soft:#12302D; --danger:#F87171; --seg:#2A232C; --plain:#2A262D; --track:#3A2F38;
+            --topbg:rgba(20,16,21,.9); color-scheme:dark; }
+  }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans Thai',sans-serif; font-size:15px; }
   body { padding-bottom:84px; }
-  .top { position:sticky; top:0; z-index:5; background:rgba(251,245,248,.92); backdrop-filter:blur(8px);
+  .top { position:sticky; top:0; z-index:5; background:var(--topbg); backdrop-filter:blur(8px);
          padding:14px 16px 10px; display:flex; align-items:center; justify-content:space-between; }
   .top h1 { font-size:17px; margin:0; font-weight:700; }
   .wrap { padding:0 16px; max-width:560px; margin:0 auto; }
@@ -28,21 +40,21 @@
   .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .mini { border-radius:14px; padding:12px; }
   .mini .v { font-size:19px; font-weight:700; margin-top:2px; }
-  .bar { height:7px; background:#F3E8EE; border-radius:4px; overflow:hidden; margin-top:6px; }
+  .bar { height:7px; background:var(--track); border-radius:4px; overflow:hidden; margin-top:6px; }
   .bar > i { display:block; height:100%; border-radius:4px; background:var(--brand); }
   .pill { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:600; color:#fff; }
-  .chip { display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border-radius:999px; background:#fff; border:1px solid var(--line);
+  .chip { display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border-radius:999px; background:var(--card); color:var(--ink); border:1px solid var(--line);
           font-size:13px; cursor:pointer; white-space:nowrap; }
   .chip.on { background:var(--brand); color:#fff; border-color:var(--brand); }
   .chips { display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; }
-  .seg { display:flex; background:#F4EEF1; border-radius:12px; padding:4px; }
+  .seg { display:flex; background:var(--seg); border-radius:12px; padding:4px; }
   .seg button { flex:1; border:0; background:transparent; padding:8px; border-radius:9px; font:inherit; font-size:14px; color:var(--sub); cursor:pointer; }
-  .seg button.on { background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.08); }
-  select, input { font:inherit; font-size:15px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); width:100%; }
+  .seg button.on { background:var(--card); color:var(--ink); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  select, input { font:inherit; font-size:15px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--ink); width:100%; }
   label { font-size:12px; color:var(--sub); display:block; margin:10px 0 4px; }
   .btn { border:0; border-radius:12px; padding:12px 14px; font:inherit; font-weight:600; cursor:pointer; background:var(--brand); color:#fff; width:100%; }
   .btn.ghost { background:var(--brand-soft); color:var(--brand); }
-  .btn.plain { background:#F3F4F6; color:var(--ink); }
+  .btn.plain { background:var(--plain); color:var(--ink); }
   .btn.sm { width:auto; padding:7px 12px; font-size:13px; }
   .list-item { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); cursor:pointer; }
   .list-item:last-child { border-bottom:0; }
@@ -52,7 +64,7 @@
   .day { display:flex; justify-content:space-between; font-size:12px; color:var(--sub); margin:16px 2px 4px; }
   .dot { width:10px; height:10px; border-radius:50%; flex:0 0 10px; }
   .kv { display:flex; justify-content:space-between; padding:6px 0; font-size:14px; } .kv b { font-weight:600; }
-  nav { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line); display:flex; z-index:10;
+  nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--line); display:flex; z-index:10;
         padding:6px 4px calc(6px + env(safe-area-inset-bottom)); }
   nav button { flex:1; border:0; background:none; font:inherit; font-size:11px; color:var(--muted); display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; }
   nav button svg { width:23px; height:23px; stroke:currentColor; fill:none; stroke-width:1.8; }
@@ -60,7 +72,7 @@
   .fab { position:fixed; right:18px; bottom:88px; width:54px; height:54px; border-radius:50%; background:var(--brand); color:#fff; border:0;
          font-size:28px; box-shadow:0 8px 20px rgba(214,51,108,.35); z-index:9; cursor:pointer; }
   .sheet-bg { position:fixed; inset:0; background:rgba(15,23,42,.35); z-index:20; display:none; }
-  .sheet { position:fixed; left:0; right:0; bottom:0; background:#fff; border-radius:22px 22px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom));
+  .sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-radius:22px 22px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom));
            z-index:21; max-height:88vh; overflow:auto; transform:translateY(105%); transition:transform .22s ease; max-width:560px; margin:0 auto; }
   .sheet.open { transform:none; }
   .toast { position:fixed; left:50%; top:16px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 16px; border-radius:12px;
@@ -68,7 +80,7 @@
   .loading { text-align:center; padding:60px 0; color:var(--sub); }
   .hero { background:linear-gradient(135deg,var(--brand),#F58FB0); color:#fff; }
   .hero .muted, .hero .sub { color:#FFE4EE; }
-  .stack { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:10px 0 4px; background:#F3E8EE; }
+  .stack { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:10px 0 4px; background:var(--track); }
   .avatar { width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
   .badge { background:#FFF4E5; color:#B45309; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:600; }
   .empty { text-align:center; color:var(--muted); padding:28px 0; font-size:14px; }
@@ -87,7 +99,11 @@
 <script>
 // ข้อมูลเริ่มต้นมาจากลิงก์ที่บอทส่งให้: ?t=<token>&tab=<แท็บ>&api=<URL Apps Script Web App>
 const Q = new URLSearchParams(location.search);
-const BOOT = { token: Q.get('t') || '', tab: Q.get('tab') || 'summary', api: Q.get('api') || '', brand: '#D6336C', botName: 'น้องออมสิน' };
+// เปิดจากไอคอนบนหน้าจอโฮม (ไม่มี ?t=) → ใช้ลิงก์ล่าสุดที่เคยเปิด
+let SAVED = {}; try { SAVED = JSON.parse(localStorage.getItem('naomsin') || '{}'); } catch (e) {}
+const BOOT = { token: Q.get('t') || SAVED.t || '', tab: Q.get('tab') || 'summary', api: Q.get('api') || SAVED.api || '', brand: '#D6336C', botName: 'น้องออมสิน' };
+if (Q.get('t')) { try { localStorage.setItem('naomsin', JSON.stringify({ t: BOOT.token, api: BOOT.api })); } catch (e) {}
+  history.replaceState(null, '', location.pathname); } // ไม่ให้ token ค้างในแถบที่อยู่
 const API_OK = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(BOOT.api);
 const PALETTE = ['#D6336C','#F06595','#F783AC','#E8590C','#FD7E14','#FAB005','#12B886','#15AABF','#4C6EF5','#7950F2','#AE3EC9','#868E96'];
 const TABS = [
@@ -216,6 +232,15 @@ function renderSummary() {
       ${top.slice(0,5).map(([c,v]) => `<div class="row" style="margin-top:8px"><span class="dot" style="background:${catColor(c,cats)}"></span>
         <span class="grow ellipsis sub">${esc(c)}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
     </div>
+    ${D.shop ? `<div class="card"><div class="h2">🏪 ร้านค้า</div>
+      <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="mini" style="background:var(--inc-soft)"><div class="sub">ยอดขาย</div><div class="v pos" style="font-size:16px">${money(D.shop.sales)}</div></div>
+        <div class="mini" style="background:var(--brand-soft)"><div class="sub">ต้นทุน</div><div class="v neg" style="font-size:16px">${money(D.shop.cost)}</div></div>
+        <div class="mini" style="background:var(--plain)"><div class="sub">กำไร</div><div class="v" style="font-size:16px">${money(D.shop.profit)}</div></div></div>
+      ${D.shop.top.map((x,i) => `<div class="kv"><span class="sub">${i+1}. ${esc(x.name)}${x.qty?' ('+x.qty+' ชิ้น)':''}</span><b>${money(x.revenue)}</b></div>`).join('')}</div>` : ''}
+    ${D.settings.goals.length ? `<div class="card"><div class="h2">🎯 เป้าหมายการออม</div>${D.settings.goals.map(goalRow).join('')}</div>` : ''}
+    ${D.debts.length ? `<div class="card"><div class="h2">🤝 ยืม-คืน</div>${D.debts.map((x) => `<div class="kv"><span>${esc(x.person)} <span class="muted">${x.balance>0?'ติดเงินเรา':'เราติดเงิน'}</span></span>
+      <b class="${x.balance>0?'pos':'neg'}">${money(Math.abs(x.balance))}</b></div>`).join('')}</div>` : ''}
     <div class="card">
       <div class="row between"><div class="h2" style="margin:0">👛 กระเป๋าเงิน</div><b>${money(D.totalBalance, true)}</b></div>
       ${D.settings.wallets.map((w) => `<div class="list-item" onclick="go('settings')"><div class="ico">${w.icon}</div>
@@ -391,7 +416,8 @@ function renderSettings() {
     <div class="card hero"><div class="sub">เงินทั้งหมดในทุกกระเป๋า</div><div class="big">${money(D.totalBalance, true)}</div></div>
     <div class="card"><div class="h2">👛 กระเป๋าเงิน</div>
       ${s.wallets.map((w) => `<div class="list-item" onclick="editWallet('${w.id}')"><div class="ico">${w.icon}</div>
-        <div class="grow"><div class="ellipsis">${esc(w.name)} ${w.id===s.defaultWallet?'<span class="pill" style="background:var(--brand)">หลัก</span>':''}</div></div>
+        <div class="grow"><div class="ellipsis">${esc(w.name)} ${w.id===s.defaultWallet?'<span class="pill" style="background:var(--brand)">หลัก</span>':''}</div>
+          ${w.dueDay?`<div class="muted">💳 จ่ายทุกวันที่ ${w.dueDay}</div>`:''}</div>
         <div class="amt ${w.balance<0?'danger':''}">${money(w.balance, true)}</div></div>`).join('')}
       <button class="btn ghost" style="margin-top:10px" onclick="editWallet('')">➕ เพิ่มกระเป๋า</button>
       <div class="muted" style="margin-top:8px">ยอดคำนวณจากยอดตั้งต้น + รายรับ − รายจ่าย ถ้ายอดไม่ตรง แตะกระเป๋าแล้วแก้ "ยอดปัจจุบัน"</div>
@@ -407,21 +433,64 @@ function renderSettings() {
           <div class="muted">${r.freq==='daily'?'ทุกวัน':r.freq==='weekly'?'ทุกวัน'+WD[r.weekday]:'ทุกวันที่ '+r.day} ${String(r.hour).padStart(2,'0')}:00 · ${esc(r.category)}</div></div>
         <button class="del" onclick="delRec('${r.id}')">ลบ</button></div>`).join('') || '<div class="muted">ยังไม่มี เช่น ค่าเช่า ค่าสมาชิก Netflix เงินเดือน</div>'}
       <button class="btn ghost" style="margin-top:10px" onclick="newRec()">➕ เพิ่มรายการประจำ</button></div>
+    <div class="card"><div class="row between"><div class="h2" style="margin:0">🎯 เป้าหมายการออม</div><button class="btn ghost sm" onclick="newGoal()">+ เพิ่ม</button></div>
+      ${s.goals.map((g) => goalRow(g) + `<div class="row" style="gap:8px;margin-top:-4px"><button class="btn ghost sm" onclick="goalMove('${g.id}',1)">+ ออม</button>
+        <button class="btn plain sm" onclick="goalMove('${g.id}',-1)">− ถอน</button><button class="del" onclick="goalDel('${g.id}')">ลบ</button></div>`).join('') || '<div class="muted" style="margin-top:8px">ยังไม่มีเป้าหมาย</div>'}</div>
+    <div class="card"><div class="h2">🤝 ยืม-คืน</div>
+      ${D.debts.map((x) => `<div class="list-item" style="cursor:default"><div class="grow">${esc(x.person)}<div class="muted">${x.balance>0?'ติดเงินเรา':'เราติดเงิน'}</div></div>
+        <b class="${x.balance>0?'pos':'neg'}">${money(Math.abs(x.balance))}</b><button class="btn plain sm" onclick="debtClear('${esc(x.person).replace(/'/g,'')}')">✅ ครบ</button></div>`).join('') || '<div class="muted">ไม่มียอดค้าง · จดในแชท เช่น "แป้งยืม 500"</div>'}</div>
+    <div class="card"><div class="h2">✨ ฟีเจอร์เสริม</div>
+      <div class="list-item" style="cursor:default"><div class="grow">☀️ โค้ชการเงินทุกเช้าวันจันทร์</div>
+        <select style="width:110px" onchange="toggle('coach', this.value==='1')"><option value="1" ${s.coach?'selected':''}>เปิด</option><option value="0" ${!s.coach?'selected':''}>ปิด</option></select></div>
+      <div class="list-item" style="cursor:default"><div class="grow">🏪 โหมดร้านค้า (ยอดขาย/ต้นทุน/กำไร)</div>
+        <select style="width:110px" onchange="toggle('shopMode', this.value==='1')"><option value="1" ${s.shopMode?'selected':''}>เปิด</option><option value="0" ${!s.shopMode?'selected':''}>ปิด</option></select></div>
+      ${D.plan.enabled ? `<div class="list-item" style="cursor:default"><div class="grow">💎 แพ็กเกจ</div><b>${({free:'Free',pro:'Pro',promax:'Pro Max'})[D.plan.tier]}${D.plan.until&&D.plan.tier!=='free'?' · ถึง '+thDate(D.plan.until):''}</b></div>` : ''}
+      <div class="muted" style="margin-top:8px">📱 กด "แชร์ → เพิ่มไปยังหน้าจอโฮม" เพื่อใช้แดชบอร์ดเหมือนแอป</div></div>
     <div class="card"><div class="h2">🧮 อื่นๆ</div>
       <button class="btn plain" onclick="recompute()">คำนวณยอดกระเป๋าใหม่จากรายการทั้งหมด</button>
       <div class="muted" style="margin-top:10px">ลิงก์แดชบอร์ดนี้เป็นของคุณเท่านั้นและหมดอายุอัตโนมัติ · ข้อมูลในฐานข้อมูลถูกเข้ารหัส</div></div>`;
 }
+function goalRow(g) {
+  const pct = g.target ? Math.min(100, g.saved * 100 / g.target) : 0;
+  const left = Math.max(0, g.target - g.saved);
+  const days = g.deadline ? Math.max(1, Math.round((new Date(g.deadline) - new Date(ymd(new Date()))) / 864e5)) : 0;
+  return `<div style="margin:12px 0"><div class="row between"><b>${esc(g.name)}</b><span class="sub">${money(g.saved)} / ${money(g.target)}</span></div>
+    <div class="bar"><i style="width:${pct}%;background:${pct>=100?'var(--inc)':'var(--brand)'}"></i></div>
+    <div class="muted">${left ? 'เหลือ ' + money(left) + (days ? ' · เก็บวันละ ≈' + money(Math.ceil(left/days)) + ' (ถึง ' + thDate(g.deadline) + ')' : '') : '🎉 ครบเป้าแล้ว!'}</div></div>`;
+}
+function newGoal() {
+  openSheet(`<div class="row between"><div class="h2" style="margin:0">ตั้งเป้าหมายใหม่</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
+    <label>ชื่อเป้าหมาย</label><input id="gn" placeholder="เช่น ไปญี่ปุ่น">
+    <label>เป้า (บาท)</label><input id="gt" inputmode="decimal">
+    <label>มีอยู่แล้ว (บาท)</label><input id="gs" inputmode="decimal" placeholder="0">
+    <label>ภายในวันที่ (ไม่บังคับ)</label><input id="gd" type="date">
+    <div style="margin-top:16px"><button class="btn" onclick="saveGoal()">บันทึก</button></div>`);
+}
+async function saveGoal() {
+  const p = { name:$('gn').value.trim(), target:$('gt').value, saved:$('gs').value, deadline:$('gd').value };
+  if (!p.name || !(Number(p.target) > 0)) return toast('ใส่ชื่อและจำนวนเป้าหมาย');
+  D = await call('dashSave', 'goal_add', p, range); closeSheet(); render(); toast('🎯 ตั้งเป้าแล้ว');
+}
+async function goalMove(id, sign) {
+  const v = prompt(sign > 0 ? 'ออมเพิ่มกี่บาท?' : 'ถอนออกกี่บาท?'); if (!v || !(Number(v) > 0)) return;
+  D = await call('dashSave', 'goal_move', { id, amount: sign * Number(v) }, range); render(); toast('✅ อัปเดตแล้ว');
+}
+async function goalDel(id) { if (!confirm('ลบเป้าหมายนี้?')) return; D = await call('dashSave', 'goal_delete', { id }, range); render(); }
+async function debtClear(person) { if (!confirm('เคลียร์ยอดกับ ' + person + '?')) return; D = await call('dashSave', 'debt_clear', { person }, range); render(); toast('✅ เคลียร์แล้ว'); }
+async function toggle(key, val) { const p = {}; p[key] = val; D = await call('dashSave', 'toggles', p, range); render(); toast('✅ บันทึกแล้ว'); }
+
 function editWallet(id) {
   const w = D.settings.wallets.find((x) => x.id === id) || { name:'', balance:'' };
   openSheet(`<div class="row between"><div class="h2" style="margin:0">${id?'แก้ไขกระเป๋า':'เพิ่มกระเป๋า'}</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
     <label>ชื่อ</label><input id="wn" value="${esc(w.name)}" placeholder="เช่น KBank, บัตร KTC, TrueMoney">
-    <label>ยอดปัจจุบัน (บาท)</label><input id="wb" inputmode="decimal" value="${id?w.balance:''}" placeholder="0">
+    <label>ยอดปัจจุบัน (บาท) ${'<span class="muted">บัตรเครดิตใส่ยอดค้างเป็นลบ เช่น -4870</span>'}</label><input id="wb" inputmode="decimal" value="${id?w.balance:''}" placeholder="0">
+    <label>วันครบกำหนดจ่าย (บัตรเครดิต · ไม่บังคับ)</label><select id="wd"><option value="0">ไม่ตั้ง</option>${Array.from({length:31},(_,i)=>`<option ${w.dueDay===i+1?'selected':''}>${i+1}</option>`).join('')}</select>
     <div style="margin-top:16px"><button class="btn" onclick="saveWallet('${id}')">บันทึก</button></div>
     ${id?`<div class="grid2" style="margin-top:10px"><button class="btn ghost" onclick="walletOp('wallet_default','${id}')">⭐ ตั้งเป็นหลัก</button>
       <button class="btn plain" onclick="walletOp('wallet_delete','${id}')">🗑️ ลบ</button></div>`:''}`);
 }
 async function saveWallet(id) {
-  const p = { id, name:$('wn').value.trim(), balance:$('wb').value };
+  const p = { id, name:$('wn').value.trim(), balance:$('wb').value, dueDay:$('wd').value };
   if (!p.name) return toast('ใส่ชื่อกระเป๋าก่อน');
   D = await call('dashSave', id ? 'wallet_update' : 'wallet_add', p, range); closeSheet(); render(); toast('✅ บันทึกแล้ว');
 }
