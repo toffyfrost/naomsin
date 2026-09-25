@@ -3,335 +3,499 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>N'AOMSIN · จดรายรับรายจ่ายง่ายๆ แค่แชท LINE</title>
+<title>N'AOMSIN · ผู้ช่วยจดเงินบน LINE</title>
 <meta name="description" content="น้องออมสิน ผู้ช่วยจดรายรับรายจ่ายบน LINE พิมพ์ ส่งรูปสลิป หรืออัดเสียง น้องออมสินจดให้ แยกหมวด และเทียบงบทันที">
+<meta name="theme-color" content="#050A18">
 <link rel="icon" href="img/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --brand:#D6336C; --brand-d:#B02457; --soft:#FDEAF1; --bg:#FFF8FB; --card:#fff; --ink:#1F2937; --sub:#6B7280;
-          --line:#F3DCE6; --mint:#96F2D7; --mint-d:#087F5B; --line-green:#06C755; }
+  :root {
+    --bg:#050A18; --bg2:#0A1430; --panel:rgba(255,255,255,.04); --stroke:rgba(255,255,255,.09);
+    --ink:#EAF1FF; --sub:#94A6C6; --dim:#5C6F92;
+    --blue:#1C7ED6; --blue2:#4DABF7; --sky:#A5D8FF; --mint:#63E6BE; --line-green:#06C755;
+    --glow:0 0 0 1px rgba(77,171,247,.25),0 30px 80px -20px rgba(28,126,214,.55);
+    --head:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif;
+  }
   * { box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
-  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans Thai',sans-serif; font-size:16px; line-height:1.6; overflow-x:hidden; }
+  html { scroll-behavior:smooth; overflow-x:clip; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans Thai',sans-serif; font-size:17px; line-height:1.7; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
   a { color:inherit; text-decoration:none; }
   img { max-width:100%; display:block; }
-  .wrap { max-width:1140px; margin:0 auto; padding:0 20px; }
-  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 26px; border-radius:999px; font-weight:700; background:var(--brand); color:#fff; border:0; cursor:pointer; transition:.2s; }
-  .btn:hover { background:var(--brand-d); transform:translateY(-2px); }
-  .btn.line { background:var(--line-green); }
-  .btn.line:hover { background:#05a849; }
-  .btn.ghost { background:var(--soft); color:var(--brand); }
+  .wrap { max-width:1200px; margin:0 auto; padding:0 24px; }
+  h1,h2,h3 { font-family:var(--head); font-weight:700; letter-spacing:-.01em; margin:0; }
+  .grad { background:linear-gradient(100deg,#fff 10%,var(--sky) 45%,var(--blue2) 80%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--blue2); }
+  .eyebrow::before { content:""; width:24px; height:1px; background:currentColor; }
 
-  /* nav */
-  header { position:sticky; top:0; z-index:20; background:rgba(255,248,251,.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
-  header .wrap { display:flex; align-items:center; justify-content:space-between; height:68px; }
-  .logo { display:flex; align-items:center; gap:10px; font-weight:800; font-size:20px; color:var(--brand); }
-  .logo img { width:40px; height:40px; border-radius:12px; }
-  nav.menu { display:flex; gap:28px; font-weight:500; color:var(--sub); }
-  nav.menu a:hover { color:var(--brand); }
-  @media (max-width:760px) { nav.menu { display:none; } }
+  .btn { display:inline-flex; align-items:center; gap:10px; padding:14px 28px; border-radius:999px; font-weight:600; font-size:16px; transition:.25s; border:0; cursor:pointer; }
+  .btn.pri { background:linear-gradient(135deg,var(--blue),var(--blue2)); color:#fff; box-shadow:0 10px 30px -8px rgba(28,126,214,.7); }
+  .btn.pri:hover { transform:translateY(-2px); box-shadow:0 16px 40px -8px rgba(28,126,214,.9); }
+  .btn.ghost { color:var(--ink); border:1px solid var(--stroke); background:var(--panel); }
+  .btn.ghost:hover { border-color:rgba(77,171,247,.5); }
+
+  /* progress + nav */
+  #progress { position:fixed; top:0; left:0; height:2px; width:0; background:linear-gradient(90deg,var(--blue),var(--mint)); z-index:50; }
+  header { position:fixed; top:0; left:0; right:0; z-index:40; transition:.3s; }
+  header.solid { background:rgba(5,10,24,.72); backdrop-filter:blur(16px) saturate(1.4); border-bottom:1px solid var(--stroke); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:72px; }
+  .logo { display:flex; align-items:center; gap:12px; font-family:var(--head); font-weight:700; font-size:19px; letter-spacing:.04em; }
+  .logo img { width:36px; height:36px; border-radius:10px; }
+  nav.menu { display:flex; gap:32px; font-size:15px; color:var(--sub); }
+  nav.menu a:hover { color:#fff; }
+  header .btn { padding:10px 20px; font-size:15px; }
+  @media (max-width:860px) { nav.menu { display:none; } }
 
   /* hero */
-  .hero { position:relative; padding:64px 0 40px; overflow:hidden; }
-  .hero::before { content:""; position:absolute; inset:-200px -200px auto auto; width:640px; height:640px; background:radial-gradient(circle,#FFD3E3 0%,transparent 65%); z-index:-1; }
-  .hero .wrap { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
-  .tag { display:inline-block; background:var(--soft); color:var(--brand); font-weight:600; font-size:14px; padding:6px 14px; border-radius:999px; }
-  h1 { font-size:clamp(34px,5vw,54px); line-height:1.25; margin:18px 0 16px; font-weight:800; }
-  h1 em { font-style:normal; color:var(--brand); }
-  .lead { font-size:18px; color:var(--sub); max-width:520px; }
-  .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin:28px 0 36px; }
-  .stats { display:flex; gap:36px; flex-wrap:wrap; }
-  .stats b { display:block; font-size:22px; color:var(--brand); line-height:1.2; }
-  .stats span { color:var(--sub); font-size:14px; }
+  .hero { position:relative; min-height:100vh; display:flex; align-items:center; padding:120px 0 80px; overflow:hidden; }
+  .aurora { position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .aurora i { position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; }
+  .aurora i:nth-child(1) { width:620px; height:620px; background:#1C7ED6; top:-180px; right:-120px; animation:drift 16s ease-in-out infinite; }
+  .aurora i:nth-child(2) { width:420px; height:420px; background:#0B7285; bottom:-160px; left:-100px; animation:drift 20s ease-in-out infinite reverse; }
+  .aurora i:nth-child(3) { width:300px; height:300px; background:#5F3DC4; top:30%; left:40%; opacity:.25; animation:drift 24s ease-in-out infinite; }
+  @keyframes drift { 50% { transform:translate(40px,-30px) scale(1.08); } }
+  .hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:220px; background:linear-gradient(transparent,var(--bg)); z-index:0; pointer-events:none; }
+  .grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:64px 64px; mask-image:radial-gradient(ellipse at 50% 40%,#000 20%,transparent 70%); }
+  .hero .wrap { position:relative; z-index:1; display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:center; }
+  .hero h1 { font-size:clamp(40px,6vw,76px); line-height:1.15; margin:22px 0 22px; }
+  .hero .lead { font-size:19px; color:var(--sub); max-width:540px; font-weight:300; }
+  .cta { display:flex; gap:14px; flex-wrap:wrap; margin-top:36px; }
+  .trust { display:flex; gap:28px; flex-wrap:wrap; margin-top:48px; color:var(--dim); font-size:14px; }
+  .trust span { display:flex; align-items:center; gap:8px; }
+  .trust b { color:var(--sub); font-weight:500; }
+  .hero-phone { position:relative; perspective:1400px; }
+  .scroll-hint { position:absolute; bottom:28px; left:50%; transform:translateX(-50%); z-index:1; color:var(--dim); font-size:12px; letter-spacing:.2em; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .scroll-hint i { width:22px; height:36px; border:1.5px solid var(--dim); border-radius:12px; position:relative; }
+  .scroll-hint i::after { content:""; position:absolute; left:50%; top:7px; width:3px; height:7px; background:var(--blue2); border-radius:2px; transform:translateX(-50%); animation:wheel 1.8s infinite; }
+  @keyframes wheel { 70% { transform:translate(-50%,10px); opacity:0; } }
+  @media (max-width:960px) { .hero .wrap { grid-template-columns:1fr; } .hero-phone { margin-top:30px; } .scroll-hint { display:none; } }
 
-  .phone { position:relative; width:300px; margin:0 auto; border-radius:44px; padding:12px; background:#18121A;
-           box-shadow:0 40px 80px -20px rgba(214,51,108,.45),0 0 0 2px #2C2330 inset; }
-  .phone img { border-radius:34px; width:100%; }
-  .phone::before { content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%); width:90px; height:24px; background:#18121A; border-radius:20px; z-index:2; }
-  .float { position:absolute; background:#fff; border-radius:16px; padding:10px 14px; box-shadow:0 12px 30px rgba(214,51,108,.18); font-size:14px; font-weight:600; white-space:nowrap; animation:bob 4s ease-in-out infinite; }
-  .float.a { top:70px; left:-40px; }
-  .float.b { bottom:110px; right:-30px; animation-delay:-2s; }
-  @keyframes bob { 50% { transform:translateY(-10px); } }
-  @media (max-width:860px) { .hero .wrap { grid-template-columns:1fr; } .float.a { left:-6px; } .float.b { right:-6px; } }
+  /* phone */
+  .phone { position:relative; width:290px; margin:0 auto; border-radius:48px; padding:11px; background:linear-gradient(145deg,#2A3550,#0C1224);
+           box-shadow:var(--glow),inset 0 0 0 1.5px rgba(255,255,255,.12); transform-style:preserve-3d; transition:transform .2s linear; }
+  .phone .screen { position:relative; border-radius:38px; overflow:hidden; aspect-ratio:390/844; background:#F4F8FD; }
+  .phone .screen > * { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1); transform:scale(1.04); }
+  .phone .screen > .on { opacity:1; transform:none; }
+  .phone::before { content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%); width:86px; height:24px; background:#05080F; border-radius:20px; z-index:3; }
+  .chip { position:absolute; z-index:4; background:rgba(10,20,48,.75); backdrop-filter:blur(14px); border:1px solid var(--stroke); border-radius:16px; padding:10px 14px; font-size:14px; white-space:nowrap; box-shadow:0 20px 40px -10px rgba(0,0,0,.6); animation:bob 5s ease-in-out infinite; }
+  .chip small { display:block; color:var(--sub); font-size:12px; }
+  .chip.a { top:90px; left:-70px; } .chip.b { bottom:120px; right:-60px; animation-delay:-2.5s; }
+  @keyframes bob { 50% { transform:translateY(-12px); } }
+  @media (max-width:560px) { .chip.a { left:-10px; } .chip.b { right:-10px; } }
 
-  section { padding:80px 0; }
-  .head { text-align:center; max-width:640px; margin:0 auto 48px; }
-  h2 { font-size:clamp(28px,3.6vw,40px); line-height:1.3; margin:10px 0 12px; font-weight:800; }
-  .head p { color:var(--sub); margin:0; }
+  /* chat inside phone */
+  .chatui { background:linear-gradient(#7FA6D6,#9DB9E0); padding:54px 12px 12px; display:flex; flex-direction:column; gap:8px; font-size:12.5px; line-height:1.45; color:#1F2937; }
+  .chatui .top { display:flex; align-items:center; gap:8px; color:#fff; font-weight:600; font-size:14px; margin-bottom:6px; }
+  .chatui .top img { width:28px; height:28px; border-radius:50%; }
+  .m { max-width:84%; padding:8px 11px; border-radius:16px; background:#fff; opacity:0; transform:translateY(10px); transition:.5s cubic-bezier(.2,.8,.2,1); }
+  .m.me { align-self:flex-end; background:#06C755; color:#fff; border-bottom-right-radius:4px; }
+  .m.bot { border-bottom-left-radius:4px; }
+  .on .m { opacity:1; transform:none; }
+  .on .m:nth-of-type(2) { transition-delay:.35s; } .on .m:nth-of-type(3) { transition-delay:1s; } .on .m:nth-of-type(4) { transition-delay:1.6s; } .on .m:nth-of-type(5) { transition-delay:2.2s; }
+  .rc b { color:var(--blue); } .rc .r { display:flex; justify-content:space-between; gap:14px; border-bottom:1px dashed #E5E7EB; padding:2px 0; }
+  .rc .bar { height:5px; background:#E2EAF3; border-radius:3px; margin-top:6px; overflow:hidden; } .rc .bar i { display:block; height:100%; width:34%; background:var(--blue); }
+  .slip { width:100%; border-radius:10px; background:#fff; padding:10px; text-align:center; font-size:11px; color:#6B7280; }
+  .slip b { display:block; font-size:18px; color:#1F2937; }
+  .voice { display:flex; align-items:center; gap:8px; } .voice span { display:flex; gap:2px; align-items:center; }
+  .voice span i { width:3px; background:#fff; border-radius:2px; animation:eq 1s ease-in-out infinite; }
+  @keyframes eq { 50% { height:4px !important; } }
 
-  /* chat demo */
-  .chat-sec .wrap { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
-  .chat { background:#8CABD9; border-radius:28px; padding:22px 18px; max-width:400px; margin:0 auto; width:100%; box-shadow:0 30px 60px -20px rgba(31,41,55,.35); }
-  .chat-top { display:flex; align-items:center; gap:10px; color:#fff; font-weight:700; margin-bottom:16px; }
-  .chat-top img { width:34px; height:34px; border-radius:50%; }
-  .msg { display:flex; margin:10px 0; opacity:0; transform:translateY(10px); transition:.45s; }
-  .msg.show { opacity:1; transform:none; }
-  .msg.me { justify-content:flex-end; }
-  .bub { max-width:82%; padding:9px 14px; border-radius:18px; font-size:15px; background:#fff; }
-  .me .bub { background:#06C755; color:#fff; border-bottom-right-radius:4px; }
-  .bot .bub { border-bottom-left-radius:4px; }
-  .rcpt { background:#fff; border-radius:18px; padding:14px 16px; width:82%; font-size:14px; }
-  .rcpt .t { color:var(--brand); font-weight:700; margin-bottom:6px; }
-  .rcpt .r { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #eee; }
-  .rcpt .r:last-of-type { border:0; }
-  .rcpt .bar { height:6px; background:#F3E8EE; border-radius:4px; margin-top:8px; overflow:hidden; }
-  .rcpt .bar i { display:block; height:100%; width:34%; background:var(--brand); }
-  .steps { list-style:none; padding:0; margin:24px 0 0; display:grid; gap:14px; }
-  .steps li { display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 16px; }
-  .steps .n { flex:0 0 36px; height:36px; border-radius:12px; background:var(--soft); color:var(--brand); font-weight:800; display:flex; align-items:center; justify-content:center; }
-  .steps code { background:var(--soft); color:var(--brand); padding:1px 8px; border-radius:6px; font-family:inherit; font-weight:600; }
-  @media (max-width:860px) { .chat-sec .wrap { grid-template-columns:1fr; } }
+  /* statement (word scrub) */
+  .statement { padding:160px 0; }
+  .statement p { font-family:var(--head); font-weight:600; font-size:clamp(28px,4.2vw,54px); line-height:1.4; max-width:1000px; margin:0; }
+  .statement .w { color:rgba(234,241,255,.13); transition:color .3s; }
+  .statement .w.lit { color:var(--ink); }
+  .statement .w.hl.lit { color:var(--blue2); }
 
-  /* features */
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:18px; }
-  .feat { background:#fff; border:1px solid var(--line); border-radius:22px; padding:24px; transition:.25s; }
-  .feat:hover { transform:translateY(-4px); box-shadow:0 18px 40px -16px rgba(214,51,108,.3); }
-  .feat .ic { font-size:30px; width:56px; height:56px; border-radius:16px; background:var(--soft); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
-  .feat h3 { margin:0 0 6px; font-size:18px; }
-  .feat p { margin:0; color:var(--sub); font-size:15px; }
+  /* story */
+  .story { position:relative; }
+  .stage { position:sticky; top:0; height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:40px; max-width:1200px; margin:0 auto; padding:0 24px; }
+  .chapters { position:relative; height:420px; }
+  .chap { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; opacity:0; transform:translateY(40px); transition:opacity .6s, transform .8s cubic-bezier(.2,.8,.2,1); pointer-events:none; }
+  .chap.on { opacity:1; transform:none; pointer-events:auto; }
+  .chap.past { transform:translateY(-40px); }
+  .chap .num { font-family:var(--head); font-size:15px; color:var(--blue2); font-weight:600; letter-spacing:.1em; }
+  .chap h2 { font-size:clamp(34px,4vw,52px); line-height:1.2; margin:14px 0 18px; }
+  .chap p { color:var(--sub); font-size:18px; font-weight:300; max-width:470px; margin:0; }
+  .chap .tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+  .chap .tags span { font-size:13px; padding:6px 12px; border-radius:999px; border:1px solid var(--stroke); background:var(--panel); color:var(--sub); }
+  .chap .m-shot { display:none; }
+  .rail { position:absolute; left:-44px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px; }
+  .rail i { width:3px; height:26px; border-radius:2px; background:var(--stroke); transition:.4s; }
+  .rail i.on { background:var(--blue2); height:44px; }
+  .stage .ring { position:absolute; width:560px; height:560px; border-radius:50%; border:1px solid rgba(77,171,247,.12); left:50%; top:50%; transform:translate(-50%,-50%); }
+  .stage .ring.r2 { width:760px; height:760px; border-color:rgba(77,171,247,.06); }
+  .phone-col { position:relative; display:flex; justify-content:center; }
+  .phone-col .glow { position:absolute; width:380px; height:380px; background:radial-gradient(circle,rgba(28,126,214,.45),transparent 65%); top:50%; left:50%; transform:translate(-50%,-50%); filter:blur(20px); }
+  @media (max-width:1023px) {
+    .story { height:auto !important; }
+    .stage { position:static; height:auto; display:block; }
+    .phone-col, .rail { display:none; }
+    .chapters { height:auto; }
+    .stage .ring { display:none; }
+    .chap { position:static; opacity:1; transform:none; padding:60px 0; pointer-events:auto; }
+    .chap .m-shot { display:block; width:260px; margin:36px auto 0; border-radius:34px; box-shadow:var(--glow); border:8px solid #1A2338; }
+  }
 
-  /* rich menu */
-  .rich { background:linear-gradient(135deg,#D6336C,#E64980); color:#fff; border-radius:36px; padding:56px 40px; display:grid; grid-template-columns:.9fr 1.1fr; gap:40px; align-items:center; }
-  .rich h2 { color:#fff; }
-  .rich p { opacity:.9; }
-  .rich img { border-radius:22px; box-shadow:0 30px 60px -20px rgba(0,0,0,.4); }
-  @media (max-width:860px) { .rich { grid-template-columns:1fr; padding:36px 22px; } }
+  section { position:relative; padding:130px 0; }
+  .head { text-align:center; max-width:720px; margin:0 auto 70px; }
+  .head h2 { font-size:clamp(34px,4.4vw,56px); line-height:1.2; margin:18px 0 16px; }
+  .head p { color:var(--sub); font-weight:300; font-size:18px; margin:0; }
 
-  /* screens */
-  .tabs { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:36px; }
-  .tabs button { font:inherit; font-weight:600; border:1px solid var(--line); background:#fff; color:var(--sub); padding:9px 20px; border-radius:999px; cursor:pointer; }
-  .tabs button.on { background:var(--brand); color:#fff; border-color:var(--brand); }
-  .screens { display:grid; grid-template-columns:1fr 300px 1fr; gap:36px; align-items:center; }
-  .screens .desc h3 { font-size:24px; margin:0 0 8px; }
-  .screens .desc p { color:var(--sub); margin:0; }
-  .screens .side { display:grid; gap:14px; }
-  .pill { background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px 16px; font-weight:600; }
-  .pill small { display:block; color:var(--sub); font-weight:400; }
-  #shot { transition:opacity .25s; }
-  @media (max-width:860px) { .screens { grid-template-columns:1fr; text-align:center; } .screens .side { display:none; } }
+  /* bento */
+  .bento { display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:minmax(200px,auto); gap:18px; }
+  .cell { position:relative; overflow:hidden; border-radius:28px; padding:30px; background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015)); border:1px solid var(--stroke); transition:border-color .3s; }
+  .cell:hover { border-color:rgba(77,171,247,.4); }
+  .cell::after { content:""; position:absolute; inset:0; background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(77,171,247,.12),transparent 40%); opacity:0; transition:.3s; pointer-events:none; }
+  .cell:hover::after { opacity:1; }
+  .cell .ic { font-size:28px; margin-bottom:16px; }
+  .cell h3 { font-size:21px; margin-bottom:8px; }
+  .cell p { color:var(--sub); font-size:15px; margin:0; font-weight:300; }
+  .cell.w2 { grid-column:span 2; } .cell.h2 { grid-row:span 2; }
+  .cell.feature { background:linear-gradient(160deg,rgba(28,126,214,.35),rgba(28,126,214,.05)); }
+  .cell.feature img { margin-top:24px; border-radius:18px; box-shadow:0 30px 60px -20px rgba(0,0,0,.6); }
+  .big-n { font-family:var(--head); font-size:64px; font-weight:700; line-height:1; margin-bottom:10px; }
+  @media (max-width:960px) { .bento { grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px) { .bento { grid-template-columns:1fr; } .cell.w2 { grid-column:auto; } .cell.h2 { grid-row:auto; } }
+
+  /* rich menu tilt */
+  .rich-wrap { perspective:1600px; max-width:980px; margin:0 auto; }
+  .rich-wrap img { border-radius:26px; box-shadow:var(--glow); transform:rotateX(var(--rx,24deg)) scale(var(--rs,.9)); transition:transform .1s linear; }
+
+  /* security */
+  .sec { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .sec div { padding:28px; border-top:1px solid var(--stroke); }
+  .sec b { display:block; font-family:var(--head); font-size:20px; margin-bottom:8px; }
+  .sec p { color:var(--sub); font-weight:300; margin:0; font-size:15px; }
+  @media (max-width:760px) { .sec { grid-template-columns:1fr; } }
 
   /* pricing */
-  .plans { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px; max-width:760px; margin:0 auto; }
-  .plan { background:#fff; border:1px solid var(--line); border-radius:28px; padding:32px 28px; position:relative; }
-  .plan.hot { border:2px solid var(--brand); box-shadow:0 24px 50px -20px rgba(214,51,108,.4); }
-  .plan .badge { position:absolute; top:-14px; right:24px; background:var(--brand); color:#fff; font-size:13px; font-weight:700; padding:4px 14px; border-radius:999px; }
-  .plan h3 { margin:0; font-size:24px; }
-  .plan .price { font-size:40px; font-weight:800; color:var(--brand); margin:10px 0 2px; }
-  .plan .price small { font-size:16px; color:var(--sub); font-weight:500; }
-  .plan ul { list-style:none; padding:0; margin:20px 0 26px; display:grid; gap:10px; }
-  .plan li::before { content:"✓"; color:var(--mint-d); font-weight:800; margin-right:10px; }
+  .plans { display:grid; grid-template-columns:1fr 1fr; gap:22px; max-width:880px; margin:0 auto; }
+  .plan { position:relative; border-radius:30px; padding:40px 34px; border:1px solid var(--stroke); background:var(--panel); }
+  .plan.hot { background:linear-gradient(160deg,rgba(28,126,214,.3),rgba(10,20,48,.4)); border-color:rgba(77,171,247,.5); box-shadow:var(--glow); }
+  .plan .badge { position:absolute; top:24px; right:24px; font-size:12px; font-weight:600; letter-spacing:.1em; color:var(--sky); border:1px solid rgba(165,216,255,.35); padding:4px 12px; border-radius:999px; }
+  .plan h3 { font-size:26px; }
+  .plan .price { font-family:var(--head); font-size:48px; font-weight:700; margin:14px 0 4px; }
+  .plan .price small { font-size:16px; color:var(--sub); font-weight:400; }
+  .plan ul { list-style:none; padding:0; margin:26px 0 32px; display:grid; gap:12px; color:var(--sub); }
+  .plan li::before { content:"✓"; color:var(--mint); margin-right:12px; font-weight:700; }
+  .plan .btn { width:100%; justify-content:center; }
+  @media (max-width:760px) { .plans { grid-template-columns:1fr; } }
 
   /* faq */
-  .faq { max-width:760px; margin:0 auto; display:grid; gap:12px; }
-  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px 22px; }
-  summary { font-weight:700; cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:12px; }
-  summary::after { content:"+"; color:var(--brand); font-size:22px; line-height:1; transition:.2s; }
+  .faq { max-width:820px; margin:0 auto; }
+  details { border-bottom:1px solid var(--stroke); padding:24px 4px; }
+  summary { font-family:var(--head); font-size:19px; font-weight:600; cursor:pointer; list-style:none; display:flex; justify-content:space-between; gap:16px; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"+"; color:var(--blue2); font-size:26px; line-height:1; transition:.3s; }
   details[open] summary::after { transform:rotate(45deg); }
-  details p { color:var(--sub); margin:12px 0 0; }
+  details p { color:var(--sub); font-weight:300; margin:14px 0 0; }
 
-  .final { text-align:center; background:var(--soft); border-radius:36px; padding:64px 24px; }
-  .final img { width:96px; height:96px; border-radius:28px; margin:0 auto 18px; box-shadow:0 16px 30px -10px rgba(214,51,108,.5); }
-  footer { padding:40px 0; color:var(--sub); font-size:14px; }
-  footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  .final { text-align:center; padding:160px 0 140px; overflow:hidden; }
+  .final img { width:110px; height:110px; border-radius:30px; margin:0 auto 34px; box-shadow:var(--glow); }
+  .final h2 { font-size:clamp(38px,5.5vw,72px); line-height:1.15; }
+  .final p { color:var(--sub); font-size:19px; font-weight:300; margin:20px 0 40px; }
+  footer { border-top:1px solid var(--stroke); padding:36px 0; color:var(--dim); font-size:14px; }
+  footer .wrap { display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; }
 
-  .reveal { opacity:0; transform:translateY(24px); transition:.7s ease; }
-  .reveal.in { opacity:1; transform:none; }
-  @media (prefers-reduced-motion:reduce) { .reveal,.msg { opacity:1; transform:none; transition:none; } .float { animation:none; } }
+  /* reveal */
+  .rv { opacity:0; transform:translateY(50px); transition:opacity 1s ease, transform 1.1s cubic-bezier(.2,.8,.2,1); transition-delay:var(--d,0s); }
+  .rv.in { opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce) {
+    .rv,.m,.chap,.phone .screen > * { transition:none !important; opacity:1; transform:none; }
+    .aurora i,.chip { animation:none; }
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
-<header>
+<header id="hdr">
   <div class="wrap">
-    <a class="logo" href="#"><img src="img/icon-512.png" alt="">N'AOMSIN</a>
-    <nav class="menu">
-      <a href="#how">วิธีใช้</a><a href="#features">ฟีเจอร์</a><a href="#dashboard">แดชบอร์ด</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a>
-    </nav>
-    <a class="btn line" href="#add">เพิ่มเพื่อน</a>
+    <a class="logo" href="#top"><img src="img/icon-512.png" alt="">N'AOMSIN</a>
+    <nav class="menu"><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
+    <a class="btn pri" href="#add">เพิ่มเพื่อน</a>
   </div>
 </header>
 
-<section class="hero">
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="aurora"><i></i><i></i><i></i></div>
+  <div class="grid-bg"></div>
   <div class="wrap">
     <div>
-      <span class="tag">🐷 ผู้ช่วยจดเงินบน LINE</span>
-      <h1>จดรายรับรายจ่าย<br><em>แค่แชทกับน้องออมสิน</em></h1>
-      <p class="lead">พิมพ์ ส่งรูปสลิป หรืออัดเสียงบอก น้องออมสินจดให้ แยกหมวด เทียบงบ และสรุปให้ดูทันที ไม่ต้องโหลดแอปเพิ่ม</p>
-      <div class="cta-row">
-        <a class="btn line" href="#add">💬 เพิ่มเพื่อนใน LINE</a>
-        <a class="btn ghost" href="#how">ดูวิธีใช้</a>
+      <span class="eyebrow rv">ผู้ช่วยการเงินบน LINE</span>
+      <h1 class="rv" style="--d:.1s">เงินทุกบาท<br><span class="grad">มีเรื่องเล่า</span></h1>
+      <p class="lead rv" style="--d:.2s">น้องออมสินฟังทุกเรื่องที่คุณจ่าย แค่พิมพ์ ส่งสลิป หรือพูดบอก แล้วเปลี่ยนมันเป็นภาพการเงินที่ชัดเจน ไม่ต้องโหลดแอปเพิ่ม</p>
+      <div class="cta rv" style="--d:.3s">
+        <a class="btn pri" href="#add">เริ่มใช้ฟรีใน LINE →</a>
+        <a class="btn ghost" href="#story">ดูเรื่องราว</a>
       </div>
-      <div class="stats">
-        <div><b>3 วิ</b><span>จดเสร็จหนึ่งรายการ</span></div>
-        <div><b>ข้อความ · รูป · เสียง</b><span>จดได้ทุกแบบ</span></div>
-        <div><b>🔒 เข้ารหัส</b><span>ข้อมูลของคุณ</span></div>
+      <div class="trust rv" style="--d:.4s">
+        <span>🔒 <b>ข้อมูลเข้ารหัส</b></span><span>⚡ <b>จดใน 3 วินาที</b></span><span>📱 <b>ไม่ต้องโหลดแอป</b></span>
       </div>
     </div>
-    <div style="position:relative">
-      <div class="phone"><img src="img/dash-summary.png" alt="หน้าสรุปในแดชบอร์ด N'AOMSIN"></div>
-      <div class="float a">🔥 จดต่อเนื่อง 27 วัน</div>
-      <div class="float b">🎯 เหลืองบ ฿10,107</div>
+    <div class="hero-phone rv" style="--d:.2s">
+      <div class="phone" id="heroPhone"><div class="screen"><img class="on" src="img/dash-summary-dark.png" alt="หน้าสรุปของแดชบอร์ด N'AOMSIN"></div></div>
+      <div class="chip a">🔥 จดต่อเนื่อง 27 วัน<small>ทำได้ดีมาก!</small></div>
+      <div class="chip b">🎯 เหลืองบ ฿10,107<small>อีก 10 วันถึงรอบใหม่</small></div>
     </div>
   </div>
+  <div class="scroll-hint"><i></i>SCROLL</div>
 </section>
 
-<section id="how" class="chat-sec">
+<!-- STATEMENT -->
+<section class="statement">
   <div class="wrap">
-    <div class="reveal">
-      <span class="tag">จดรายการ</span>
-      <h2>พิมพ์เหมือนแชทปกติ</h2>
-      <p style="color:var(--sub)">พิมพ์ยาวๆ รวดเดียวก็ได้ AI จะแยกเป็นรายการ เดาหมวด และบอกยอดเทียบงบให้ทันที</p>
-      <ol class="steps">
-        <li><span class="n">1</span><div><b>เพิ่มเพื่อนน้องออมสิน</b><br><span style="color:var(--sub)">กดยอมรับเงื่อนไข แล้วเริ่มจดได้เลย</span></div></li>
-        <li><span class="n">2</span><div><b>บอกว่าใช้อะไรไป</b><br><span style="color:var(--sub)">เช่น <code>ข้าวมันไก่ 50</code> หรือส่งรูปสลิปโอนเงิน</span></div></li>
-        <li><span class="n">3</span><div><b>ดูสรุปเมื่อไหร่ก็ได้</b><br><span style="color:var(--sub)">พิมพ์ <code>สรุปเดือนนี้</code> หรือเปิดแดชบอร์ดจากเมนู</span></div></li>
-      </ol>
-    </div>
-    <div class="chat" id="chat">
-      <div class="chat-top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
-      <div class="msg me"><div class="bub">เช้าข้าวมันไก่50 กาแฟ45 เที่ยงก๋วยเตี๋ยว60 ค่าวิน20</div></div>
-      <div class="msg bot"><div class="rcpt">
-        <div class="t">✅ จดแล้ว 4 รายการ</div>
-        <div class="r"><span>🍚 ข้าวมันไก่</span><b>฿50</b></div>
-        <div class="r"><span>☕ กาแฟ</span><b>฿45</b></div>
-        <div class="r"><span>🍜 ก๋วยเตี๋ยว</span><b>฿60</b></div>
-        <div class="r"><span>🛵 ค่าวิน</span><b>฿20</b></div>
-        <div style="margin-top:8px;font-size:13px;color:#6B7280">อาหาร ฿1,129 / ฿5,000</div>
-        <div class="bar"><i></i></div>
-      </div></div>
-      <div class="msg me"><div class="bub">เดือนนี้ใช้กับกาแฟไปเท่าไหร่</div></div>
-      <div class="msg bot"><div class="bub">เดือนนี้กาแฟไป ฿585 จาก 13 แก้วค่ะ ☕ ลดลง 12% จากเดือนก่อนนะคะ เก่งมาก!</div></div>
-    </div>
+    <p class="scrub">สิ้นเดือนทีไร ก็สงสัยว่า <span class="hl">เงินหายไปไหน?</span> ไม่ใช่เพราะคุณใช้เงินเก่งเกินไป แต่เพราะ <span class="hl">การจดมันยากเกินไป</span> เราเลยทำให้มันง่ายเท่ากับการส่งแชท</p>
   </div>
 </section>
 
+<!-- STORY -->
+<div class="story" id="story">
+  <div class="stage">
+    <div class="ring"></div><div class="ring r2"></div>
+    <div class="chapters">
+      <div class="rail" id="rail"></div>
+      <div class="chap">
+        <span class="num">01 / พิมพ์</span>
+        <h2>พิมพ์รวดเดียว<br><span class="grad">AI แยกให้เอง</span></h2>
+        <p>เช้า เที่ยง เย็น พิมพ์รวมกันในข้อความเดียว น้องออมสินแยกเป็นรายการ เดาหมวด แล้วบอกยอดเทียบงบให้ทันที</p>
+        <div class="tags"><span>แยกหลายรายการ</span><span>เดาหมวดอัตโนมัติ</span><span>ยกเลิกทั้งชุดได้</span></div>
+        <img class="m-shot" src="img/dash-list.png" alt="">
+      </div>
+      <div class="chap">
+        <span class="num">02 / สลิปและเสียง</span>
+        <h2>ขี้เกียจพิมพ์?<br><span class="grad">ส่งรูปหรือพูดเลย</span></h2>
+        <p>ส่งสลิปโอนเงินหรือใบเสร็จ ระบบอ่านยอด วันที่ ร้าน และกันสลิปซ้ำ หรือจะอัดเสียงบอกก็ได้</p>
+        <div class="tags"><span>อ่านสลิปธนาคาร</span><span>ใบเสร็จ</span><span>ข้อความเสียง</span></div>
+      </div>
+      <div class="chap">
+        <span class="num">03 / สรุป</span>
+        <h2>เห็นเงินทั้งเดือน<br><span class="grad">ในหน้าเดียว</span></h2>
+        <p>เหลือเก็บเท่าไหร่ ใช้ไปกับอะไร งบเหลืออีกเท่าไหร่ ทั้งหมดอยู่ในหน้าเดียว พร้อมนับวันที่จดต่อเนื่อง</p>
+        <div class="tags"><span>รอบงบกำหนดเอง</span><span>จดต่อเนื่อง 🔥</span><span>โหมดมืด</span></div>
+        <img class="m-shot" src="img/dash-summary.png" alt="">
+      </div>
+      <div class="chap">
+        <span class="num">04 / วิเคราะห์</span>
+        <h2>ย้อนดู 6 เดือน<br><span class="grad">รู้ว่ากำลังดีขึ้นไหม</span></h2>
+        <p>กราฟรายรับรายจ่ายพร้อมเส้นงบ และแยกรายจ่ายตามหมวดเป็นเปอร์เซ็นต์ เห็นทันทีว่าเงินรั่วตรงไหน</p>
+        <div class="tags"><span>กราฟ 6 เดือน</span><span>เส้นงบ</span><span>รายงาน PDF</span></div>
+        <img class="m-shot" src="img/dash-analysis.png" alt="">
+      </div>
+      <div class="chap">
+        <span class="num">05 / งบ</span>
+        <h2>ตั้งงบแต่ละหมวด<br><span class="grad">เตือนก่อนเกิน</span></h2>
+        <p>กำหนดงบรวมหรือแยกหมวด ทุกครั้งที่จด น้องออมสินบอกยอดเทียบงบ และเตือนเมื่อใช้ถึง 80%</p>
+        <div class="tags"><span>งบรายหมวด</span><span>เตือน 80%</span><span>วันเริ่มรอบ</span></div>
+        <img class="m-shot" src="img/dash-budget.png" alt="">
+      </div>
+      <div class="chap">
+        <span class="num">06 / อนาคต</span>
+        <h2>จากการจด<br><span class="grad">สู่เป้าหมาย</span></h2>
+        <p>จัดการกระเป๋าเงินหลายใบ รายการประจำ และเป้าหมายการออม พร้อมบอกว่าต้องเก็บวันละเท่าไหร่ถึงจะทัน</p>
+        <div class="tags"><span>กระเป๋าเงิน</span><span>รายการประจำ</span><span>เป้าหมายการออม</span></div>
+        <img class="m-shot" src="img/dash-settings.png" alt="">
+      </div>
+    </div>
+    <div class="phone-col">
+      <div class="glow"></div>
+      <div class="phone" id="storyPhone"><div class="screen" id="screens">
+        <div class="chatui">
+          <div class="top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
+          <div class="m me">เช้าข้าวมันไก่50 กาแฟ45 เที่ยงก๋วยเตี๋ยว60 ค่าวิน20</div>
+          <div class="m bot rc"><b>✅ จดแล้ว 4 รายการ</b>
+            <div class="r"><span>🍚 ข้าวมันไก่</span>฿50</div><div class="r"><span>☕ กาแฟ</span>฿45</div>
+            <div class="r"><span>🍜 ก๋วยเตี๋ยว</span>฿60</div><div class="r" style="border:0"><span>🛵 ค่าวิน</span>฿20</div>
+            <div style="font-size:11px;color:#6B7280;margin-top:4px">อาหาร ฿1,129 / ฿5,000</div><div class="bar"><i></i></div></div>
+          <div class="m me">เดือนนี้กาแฟไปเท่าไหร่</div>
+          <div class="m bot">เดือนนี้กาแฟ ฿585 ค่ะ ☕ น้อยกว่าเดือนก่อน 12% เก่งมาก!</div>
+        </div>
+        <div class="chatui">
+          <div class="top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
+          <div class="m me" style="padding:6px"><div class="slip">โอนเงินสำเร็จ<b>฿1,280.00</b>การไฟฟ้า · 22 ก.ย. 69</div></div>
+          <div class="m bot rc"><b>🧾 อ่านสลิปแล้ว</b><div class="r"><span>ค่าไฟ</span>฿1,280</div><div class="r" style="border:0"><span>หมวด</span>บิล/ค่าน้ำไฟ</div></div>
+          <div class="m me voice">🎙️ <span><i style="height:10px"></i><i style="height:16px;animation-delay:.1s"></i><i style="height:8px;animation-delay:.2s"></i><i style="height:14px;animation-delay:.3s"></i><i style="height:10px;animation-delay:.4s"></i><i style="height:16px;animation-delay:.5s"></i></span> 0:04</div>
+          <div class="m bot">ได้ยินว่า "ซื้อยา 180" จดหมวดสุขภาพให้แล้วค่ะ 💊</div>
+        </div>
+        <img src="img/dash-summary.png" alt="หน้าสรุป">
+        <img src="img/dash-analysis.png" alt="หน้าวิเคราะห์">
+        <img src="img/dash-budget.png" alt="หน้าหมวดและงบ">
+        <img src="img/dash-settings.png" alt="หน้าตั้งค่า">
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
 <section id="features">
   <div class="wrap">
-    <div class="head reveal"><span class="tag">ฟีเจอร์</span><h2>น้องออมสินทำอะไรได้อีกเยอะ</h2><p>ครบตั้งแต่จดรายวันไปจนถึงเป้าหมายการออม</p></div>
-    <div class="grid">
-      <div class="feat reveal"><div class="ic">🧾</div><h3>อ่านรูปสลิป</h3><p>ส่งรูปสลิปหรือใบเสร็จ ดึงยอด วันที่ ร้าน และกันสลิปซ้ำให้</p></div>
-      <div class="feat reveal"><div class="ic">🎙️</div><h3>จดด้วยเสียง</h3><p>ขี้เกียจพิมพ์ ก็อัดเสียงบอกได้เลย</p></div>
-      <div class="feat reveal"><div class="ic">🎯</div><h3>งบและรอบงบ</h3><p>ตั้งงบรวมหรือแยกหมวด เลือกวันเริ่มรอบได้ เตือนเมื่อใกล้เกิน</p></div>
-      <div class="feat reveal"><div class="ic">👛</div><h3>กระเป๋าเงิน</h3><p>เงินสด ธนาคาร บัตร e-wallet เห็นยอดคงเหลือแต่ละใบ</p></div>
-      <div class="feat reveal"><div class="ic">🔁</div><h3>รายการประจำ</h3><p>ค่าเช่า ค่าสมาชิก เงินเดือน จดให้อัตโนมัติ</p></div>
-      <div class="feat reveal"><div class="ic">🔔</div><h3>เตือนจดรายวัน</h3><p>ส่งเตือนตามเวลาที่ตั้ง เฉพาะวันที่ยังไม่ได้จด</p></div>
-      <div class="feat reveal"><div class="ic">👨‍👩‍👧</div><h3>จดร่วมกันในกลุ่ม</h3><p>สมุดกลุ่มสำหรับครอบครัวหรือเพื่อน พร้อมหารบิล</p></div>
-      <div class="feat reveal"><div class="ic">📄</div><h3>รายงาน PDF & Excel</h3><p>รายงานรายเดือนพร้อมกราฟ และส่งออก Excel/CSV</p></div>
-      <div class="feat reveal"><div class="ic">💬</div><h3>ถามเรื่องเงินได้</h3><p>"ร้านไหนจ่ายบ่อยสุด" น้องออมสินค้นจากรายการจริงแล้วตอบ</p></div>
-      <div class="feat reveal"><div class="ic">✈️</div><h3>เป้าหมายการออม</h3><p>ตั้งเป้า บอกว่าต้องเก็บวันละเท่าไหร่ถึงจะทัน</p></div>
-      <div class="feat reveal"><div class="ic">💳</div><h3>บัตรเครดิต & ผ่อน</h3><p>เตือนก่อนวันจ่ายบัตร และติดตามงวดผ่อน</p></div>
-      <div class="feat reveal"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้านเล็กๆ</p></div>
+    <div class="head">
+      <span class="eyebrow rv">ฟีเจอร์</span>
+      <h2 class="rv" style="--d:.1s">ครบกว่าที่คิด<br><span class="grad">ในแชทเดียว</span></h2>
+      <p class="rv" style="--d:.2s">ตั้งแต่ค่ากาแฟแก้วแรก ไปจนถึงเป้าหมายเที่ยวญี่ปุ่น</p>
+    </div>
+    <div class="bento">
+      <div class="cell feature w2 h2 rv"><div class="ic">📊</div><h3>แดชบอร์ดแบบแอป</h3><p>สรุป วิเคราะห์ งบ รายการ ตั้งค่า เพิ่มไว้หน้าจอโฮมได้ รองรับโหมดมืด</p><img src="img/dash-analysis-dark.png" alt="" style="width:62%;margin-left:auto;margin-right:auto"></div>
+      <div class="cell rv" style="--d:.1s"><div class="ic">👨‍👩‍👧</div><h3>จดในกลุ่ม</h3><p>สมุดกลุ่มสำหรับครอบครัว ทุกรายการระบุว่าใครจด</p></div>
+      <div class="cell rv" style="--d:.2s"><div class="ic">🧾</div><h3>หารบิล</h3><p>"หมูกระทะ 1200 หารทุกคน" แล้วสรุปว่าใครต้องจ่ายใคร</p></div>
+      <div class="cell rv"><div class="ic">💬</div><h3>ถามเรื่องเงินได้</h3><p>"ร้านไหนจ่ายบ่อยสุด" ระบบค้นรายการจริงแล้วตอบพร้อมตัวเลข</p></div>
+      <div class="cell rv" style="--d:.1s"><div class="ic">🔁</div><h3>รายการประจำ</h3><p>ค่าเช่า ค่าสมาชิก เงินเดือน จดให้อัตโนมัติ</p></div>
+      <div class="cell w2 rv"><div class="big-n grad">PDF · Excel</div><h3>รายงานพร้อมส่ง</h3><p>รายงาน A4 รายเดือนพร้อมกราฟและบทวิเคราะห์ ส่งมาในแชททุกวันที่ 1 และส่งออก Excel/CSV ได้ทุกเมื่อ</p></div>
+      <div class="cell rv" style="--d:.1s"><div class="ic">💳</div><h3>บัตรและผ่อน</h3><p>เตือนก่อนวันจ่ายบัตร 3 วัน และติดตามงวดผ่อน</p></div>
+      <div class="cell rv" style="--d:.2s"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้าน</p></div>
     </div>
   </div>
 </section>
 
+<!-- RICH MENU -->
+<section style="padding-top:40px">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow rv">เมนูลัด</span>
+      <h2 class="rv" style="--d:.1s">ทุกอย่างอยู่ใต้แชท</h2>
+      <p class="rv" style="--d:.2s">กดครั้งเดียว ไปถึงทุกฟีเจอร์</p>
+    </div>
+    <div class="rich-wrap" id="rich"><img src="img/richmenu.png" alt="เมนูลัดของ N'AOMSIN ใน LINE"></div>
+  </div>
+</section>
+
+<!-- SECURITY -->
 <section>
   <div class="wrap">
-    <div class="rich reveal">
-      <div>
-        <span class="tag" style="background:rgba(255,255,255,.2);color:#fff">เมนูลัด</span>
-        <h2>ทุกอย่างอยู่ใต้แชท<br>กดทีเดียวถึง</h2>
-        <p>เมนูด้านล่างห้องแชทพาไปจด ดูสรุป วิเคราะห์ ตั้งงบ ดูรายการ และกระเป๋าเงินได้ในคลิกเดียว</p>
-      </div>
-      <img src="img/richmenu.png" alt="Rich Menu ของ N'AOMSIN ใน LINE">
+    <div class="head">
+      <span class="eyebrow rv">ความปลอดภัย</span>
+      <h2 class="rv" style="--d:.1s">เรื่องเงินของคุณ<br><span class="grad">เป็นความลับของคุณ</span></h2>
+    </div>
+    <div class="sec">
+      <div class="rv"><b>🔒 เข้ารหัสทุกรายการ</b><p>ข้อมูลการเงินถูกเข้ารหัสก่อนบันทึก แม้เปิดฐานข้อมูลก็อ่านไม่ออก</p></div>
+      <div class="rv" style="--d:.1s"><b>⏱️ ลิงก์หมดอายุ 24 ชม.</b><p>ลิงก์แดชบอร์ดเป็นของแต่ละคน และหมดอายุเองภายใน 24 ชั่วโมง</p></div>
+      <div class="rv" style="--d:.2s"><b>🧮 ตัวเลขไม่ผิด</b><p>AI แค่อ่านข้อความ ยอดทั้งหมดคำนวณด้วยโค้ดจากข้อมูลจริง</p></div>
     </div>
   </div>
 </section>
 
-<section id="dashboard">
-  <div class="wrap">
-    <div class="head reveal"><span class="tag">แดชบอร์ด</span><h2>เห็นภาพรวมเงินแบบแอป</h2><p>เปิดจากลิงก์ในแชท เพิ่มไว้หน้าจอโฮมได้ รองรับโหมดมืด</p></div>
-    <div class="tabs" id="tabs"></div>
-    <div class="screens">
-      <div class="side">
-        <div class="pill">📊 กราฟ 6 เดือน<small>เทียบรายรับ รายจ่าย และเส้นงบ</small></div>
-        <div class="pill">🍩 แยกตามหมวด<small>รู้ทันทีว่าเงินไหลไปไหน</small></div>
-      </div>
-      <div class="phone"><img id="shot" src="img/dash-summary.png" alt=""></div>
-      <div class="desc" id="desc"></div>
-    </div>
-  </div>
-</section>
-
+<!-- PRICING -->
 <section id="pricing">
   <div class="wrap">
-    <div class="head reveal"><span class="tag">ราคา</span><h2>เริ่มใช้ฟรีได้ทันที</h2><p>ฟีเจอร์หลักใช้ได้ฟรี อยากได้มากกว่านี้ค่อยอัปเกรด</p></div>
+    <div class="head">
+      <span class="eyebrow rv">ราคา</span>
+      <h2 class="rv" style="--d:.1s">เริ่มฟรี<br><span class="grad">อัปเกรดเมื่อพร้อม</span></h2>
+    </div>
     <div class="plans">
-      <div class="plan reveal">
-        <h3>Free</h3><div class="price">0 <small>บาท</small></div><div style="color:var(--sub)">เริ่มจดง่ายๆ บน LINE</div>
-        <ul><li>จดด้วยข้อความ</li><li>ตั้งหมวดและงบ</li><li>ดูสรุปรายวัน/เดือน</li><li>แดชบอร์ดเว็บ</li></ul>
-        <a class="btn ghost" href="#add" style="width:100%;justify-content:center">เริ่มใช้ฟรี</a>
+      <div class="plan rv">
+        <h3>Free</h3><div class="price">฿0 <small>ตลอดไป</small></div>
+        <ul><li>จดด้วยข้อความ</li><li>ตั้งหมวดและงบ</li><li>สรุปรายวันและรายเดือน</li><li>แดชบอร์ดเว็บ</li></ul>
+        <a class="btn ghost" href="#add">เริ่มใช้ฟรี</a>
       </div>
-      <div class="plan hot reveal">
-        <span class="badge">แนะนำ</span>
-        <h3>Pro</h3><div class="price">เร็วๆ นี้</div><div style="color:var(--sub)">สำหรับคนที่อยากจัดการเงินจริงจัง</div>
-        <ul><li>จดด้วยรูปสลิปและเสียง</li><li>รายการประจำอัตโนมัติ</li><li>รายงาน PDF และส่งออก Excel</li><li>สมุดกลุ่มและหารบิล</li></ul>
-        <a class="btn" href="#add" style="width:100%;justify-content:center">เพิ่มเพื่อนรอรับข่าว</a>
+      <div class="plan hot rv" style="--d:.1s">
+        <span class="badge">เร็วๆ นี้</span>
+        <h3>Pro</h3><div class="price">เร็วๆ นี้</div>
+        <ul><li>จดด้วยรูปสลิปและเสียง</li><li>รายการประจำอัตโนมัติ</li><li>รายงาน PDF และ Excel</li><li>สมุดกลุ่มและหารบิล</li></ul>
+        <a class="btn pri" href="#add">เพิ่มเพื่อนรอรับข่าว</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="faq">
+<!-- FAQ -->
+<section id="faq" style="padding-top:40px">
   <div class="wrap">
-    <div class="head reveal"><span class="tag">คำถามที่พบบ่อย</span><h2>เรื่องที่อยากรู้</h2></div>
-    <div class="faq">
-      <details open><summary>N'AOMSIN คืออะไร?</summary><p>น้องออมสินคือบอทจดรายรับรายจ่ายบน LINE แค่พิมพ์บอกเหมือนคุยกับเพื่อน ไม่ต้องเปิดแอปหรือกรอกฟอร์ม</p></details>
+    <div class="head"><span class="eyebrow rv">คำถามที่พบบ่อย</span><h2 class="rv" style="--d:.1s">มีอะไรสงสัยไหม</h2></div>
+    <div class="faq rv">
+      <details open><summary>N'AOMSIN คืออะไร?</summary><p>น้องออมสินคือผู้ช่วยจดรายรับรายจ่ายบน LINE แค่พิมพ์บอกเหมือนคุยกับเพื่อน ไม่ต้องเปิดแอปหรือกรอกฟอร์ม</p></details>
       <details><summary>ต้องโหลดแอปไหม?</summary><p>ไม่ต้อง ใช้ผ่าน LINE ที่มีอยู่แล้ว ส่วนแดชบอร์ดเปิดผ่านเบราว์เซอร์และเพิ่มไว้หน้าจอโฮมได้</p></details>
       <details><summary>จดย้อนหลังได้ไหม?</summary><p>ได้ พิมพ์วันที่ไปด้วย เช่น "เมื่อวาน ค่าไฟ 1280" หรือแก้วันที่ในแดชบอร์ด</p></details>
-      <details><summary>AI คิดเลขผิดไหม?</summary><p>AI ทำหน้าที่อ่านข้อความเท่านั้น ยอดสรุปทั้งหมดคำนวณด้วยโค้ดจากข้อมูลจริง ตัวเลขจึงถูกต้องเสมอ</p></details>
-      <details><summary>ข้อมูลปลอดภัยไหม?</summary><p>ข้อมูลการเงินถูกเข้ารหัสก่อนบันทึก ลิงก์แดชบอร์ดเป็นของแต่ละคนและหมดอายุใน 24 ชั่วโมง ถ้าไม่ยอมรับเงื่อนไข ระบบจะไม่เก็บข้อมูลใดๆ</p></details>
-      <details><summary>ลบรายการที่จดผิดได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
+      <details><summary>จดผิดแก้ได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
+      <details><summary>ถ้าไม่ใช้แล้ว ข้อมูลจะเป็นยังไง?</summary><p>ถ้าไม่ยอมรับเงื่อนไขตอนเริ่ม ระบบจะไม่เก็บข้อมูลใดๆ ไว้เลย</p></details>
     </div>
   </div>
 </section>
 
-<section id="add" style="padding-top:20px">
-  <div class="wrap">
-    <div class="final reveal">
-      <img src="img/icon-512.png" alt="">
-      <h2>เริ่มจดวันนี้ แล้วจะเห็นว่าเงินไปไหน</h2>
-      <p style="color:var(--sub);margin:0 0 26px">เพิ่มเพื่อนน้องออมสินใน LINE แล้วส่งรายการแรกได้เลย</p>
-      <a class="btn line" href="https://lin.ee/Tb6ftD1A" target="_blank" rel="noopener">💬 เพิ่มเพื่อน N'AOMSIN</a>
-    </div>
+<!-- FINAL -->
+<section class="final" id="add">
+  <div class="aurora"><i></i><i></i></div>
+  <div class="wrap" style="position:relative">
+    <img class="rv" src="img/icon-512.png" alt="">
+    <h2 class="rv" style="--d:.1s">เรื่องเล่าของเงินคุณ<br><span class="grad">เริ่มจากข้อความแรก</span></h2>
+    <p class="rv" style="--d:.2s">เพิ่มเพื่อนน้องออมสิน แล้วลองพิมพ์ "กาแฟ 45" ดูเลย</p>
+    <a class="btn pri rv" style="--d:.3s" href="https://line.me/R/ti/p/@YOUR_LINE_ID" target="_blank" rel="noopener">💬 เพิ่มเพื่อนใน LINE</a>
   </div>
 </section>
 
 <footer>
-  <div class="wrap">
-    <div><b style="color:var(--brand)">N'AOMSIN</b> · ผู้ช่วยจดรายรับรายจ่าย</div>
-    <div>© 2026 N'AOMSIN. All rights reserved.</div>
-  </div>
+  <div class="wrap"><div><b style="color:var(--ink)">N'AOMSIN</b> · ผู้ช่วยจดรายรับรายจ่าย</div><div>© 2026 N'AOMSIN. All rights reserved.</div></div>
 </footer>
 
 <script>
-  const SCREENS = [
-    ['summary','สรุป','ยอดเหลือเก็บ รายรับ รายจ่าย และงบคงเหลือของรอบนี้ ในหน้าเดียว'],
-    ['analysis','วิเคราะห์','กราฟรายรับรายจ่ายย้อนหลัง 6 เดือน พร้อมค่าเฉลี่ยต่อเดือน'],
-    ['budget','หมวด / งบ','ตั้งงบรายหมวด ดูว่าหมวดไหนใกล้เกินงบ'],
-    ['list','รายการ','ค้นหา แก้ไข เพิ่ม และส่งออกเป็น Excel/CSV'],
-    ['settings','ตั้งค่า','จัดการกระเป๋าเงิน เวลาเตือน รายการประจำ และเป้าหมายการออม'],
-  ];
-  const tabs = document.getElementById('tabs'), shot = document.getElementById('shot'), desc = document.getElementById('desc');
-  function show(i) {
-    const [k, name, text] = SCREENS[i];
-    [...tabs.children].forEach((b, j) => b.classList.toggle('on', j === i));
-    shot.style.opacity = 0;
-    setTimeout(() => { shot.src = 'img/dash-' + k + '.png'; shot.alt = 'หน้า' + name + 'ในแดชบอร์ด'; shot.style.opacity = 1; }, 180);
-    desc.innerHTML = '<h3>' + name + '</h3><p>' + text + '</p>';
-  }
-  SCREENS.forEach((s, i) => { const b = document.createElement('button'); b.textContent = s[1]; b.onclick = () => show(i); tabs.appendChild(b); });
-  show(0);
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const desktop = matchMedia('(min-width:1024px)'), still = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  const io = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    if (e.target.id === 'chat') [...e.target.querySelectorAll('.msg')].forEach((m, i) => setTimeout(() => m.classList.add('show'), i * 700));
-    else e.target.classList.add('in');
-    io.unobserve(e.target);
-  }), { threshold: .2 });
-  document.querySelectorAll('.reveal, #chat').forEach((el) => io.observe(el));
+  // เผยเนื้อหาเมื่อเลื่อนมาถึง
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+  $$('.rv').forEach((el) => io.observe(el));
+
+  // แยกคำสำหรับข้อความที่สว่างขึ้นตามการเลื่อน
+  const scrub = $('.scrub');
+  scrub.innerHTML = [...scrub.childNodes].map((n) => {
+    const hl = n.nodeType === 1;
+    return n.textContent.split(/(\s+)/).map((w) => w.trim() ? `<span class="w${hl ? ' hl' : ''}">${w}</span>` : w).join('');
+  }).join('');
+  const words = $$('.w', scrub);
+
+  // บท storytelling
+  const story = $('#story'), chaps = $$('.chap'), screens = [...$('#screens').children], rail = $('#rail');
+  rail.innerHTML = chaps.map(() => '<i></i>').join('');
+  const dots = [...rail.children];
+  const setStoryHeight = () => { story.style.height = desktop.matches ? (chaps.length * 90 + 40) + 'vh' : ''; };
+  setStoryHeight(); desktop.addEventListener('change', setStoryHeight);
+  let cur = -1;
+  function setChap(i) {
+    if (i === cur) return; cur = i;
+    chaps.forEach((c, j) => { c.classList.toggle('on', j === i); c.classList.toggle('past', j < i); });
+    screens.forEach((s, j) => s.classList.toggle('on', j === i));
+    dots.forEach((d, j) => d.classList.toggle('on', j === i));
+  }
+  setChap(0);
+
+  const hdr = $('#hdr'), bar = $('#progress'), heroPhone = $('#heroPhone'), storyPhone = $('#storyPhone'), rich = $('#rich img');
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  let ticking = false;
+  function frame() {
+    ticking = false;
+    const y = scrollY, vh = innerHeight, max = document.documentElement.scrollHeight - vh;
+    bar.style.width = (y / max * 100) + '%';
+    hdr.classList.toggle('solid', y > 40);
+
+    // ข้อความสว่างทีละคำ
+    const r = scrub.getBoundingClientRect(), p = clamp((vh * .8 - r.top) / (r.height + vh * .35));
+    const lit = Math.round(p * words.length);
+    words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+
+    if (!still) {
+      heroPhone.style.transform = `rotateY(${-14 + y * .02}deg) rotateX(${6 - y * .01}deg) translateY(${y * .12}px)`;
+      const rr = rich.parentElement.getBoundingClientRect(), rp = clamp(1 - (rr.top - vh * .15) / (vh * .75));
+      rich.style.setProperty('--rx', (24 * (1 - rp)) + 'deg'); rich.style.setProperty('--rs', .88 + .12 * rp);
+    }
+
+    if (desktop.matches) {
+      const sr = story.getBoundingClientRect(), total = sr.height - vh;
+      const sp = clamp(-sr.top / total);
+      setChap(Math.min(chaps.length - 1, Math.floor(sp * chaps.length)));
+      if (!still) { const local = (sp * chaps.length) % 1; storyPhone.style.transform = `rotateY(${(local - .5) * -10}deg) translateY(${(local - .5) * -16}px)`; }
+    }
+  }
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+  addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();
+
+  // แสงตามเมาส์ในการ์ด
+  $$('.cell').forEach((c) => c.addEventListener('pointermove', (e) => {
+    const b = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - b.left) + 'px'); c.style.setProperty('--my', (e.clientY - b.top) + 'px');
+  }));
+})();
 </script>
 </body>
 </html>
