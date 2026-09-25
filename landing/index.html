@@ -429,7 +429,7 @@
         <div class="camp" id="camp" hidden></div>
         <ul><li class="all">ทุกอย่างใน Free</li><li>จดด้วยเสียง</li><li>ถามเรื่องเงินกับ AI</li><li>รายงาน PDF + ส่งรายงานรายเดือนอัตโนมัติ</li><li>ส่งออก Excel / CSV</li><li>เป้าหมายการออม</li><li>รายการประจำ บัตรเครดิต และผ่อนชำระ</li><li>โค้ชการเงินรายสัปดาห์</li><li>โหมดร้านค้า</li><li>โควตา AI ×3</li></ul>
         <a class="btn pri" href="#add" id="proCta">สมัคร Pro ใน LINE</a>
-        <p class="plan-note">ชำระผ่านพร้อมเพย์ ส่งสลิปในแชท ระบบตรวจและเปิด Pro ให้อัตโนมัติ</p>
+        <p class="plan-note">ชำระผ่านพร้อมเพย์ ส่งสลิปในแชท ระบบตรวจและเปิด Pro ให้อัตโนมัติ<br>🎟️ มีโค้ดพิเศษ? พิมพ์ <b>โค้ด XXXX</b> ในแชทรับ Pro ฟรีทันที</p>
       </div>
     </div>
   </div>
@@ -447,6 +447,7 @@
       <details><summary>จดผิดแก้ได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
       <details><summary>Free กับ Pro ต่างกันยังไง?</summary><p>Free จดบันทึก ดูสรุป ตั้งงบ ใช้แดชบอร์ด และจดในกลุ่มได้ครบ ส่วน Pro เพิ่มจดด้วยเสียง ถามเรื่องเงินกับ AI รายงาน PDF ส่งออก Excel เป้าหมายการออม รายการประจำ บัตร/ผ่อน โค้ช โหมดร้านค้า และโควตา AI 3 เท่า</p></details>
       <details><summary>จ่ายเงินยังไง ต่ออายุอัตโนมัติไหม?</summary><p>พิมพ์ "แพ็กเกจ" ในแชท เลือกรายเดือน (฿35) หรือรายปี (฿299) สแกน QR พร้อมเพย์แล้วส่งรูปสลิป ระบบตรวจสลิปและเปิด Pro ให้ทันที ไม่มีการตัดเงินอัตโนมัติ ก่อนหมดอายุ 3 วันจะมีข้อความเตือน</p></details>
+      <details><summary>มีโค้ดพิเศษ ใช้ยังไง?</summary><p>พิมพ์คำว่า "โค้ด" ตามด้วยโค้ดในแชท LINE น้องออมสิน เช่น "โค้ด NAOMSIN2026" ระบบเปิด Pro ฟรีตามจำนวนวันของโค้ดให้ทันที แต่ละโค้ดใช้ได้คนละ 1 ครั้ง</p></details>
       <details><summary>ถ้าไม่ใช้แล้ว ข้อมูลจะเป็นยังไง?</summary><p>ถ้าไม่ยอมรับเงื่อนไขตอนเริ่ม ระบบจะไม่เก็บข้อมูลใดๆ ไว้เลย</p></details>
     </div>
   </div>
@@ -556,8 +557,10 @@
     $('#proUnit').textContent = cyc === 'yearly' ? '/ ปี' : '/ เดือน';
     $('#proWas').hidden = !c.campaign; $('#proWas').textContent = '฿' + c.base;
     $('#proPer').textContent = cyc === 'yearly' ? 'ตกเดือนละ ฿' + (c.price / 12).toFixed(2) + ' · ประหยัด ฿' + (m * 12 - c.price) + ' เทียบกับจ่ายรายเดือน' : 'ไม่ต่ออายุอัตโนมัติ จ่ายเมื่ออยากใช้ต่อ';
-    $('#camp').hidden = !c.campaign;
-    if (c.campaign) $('#camp').textContent = '🏷️ ' + c.campaign.name + ' ลด ' + c.campaign.percent + '% ถึง ' + thD(c.campaign.end);
+    const offer = P.offer && !P.freePro ? '🎁 ' + P.offer.text + ' · พิมพ์ "โค้ด ' + P.offer.code + '" ในแชท' : '';
+    $('#camp').hidden = !c.campaign && !offer;
+    $('#camp').textContent = [c.campaign ? '🏷️ ' + c.campaign.name + ' ลด ' + c.campaign.percent + '% ถึง ' + thD(c.campaign.end) : '', offer].filter(Boolean).join('\n');
+    $('#camp').style.whiteSpace = 'pre-line';
     $('#saveTag').textContent = 'ประหยัด ' + Math.round((m * 12 - P.yearly.price) * 100 / (m * 12)) + '%';
     const fp = P.freePro;
     $('#promo').hidden = !fp;
