@@ -60,7 +60,7 @@
   .me { display:none; align-items:center; gap:10px; font-size:14px; color:var(--sub); }
   .me img { width:32px; height:32px; border-radius:50%; }
   .me button { font:inherit; font-size:13px; color:var(--sub); background:none; border:1px solid var(--stroke); border-radius:999px; padding:4px 12px; cursor:pointer; }
-  body.ok .me { display:flex; }
+  body.ok.has-me .me { display:flex; }
   body.ok .back { display:none; }
   @media (max-width:560px) { .me span { display:none; } }
 
@@ -90,14 +90,27 @@
   body.ok .gate { display:none; }
 
   /* feature guide */
-  .g-grid { display:grid; grid-template-columns:230px 1fr; gap:56px; align-items:start; }
-  .g-nav { position:sticky; top:96px; max-height:calc(100vh - 120px); overflow:auto; padding-right:6px; scrollbar-width:thin; }
-  .gn-cat { font-size:12px; font-weight:600; letter-spacing:.12em; color:var(--dim); margin:22px 0 8px; }
-  .gn-cat:first-child { margin-top:0; }
-  .g-nav a { display:flex; align-items:center; gap:10px; padding:7px 12px; border-radius:10px; font-size:15px; color:var(--sub); border-left:2px solid transparent; transition:.2s; }
-  .g-nav a span { width:20px; text-align:center; }
-  .g-nav a:hover { color:#fff; background:var(--panel); }
-  .g-nav a.on { color:#fff; background:rgba(28,126,214,.16); border-left-color:var(--blue2); }
+  .guide .wrap { max-width:1320px; }
+  .g-grid { display:grid; grid-template-columns:250px 1fr; gap:64px; align-items:start; }
+  .g-nav { position:sticky; top:100px; }
+  .gn-sheet-h, .gn-bg, .m-nav { display:none; }
+  .gn-g { border-bottom:1px solid var(--stroke); }
+  .gn-cat { display:flex; align-items:center; justify-content:space-between; padding:13px 4px; font-size:14px; color:var(--sub); transition:.2s; }
+  .gn-cat b { font-weight:600; }
+  .gn-cat em { font-style:normal; font-size:12px; color:var(--dim); min-width:24px; height:20px; border-radius:10px; background:var(--panel); display:flex; align-items:center; justify-content:center; }
+  .gn-cat:hover { color:#fff; }
+  .gn-g.open .gn-cat { color:#fff; }
+  .gn-g.open .gn-cat em { background:var(--blue); color:#fff; }
+  .gn-items { display:grid; grid-template-rows:0fr; transition:grid-template-rows .35s ease; }
+  .gn-items > div { overflow:hidden; }
+  .gn-g.open .gn-items { grid-template-rows:1fr; }
+  .gn-items a { display:flex; align-items:center; gap:10px; padding:7px 12px; margin-left:2px; font-size:14.5px; color:var(--sub); border-left:1px solid var(--stroke); transition:.2s; }
+  .gn-items a:last-child { margin-bottom:10px; }
+  .gn-items a span { width:20px; text-align:center; font-size:14px; }
+  .gn-items a:hover { color:#fff; }
+  .gn-items a.on { color:#fff; border-left:2px solid var(--blue2); padding-left:11px; background:linear-gradient(90deg,rgba(28,126,214,.16),transparent); }
+  .gn-prog { height:2px; background:var(--stroke); border-radius:2px; margin-top:18px; overflow:hidden; }
+  .gn-prog i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--blue),var(--mint)); transition:width .3s; }
   .g-cat { font-size:14px; font-weight:600; letter-spacing:.14em; color:var(--blue2); margin:40px 0 18px; padding-bottom:14px; border-bottom:1px solid var(--stroke); scroll-margin-top:100px; }
   .g-cat:first-child { margin-top:0; }
   .fe { display:grid; grid-template-columns:1fr 330px; gap:40px; align-items:start; padding:34px; margin-bottom:22px; border-radius:28px; border:1px solid var(--stroke);
@@ -135,12 +148,35 @@
   @media (max-width:1100px) { .fe { grid-template-columns:1fr 280px; gap:28px; padding:26px; } }
   @media (max-width:900px) {
     .g-grid { grid-template-columns:1fr; gap:0; }
-    .g-nav { position:sticky; top:72px; z-index:10; display:flex; gap:6px; overflow-x:auto; max-height:none; margin:0 -24px 20px; padding:10px 24px; background:rgba(5,10,24,.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--stroke); }
-    .g-nav .gn-cat { display:none; }
-    .g-nav a { flex:0 0 auto; border:1px solid var(--stroke); border-radius:999px; padding:6px 12px; font-size:14px; }
-    .fe { grid-template-columns:1fr; }
-    .fe-shot { position:static; max-width:340px; margin:0 auto; width:100%; }
-    .g-cat, .fe { scroll-margin-top:170px; }
+    .m-nav { display:flex; align-items:center; gap:12px; position:sticky; top:84px; z-index:20; width:100%; margin:0 0 22px; padding:10px 14px; font:inherit; color:var(--ink); text-align:left; cursor:pointer;
+             background:rgba(12,20,44,.82); backdrop-filter:blur(16px) saturate(1.4); border:1px solid var(--stroke); border-radius:18px; box-shadow:0 14px 34px -14px rgba(0,0,0,.7); overflow:hidden; }
+    .m-ic { width:36px; height:36px; flex:0 0 36px; border-radius:11px; background:rgba(28,126,214,.2); display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .m-t { flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.3; }
+    .m-t small { font-size:11px; color:var(--blue2); letter-spacing:.08em; }
+    .m-t b { font-weight:600; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .m-n { font-size:12px; color:var(--dim); }
+    .m-chev { color:var(--sub); font-size:13px; }
+    .m-bar { position:absolute; left:0; bottom:0; height:2px; width:0; background:linear-gradient(90deg,var(--blue),var(--mint)); transition:width .3s; }
+    .g-nav { position:fixed; left:0; right:0; bottom:0; top:auto; z-index:60; max-height:78vh; display:flex; flex-direction:column; background:#0B1330; border-radius:26px 26px 0 0;
+             border-top:1px solid var(--stroke); padding:8px 20px calc(16px + env(safe-area-inset-bottom)); transform:translateY(105%); transition:transform .35s cubic-bezier(.2,.8,.2,1); box-shadow:0 -30px 60px rgba(0,0,0,.6); }
+    .g-nav::before { content:""; width:40px; height:4px; border-radius:2px; background:var(--stroke); margin:4px auto 6px; flex:0 0 auto; }
+    body.nav-open .g-nav { transform:none; }
+    .gn-sheet-h { display:flex; align-items:center; justify-content:space-between; padding:6px 0 10px; font-family:var(--head); font-size:18px; }
+    .gn-x { width:34px; height:34px; border-radius:50%; border:1px solid var(--stroke); background:var(--panel); color:var(--sub); cursor:pointer; }
+    .gn-list { overflow-y:auto; scrollbar-width:none; overscroll-behavior:contain; }
+    .gn-list::-webkit-scrollbar { display:none; }
+    .gn-items { grid-template-rows:1fr; }
+    .gn-items a { padding:10px 12px; font-size:15px; }
+    .gn-prog { display:none; }
+    .gn-bg { display:block; position:fixed; inset:0; z-index:55; background:rgba(3,6,15,.6); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:opacity .3s; }
+    body.nav-open .gn-bg { opacity:1; pointer-events:auto; }
+    body.nav-open { overflow:hidden; }
+    .fe { grid-template-columns:1fr; padding:24px 20px; border-radius:24px; gap:22px; }
+    .fe h4 { font-size:22px; }
+    .fe-shot { position:static; max-width:320px; margin:0 auto; width:100%; }
+    .sh { max-height:460px; }
+    .g-cat { margin:32px 0 14px; }
+    .g-cat, .fe { scroll-margin-top:160px; }
   }
 
 </style>
@@ -167,8 +203,9 @@
       <h2>ทำอะไรได้บ้าง<br><span class="grad">ครบทั้ง 26 ฟีเจอร์</span></h2>
       <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย</p>
     </div>
+    <button class="m-nav" id="mNav" aria-label="เปิดรายการฟีเจอร์"><span class="m-ic" id="mIc">👋</span><span class="m-t"><small id="mCat">เริ่มต้นใช้งาน</small><b id="mName">สมัครใช้งาน</b></span><span class="m-n" id="mNum">1/26</span><span class="m-chev">▾</span><i class="m-bar" id="mBar"></i></button>
     <div class="g-grid">
-      <aside class="g-nav" id="gnav"><div class="gn-cat">เริ่มต้นใช้งาน</div><a href="#f-register" data-f="register"><span>👋</span>สมัครใช้งาน</a><a href="#f-richmenu" data-f="richmenu"><span>📱</span>เมนูลัดใต้แชท</a><a href="#f-help" data-f="help"><span>📚</span>คู่มือในแชท</a><div class="gn-cat">จดบันทึก</div><a href="#f-text" data-f="text"><span>📝</span>จดด้วยข้อความ</a><a href="#f-file" data-f="file"><span>📎</span>แนบรูป สลิป หรือ PDF</a><a href="#f-voice" data-f="voice"><span>🎙️</span>จดด้วยเสียง</a><a href="#f-edit" data-f="edit"><span>✏️</span>แก้ไขและลบ</a><a href="#f-quick" data-f="quick"><span>⚡</span>จดด่วน</a><a href="#f-smart" data-f="smart"><span>🧠</span>ฉลาดขึ้นเอง</a><div class="gn-cat">ดูเงินของคุณ</div><a href="#f-wallet" data-f="wallet"><span>👛</span>กระเป๋าเงิน</a><a href="#f-summary" data-f="summary"><span>📊</span>สรุปรายรับรายจ่าย</a><a href="#f-report" data-f="report"><span>📄</span>รายงาน PDF</a><a href="#f-dashboard" data-f="dashboard"><span>📈</span>แดชบอร์ด</a><a href="#f-export" data-f="export"><span>📥</span>ส่งออก Excel / CSV</a><div class="gn-cat">วางแผนการเงิน</div><a href="#f-budget" data-f="budget"><span>🎯</span>งบประมาณและรอบงบ</a><a href="#f-goal" data-f="goal"><span>✈️</span>เป้าหมายการออม</a><a href="#f-reminder" data-f="reminder"><span>🔔</span>เตือนจด สถิติ และรายการประจำ</a><a href="#f-card" data-f="card"><span>💳</span>บัตรเครดิตและผ่อนชำระ</a><a href="#f-debt" data-f="debt"><span>🤝</span>ยืม-คืนเงิน</a><div class="gn-cat">ผู้ช่วยอัจฉริยะ</div><a href="#f-ask" data-f="ask"><span>💬</span>ถามเรื่องเงิน</a><a href="#f-coach" data-f="coach"><span>☀️</span>โค้ชการเงินรายสัปดาห์</a><div class="gn-cat">กลุ่มและธุรกิจ</div><a href="#f-groupbook" data-f="groupbook"><span>👨‍👩‍👧</span>สมุดกลุ่ม</a><a href="#f-split" data-f="split"><span>🧾</span>หารบิล</a><a href="#f-shop" data-f="shop"><span>🏪</span>โหมดร้านค้า</a><div class="gn-cat">ตั้งค่าและบัญชี</div><a href="#f-settings" data-f="settings"><span>⚙️</span>ตั้งค่า</a><a href="#f-privacy" data-f="privacy"><span>🔒</span>บัญชีและความปลอดภัย</a></aside>
+      <aside class="g-nav" id="gnav"><div class="gn-sheet-h"><b>ฟีเจอร์ทั้งหมด</b><button class="gn-x" id="gnClose" aria-label="ปิด">✕</button></div><div class="gn-list"><div class="gn-g" data-c="start"><a class="gn-cat" href="#c-start"><b>เริ่มต้นใช้งาน</b><em>3</em></a><div class="gn-items"><div><a href="#f-register" data-f="register"><span>👋</span>สมัครใช้งาน</a><a href="#f-richmenu" data-f="richmenu"><span>📱</span>เมนูลัดใต้แชท</a><a href="#f-help" data-f="help"><span>📚</span>คู่มือในแชท</a></div></div></div><div class="gn-g" data-c="record"><a class="gn-cat" href="#c-record"><b>จดบันทึก</b><em>6</em></a><div class="gn-items"><div><a href="#f-text" data-f="text"><span>📝</span>จดด้วยข้อความ</a><a href="#f-file" data-f="file"><span>📎</span>แนบรูป สลิป หรือ PDF</a><a href="#f-voice" data-f="voice"><span>🎙️</span>จดด้วยเสียง</a><a href="#f-edit" data-f="edit"><span>✏️</span>แก้ไขและลบ</a><a href="#f-quick" data-f="quick"><span>⚡</span>จดด่วน</a><a href="#f-smart" data-f="smart"><span>🧠</span>ฉลาดขึ้นเอง</a></div></div></div><div class="gn-g" data-c="see"><a class="gn-cat" href="#c-see"><b>ดูเงินของคุณ</b><em>5</em></a><div class="gn-items"><div><a href="#f-wallet" data-f="wallet"><span>👛</span>กระเป๋าเงิน</a><a href="#f-summary" data-f="summary"><span>📊</span>สรุปรายรับรายจ่าย</a><a href="#f-report" data-f="report"><span>📄</span>รายงาน PDF</a><a href="#f-dashboard" data-f="dashboard"><span>📈</span>แดชบอร์ด</a><a href="#f-export" data-f="export"><span>📥</span>ส่งออก Excel / CSV</a></div></div></div><div class="gn-g" data-c="plan"><a class="gn-cat" href="#c-plan"><b>วางแผนการเงิน</b><em>5</em></a><div class="gn-items"><div><a href="#f-budget" data-f="budget"><span>🎯</span>งบประมาณและรอบงบ</a><a href="#f-goal" data-f="goal"><span>✈️</span>เป้าหมายการออม</a><a href="#f-reminder" data-f="reminder"><span>🔔</span>เตือนจด สถิติ และรายการประจำ</a><a href="#f-card" data-f="card"><span>💳</span>บัตรเครดิตและผ่อนชำระ</a><a href="#f-debt" data-f="debt"><span>🤝</span>ยืม-คืนเงิน</a></div></div></div><div class="gn-g" data-c="ai"><a class="gn-cat" href="#c-ai"><b>ผู้ช่วยอัจฉริยะ</b><em>2</em></a><div class="gn-items"><div><a href="#f-ask" data-f="ask"><span>💬</span>ถามเรื่องเงิน</a><a href="#f-coach" data-f="coach"><span>☀️</span>โค้ชการเงินรายสัปดาห์</a></div></div></div><div class="gn-g" data-c="group"><a class="gn-cat" href="#c-group"><b>กลุ่มและธุรกิจ</b><em>3</em></a><div class="gn-items"><div><a href="#f-groupbook" data-f="groupbook"><span>👨‍👩‍👧</span>สมุดกลุ่ม</a><a href="#f-split" data-f="split"><span>🧾</span>หารบิล</a><a href="#f-shop" data-f="shop"><span>🏪</span>โหมดร้านค้า</a></div></div></div><div class="gn-g" data-c="account"><a class="gn-cat" href="#c-account"><b>ตั้งค่าและบัญชี</b><em>2</em></a><div class="gn-items"><div><a href="#f-settings" data-f="settings"><span>⚙️</span>ตั้งค่า</a><a href="#f-privacy" data-f="privacy"><span>🔒</span>บัญชีและความปลอดภัย</a></div></div></div></div><div class="gn-prog"><i id="gnBar"></i></div></aside><div class="gn-bg" id="gnBg"></div>
       <div class="g-main">
 <h3 class="g-cat" id="c-start">เริ่มต้นใช้งาน</h3>
 <article class="fe" id="f-register">
@@ -545,6 +582,7 @@ const CONFIG = {
     $('#content').appendChild($('#guideTpl').content.cloneNode(true));
     document.body.classList.add('ok');
     if (profile) {
+      document.body.classList.add('has-me');
       $('#me img').src = profile.pictureUrl || 'img/brand/avatar-64.png';
       $('#me span').textContent = profile.displayName;
     }
@@ -569,15 +607,40 @@ const CONFIG = {
   }
 
   function initGuide() {
-  // คู่มือฟีเจอร์: ไฮไลต์เมนูตามหัวข้อที่อ่านอยู่
-  const navLinks = $$('#gnav a'), byId = Object.fromEntries(navLinks.map((a) => [a.dataset.f, a]));
-  const spy = new IntersectionObserver((es) => es.forEach((e) => {
-    if (!e.isIntersecting) return;
-    const a = byId[e.target.id.slice(2)]; if (!a) return;
+  // คู่มือฟีเจอร์: ไฮไลต์เมนูตามหัวข้อที่อ่านอยู่ + เปิดเฉพาะหมวดนั้น
+  const navLinks = $$('#gnav .gn-items a'), byId = Object.fromEntries(navLinks.map((a) => [a.dataset.f, a]));
+  const groups = $$('#gnav .gn-g'), total = navLinks.length;
+  function setActive(a) {
+    if (!a || a.classList.contains('on')) return;
     navLinks.forEach((x) => x.classList.toggle('on', x === a));
-    a.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-  }), { rootMargin: '-45% 0px -50% 0px' });
+    const g = a.closest('.gn-g'); groups.forEach((x) => x.classList.toggle('open', x === g));
+    const i = navLinks.indexOf(a) + 1, pct = (i / total * 100) + '%';
+    $('#gnBar').style.width = pct; $('#mBar').style.width = pct;
+    $('#mIc').textContent = a.querySelector('span').textContent;
+    $('#mName').textContent = a.textContent.replace(a.querySelector('span').textContent, '');
+    $('#mCat').textContent = $('.gn-cat b', g).textContent;
+    $('#mNum').textContent = i + '/' + total;
+  }
+  const spy = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) setActive(byId[e.target.id.slice(2)]); }), { rootMargin: '-40% 0px -55% 0px' });
   $$('.fe').forEach((f) => spy.observe(f));
+  setActive(navLinks[0]);
+
+  // มือถือ: แผ่นรายการฟีเจอร์เลื่อนขึ้นจากด้านล่าง
+  const openNav = (on) => document.body.classList.toggle('nav-open', on);
+  $('#mNav').addEventListener('click', () => { openNav(true); $('#gnav .gn-items a.on')?.scrollIntoView({ block: 'nearest' }); });
+  $('#gnClose').addEventListener('click', () => openNav(false));
+  $('#gnBg').addEventListener('click', () => openNav(false));
+  // กดเมนู → ปิดแผ่น แล้วเลื่อนไปหัวข้อ และจัดตำแหน่งซ้ำหลังรูปด้านบนโหลดเสร็จ (กันเลื่อนคลาดเพราะรูป lazy)
+  $$('#gnav a').forEach((a) => a.addEventListener('click', (e) => {
+    const t = $(a.getAttribute('href')); if (!t) return;
+    e.preventDefault(); openNav(false); history.replaceState(null, '', a.getAttribute('href'));
+    const go = () => t.scrollIntoView({ behavior: 'instant', block: 'start' });
+    requestAnimationFrame(go);
+    const imgs = $$('.fe img').filter((im) => !im.complete && (t.compareDocumentPosition(im) & Node.DOCUMENT_POSITION_PRECEDING));
+    imgs.forEach((im) => { im.loading = 'eager'; im.addEventListener('load', go, { once: true }); });
+    setTimeout(go, 700);
+  }));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') openNav(false); });
 
   // กดคำสั่งเพื่อคัดลอก
   $$('.cmd').forEach((b) => b.addEventListener('click', async () => {
