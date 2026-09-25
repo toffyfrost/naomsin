@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>หลังบ้าน · N'AOMSIN</title>
+<meta name="theme-color" content="#050A18">
+<link rel="icon" type="image/png" href="../landing/img/brand/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+  :root { --bg:#050A18; --bg2:#0A1430; --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07); --stroke:rgba(255,255,255,.09);
+          --ink:#EAF1FF; --sub:#94A6C6; --dim:#5C6F92; --blue:#1C7ED6; --blue2:#4DABF7; --sky:#A5D8FF; --mint:#63E6BE; --green:#06C755;
+          --amber:#FFC078; --red:#FF8787; --head:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans Thai',sans-serif; font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  body::before { content:""; position:fixed; width:700px; height:700px; border-radius:50%; background:#1C7ED6; filter:blur(160px); opacity:.18; top:-300px; right:-200px; pointer-events:none; }
+  a { color:var(--blue2); text-decoration:none; }
+  h1,h2,h3 { font-family:var(--head); margin:0; font-weight:700; }
+  button, input, select, textarea { font:inherit; color:inherit; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 16px; border-radius:12px; border:1px solid var(--stroke); background:var(--panel2); cursor:pointer; font-weight:600; font-size:14px; transition:.2s; white-space:nowrap; }
+  .btn:hover { border-color:rgba(77,171,247,.5); }
+  .btn.pri { background:linear-gradient(135deg,var(--blue),var(--blue2)); border:0; color:#fff; }
+  .btn.ok { background:rgba(6,199,85,.18); border-color:rgba(99,230,190,.4); color:var(--mint); }
+  .btn.bad { background:rgba(255,135,135,.1); border-color:rgba(255,135,135,.35); color:var(--red); }
+  .btn.line { background:var(--green); color:#fff; border:0; padding:13px 22px; font-size:16px; }
+  .btn.sm { padding:5px 10px; font-size:13px; border-radius:9px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  input, select, textarea { width:100%; background:rgba(0,0,0,.25); border:1px solid var(--stroke); border-radius:11px; padding:9px 12px; outline:none; }
+  input:focus, select:focus, textarea:focus { border-color:var(--blue2); }
+  label { display:block; font-size:12.5px; color:var(--sub); margin:0 0 5px; }
+  select option { background:#0B1330; }
+
+  /* layout */
+  .app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; position:relative; }
+  aside { position:sticky; top:0; height:100vh; padding:22px 16px; border-right:1px solid var(--stroke); background:rgba(5,10,24,.6); backdrop-filter:blur(12px); display:flex; flex-direction:column; }
+  .brand { display:flex; align-items:center; gap:10px; font-family:var(--head); font-weight:700; font-size:17px; margin:0 6px 26px; }
+  .brand img { width:36px; height:36px; border-radius:50%; }
+  .brand small { display:block; font-family:'Noto Sans Thai'; font-weight:400; font-size:11.5px; color:var(--dim); line-height:1.2; }
+  nav button { width:100%; display:flex; align-items:center; gap:12px; padding:10px 12px; margin-bottom:4px; border-radius:12px; border:0; background:none; color:var(--sub); cursor:pointer; text-align:left; font-size:14.5px; }
+  nav button:hover { color:#fff; background:var(--panel); }
+  nav button.on { color:#fff; background:linear-gradient(90deg,rgba(28,126,214,.28),rgba(28,126,214,.05)); }
+  nav .ic { width:22px; text-align:center; }
+  nav .badge { margin-left:auto; font-size:11px; font-weight:700; background:var(--red); color:#1a0505; border-radius:999px; padding:0 7px; }
+  .me { margin-top:auto; display:flex; align-items:center; gap:10px; padding:10px; border-radius:14px; background:var(--panel); font-size:13px; }
+  .me img { width:32px; height:32px; border-radius:50%; }
+  .me div { flex:1; min-width:0; } .me b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .me button { border:0; background:none; color:var(--dim); cursor:pointer; font-size:12px; }
+  main { padding:28px 34px 80px; min-width:0; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px; }
+  .top h1 { font-size:26px; }
+  .top p { margin:2px 0 0; color:var(--sub); font-size:14px; }
+  .card { background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.015)); border:1px solid var(--stroke); border-radius:20px; padding:20px; margin-bottom:18px; }
+  .card h3 { font-size:16px; margin-bottom:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .card h3 .sp { flex:1; }
+  .grid { display:grid; gap:14px; }
+  .g4 { grid-template-columns:repeat(4,1fr); } .g3 { grid-template-columns:repeat(3,1fr); } .g2 { grid-template-columns:1fr 1fr; }
+  .kpi { padding:16px 18px; border-radius:18px; background:var(--panel); border:1px solid var(--stroke); }
+  .kpi small { color:var(--sub); font-size:12.5px; } .kpi b { display:block; font-family:var(--head); font-size:26px; line-height:1.3; }
+  .kpi em { font-style:normal; font-size:12px; color:var(--dim); }
+  .kpi.hl { background:linear-gradient(135deg,rgba(28,126,214,.35),rgba(28,126,214,.08)); border-color:rgba(77,171,247,.35); }
+  .kpi.warn { background:rgba(255,192,120,.1); border-color:rgba(255,192,120,.35); cursor:pointer; }
+  .bars { display:flex; align-items:flex-end; gap:12px; height:170px; padding-top:10px; }
+  .bars div { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; font-size:12px; color:var(--sub); }
+  .bars i { display:block; width:100%; max-width:46px; border-radius:9px 9px 3px 3px; background:linear-gradient(180deg,var(--blue2),var(--blue)); min-height:3px; }
+  .bars b { font-size:12px; color:var(--ink); font-weight:600; }
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .row > .grow { flex:1; min-width:160px; }
+  .fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; align-items:end; }
+  .seg { display:inline-flex; padding:4px; border-radius:12px; background:var(--panel); border:1px solid var(--stroke); }
+  .seg button { border:0; background:none; color:var(--sub); padding:6px 14px; border-radius:9px; cursor:pointer; font-size:13.5px; font-weight:600; }
+  .seg button.on { background:var(--blue); color:#fff; }
+  .hint { color:var(--dim); font-size:12.5px; margin:8px 0 0; }
+  .chip { display:inline-block; font-size:12px; font-weight:600; padding:1px 10px; border-radius:999px; background:var(--panel2); color:var(--sub); white-space:nowrap; }
+  .chip.g { background:rgba(99,230,190,.14); color:var(--mint); } .chip.b { background:rgba(77,171,247,.16); color:var(--sky); }
+  .chip.y { background:rgba(255,192,120,.14); color:var(--amber); } .chip.r { background:rgba(255,135,135,.13); color:var(--red); }
+  .tbl { width:100%; border-collapse:collapse; font-size:14px; }
+  .tbl th { text-align:left; font-weight:600; font-size:12.5px; color:var(--dim); padding:8px 10px; border-bottom:1px solid var(--stroke); white-space:nowrap; }
+  .tbl td { padding:10px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:middle; }
+  .tbl tr:hover td { background:rgba(255,255,255,.02); }
+  .tbl .num { text-align:right; font-variant-numeric:tabular-nums; }
+  .scroll { overflow-x:auto; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13.5px; letter-spacing:.03em; }
+  .prog { height:5px; border-radius:3px; background:var(--panel2); overflow:hidden; margin-top:4px; min-width:70px; }
+  .prog i { display:block; height:100%; background:var(--blue2); }
+  .who { display:flex; align-items:center; gap:10px; min-width:170px; }
+  .who img, .who .av { width:32px; height:32px; border-radius:50%; flex:0 0 32px; background:var(--panel2); display:flex; align-items:center; justify-content:center; font-size:13px; object-fit:cover; }
+  .who small { display:block; color:var(--dim); font-size:12px; line-height:1.2; }
+  .empty { text-align:center; color:var(--dim); padding:30px 0; }
+  .result { margin-top:16px; padding:16px; border-radius:14px; background:rgba(6,199,85,.08); border:1px solid rgba(99,230,190,.3); }
+  .result pre { margin:10px 0 0; max-height:220px; overflow:auto; white-space:pre-wrap; font-size:13.5px; }
+  .review { display:grid; grid-template-columns:1fr auto; gap:14px; padding:14px; border-radius:14px; background:rgba(255,192,120,.06); border:1px solid rgba(255,192,120,.25); margin-bottom:10px; }
+  .review .acts { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+  .switch { position:relative; width:46px; height:26px; flex:0 0 46px; }
+  .switch input { opacity:0; width:0; height:0; }
+  .switch span { position:absolute; inset:0; border-radius:999px; background:var(--panel2); border:1px solid var(--stroke); cursor:pointer; transition:.2s; }
+  .switch span::before { content:""; position:absolute; width:20px; height:20px; left:2px; top:2px; border-radius:50%; background:#fff; transition:.2s; }
+  .switch input:checked + span { background:var(--green); }
+  .switch input:checked + span::before { transform:translateX(20px); }
+  .sec { display:none; } .sec.on { display:block; }
+  [hidden] { display:none !important; }
+
+  /* modal + toast */
+  .modal { position:fixed; inset:0; z-index:50; background:rgba(3,6,15,.7); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; }
+  .modal[hidden] { display:none; }
+  .modal .box { width:100%; max-width:520px; max-height:85vh; overflow:auto; background:#0B1330; border:1px solid var(--stroke); border-radius:20px; padding:22px; }
+  .modal h3 { margin-bottom:14px; }
+  .toast { position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); opacity:0; z-index:60; background:#0B1330; border:1px solid var(--stroke); padding:11px 18px; border-radius:14px; transition:.3s; pointer-events:none; box-shadow:0 20px 40px rgba(0,0,0,.5); }
+  .toast.show { opacity:1; transform:translateX(-50%); }
+  .toast.err { border-color:rgba(255,135,135,.5); color:var(--red); }
+
+  /* gate */
+  .gate { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .gate .box { max-width:420px; width:100%; text-align:center; padding:40px 30px; border-radius:28px; border:1px solid var(--stroke); background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015)); }
+  .gate img { width:84px; height:84px; border-radius:50%; margin-bottom:16px; }
+  .gate h1 { font-size:24px; margin-bottom:8px; } .gate p { color:var(--sub); margin:0 0 22px; }
+  .gate code { display:block; margin:10px 0 0; padding:8px; border-radius:10px; background:rgba(0,0,0,.3); font-size:12px; word-break:break-all; }
+  .spin { width:34px; height:34px; border-radius:50%; border:3px solid var(--stroke); border-top-color:var(--blue2); margin:10px auto; animation:sp 1s linear infinite; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+
+  @media (max-width:980px) { .g4 { grid-template-columns:1fr 1fr; } .g3 { grid-template-columns:1fr; } }
+  @media (max-width:760px) {
+    .app { grid-template-columns:1fr; }
+    aside { position:fixed; top:auto; bottom:0; left:0; right:0; height:auto; z-index:40; padding:6px 8px calc(6px + env(safe-area-inset-bottom)); border-right:0; border-top:1px solid var(--stroke); background:rgba(5,10,24,.94); }
+    .brand, .me { display:none; }
+    nav { display:flex; justify-content:space-around; }
+    nav button { flex-direction:column; gap:0; font-size:11px; padding:6px 4px; margin:0; text-align:center; position:relative; }
+    nav .ic { font-size:18px; } nav .badge { position:absolute; top:2px; right:6px; }
+    main { padding:20px 16px 100px; }
+    .g2 { grid-template-columns:1fr; }
+    .review { grid-template-columns:1fr; } .review .acts { justify-content:flex-start; }
+    .hide-m { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate"><div class="box" id="gateBox"><div class="spin"></div></div></div>
+
+<div class="app" id="app" hidden>
+  <aside>
+    <div class="brand"><img src="../landing/img/brand/avatar-64.png" alt=""><div>N'AOMSIN<small>หลังบ้านแอดมิน</small></div></div>
+    <nav id="nav">
+      <button data-s="overview" class="on"><span class="ic">📊</span>ภาพรวม</button>
+      <button data-s="codes"><span class="ic">🎟️</span>โค้ด</button>
+      <button data-s="billing"><span class="ic">🏷️</span><span>แคมเปญ<span class="hide-m"> & โปรฟรี</span></span></button>
+      <button data-s="payments"><span class="ic">💳</span>การชำระ<span class="badge" id="revBadge" hidden></span></button>
+      <button data-s="members"><span class="ic">👥</span>สมาชิก</button>
+    </nav>
+    <div class="me"><img id="meImg" src="../landing/img/brand/avatar-64.png" alt=""><div><b id="meName">แอดมิน</b><button id="logout">ออกจากระบบ</button></div></div>
+  </aside>
+
+  <main>
+    <!-- ภาพรวม -->
+    <section class="sec on" id="s-overview">
+      <div class="top"><div><h1>ภาพรวม</h1><p id="ovDate"></p></div><button class="btn" data-reload>↻ รีเฟรช</button></div>
+      <div class="grid g4" id="kpis"></div>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="card"><h3>💰 ยอดขาย 6 เดือน</h3><div class="bars" id="salesBars"></div></div>
+        <div class="card"><h3>⚙️ สถานะระบบ</h3><div id="sysStatus"></div></div>
+      </div>
+    </section>
+
+    <!-- โค้ด -->
+    <section class="sec" id="s-codes">
+      <div class="top"><div><h1>โค้ดพิเศษ</h1><p>ให้ผู้ใช้พิมพ์ "โค้ด XXXX" ในแชท LINE เพื่อรับ Pro ฟรี</p></div></div>
+      <div class="card">
+        <h3>✨ สร้างโค้ดใหม่ <span class="sp"></span>
+          <span class="seg" id="codeMode"><button class="on" data-m="custom">โค้ดเดียว ตั้งชื่อเอง</button><button data-m="bulk">สุ่มหลายโค้ด</button></span></h3>
+        <div class="fields">
+          <div id="fCustom"><label>ชื่อโค้ด</label><input id="cCode" placeholder="เช่น NAOMSIN2026" maxlength="24" style="text-transform:uppercase"></div>
+          <div id="fQty" hidden><label>จำนวนโค้ด</label><input id="cQty" type="number" min="1" max="500" value="10"></div>
+          <div id="fPrefix" hidden><label>คำนำหน้า (ไม่บังคับ)</label><input id="cPrefix" placeholder="เช่น KOL" maxlength="10" style="text-transform:uppercase"></div>
+          <div><label>ได้ Pro ฟรี</label><div class="row" style="gap:6px;flex-wrap:nowrap"><input id="cDur" type="number" min="1" value="1" style="width:80px"><select id="cUnit"><option value="30">เดือน</option><option value="1">วัน</option><option value="365">ปี</option></select></div></div>
+          <div><label>ใช้ได้กี่คน / โค้ด</label><input id="cUses" type="number" min="1" value="100"></div>
+          <div><label>โค้ดหมดอายุ</label><input id="cExp" type="date"></div>
+          <div><label>หมายเหตุ</label><input id="cNote" placeholder="เช่น แจกเพจ Facebook" maxlength="100"></div>
+        </div>
+        <p class="hint" id="codeHint"></p>
+        <div class="row" style="margin-top:14px"><button class="btn pri" id="cCreate">สร้างโค้ด</button></div>
+        <div class="result" id="cResult" hidden></div>
+      </div>
+      <div class="card">
+        <h3>🎟️ โค้ดทั้งหมด <span class="sp"></span><button class="btn sm" id="codesCsv">⬇ CSV</button></h3>
+        <div class="row" style="margin-bottom:12px"><input class="grow" id="codeQ" placeholder="ค้นหาโค้ด หมายเหตุ หรือรหัสชุด">
+          <select id="codeF" style="width:auto"><option value="">ทุกสถานะ</option><option>ใช้ได้</option><option>ใช้ครบแล้ว</option><option>หมดอายุ</option><option>ปิดแล้ว</option></select></div>
+        <div class="scroll"><table class="tbl"><thead><tr><th>โค้ด</th><th>Pro</th><th>ใช้แล้ว</th><th>หมดอายุ</th><th>สถานะ</th><th class="hide-m">หมายเหตุ</th><th></th></tr></thead><tbody id="codeRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- แคมเปญ & โปรฟรี -->
+    <section class="sec" id="s-billing">
+      <div class="top"><div><h1>แคมเปญ & โปรฟรี</h1><p>ราคาที่ผู้ใช้เห็นในแชทและหน้า landing เปลี่ยนตามทันที</p></div></div>
+      <div class="grid g2">
+        <div class="card">
+          <h3>🎁 Pro ฟรีให้ทุกคน <span class="sp"></span><label class="switch"><input type="checkbox" id="fpOn"><span></span></label></h3>
+          <div class="fields"><div><label>ถึงวันที่ (เว้นว่าง = ไม่มีกำหนด)</label><input type="date" id="fpUntil"></div><div><label>ข้อความ</label><input id="fpNote" placeholder="ช่วงทดสอบระบบ"></div></div>
+          <div class="row" style="margin-top:14px"><button class="btn pri" id="fpSave">บันทึก</button><span class="hint" id="fpState" style="margin:0"></span></div>
+        </div>
+        <div class="card"><h3>💎 ราคาตอนนี้</h3><div id="priceNow"></div></div>
+      </div>
+      <div class="card">
+        <h3>🏷️ เพิ่มแคมเปญส่วนลด</h3>
+        <div class="fields">
+          <div><label>ชื่อแคมเปญ</label><input id="kName" placeholder="เช่น 11.11 ลดแรง"></div>
+          <div><label>ลด (%)</label><input id="kPct" type="number" min="1" max="99" value="20"></div>
+          <div><label>เริ่ม</label><input id="kStart" type="date"></div>
+          <div><label>จบ</label><input id="kEnd" type="date"></div>
+          <div><label>ใช้กับ</label><select id="kCyc"><option value="all">ทั้งรายเดือนและรายปี</option><option value="monthly">รายเดือน</option><option value="yearly">รายปี</option></select></div>
+        </div>
+        <p class="hint" id="kPreview"></p>
+        <div class="row" style="margin-top:12px"><button class="btn pri" id="kAdd">เพิ่มแคมเปญ</button></div>
+      </div>
+      <div class="card"><h3>📅 แคมเปญทั้งหมด</h3><div class="scroll"><table class="tbl"><thead><tr><th>ชื่อ</th><th>ลด</th><th>ใช้กับ</th><th>ช่วงเวลา</th><th>สถานะ</th><th></th></tr></thead><tbody id="campRows"></tbody></table></div></div>
+    </section>
+
+    <!-- การชำระเงิน -->
+    <section class="sec" id="s-payments">
+      <div class="top"><div><h1>การชำระเงิน</h1><p>สลิปที่ระบบตรวจอัตโนมัติไม่ผ่านจะมารอที่นี่</p></div><button class="btn" data-reload>↻ รีเฟรช</button></div>
+      <div class="card"><h3>⏳ รอตรวจ</h3><div id="reviews"></div></div>
+      <div class="card">
+        <h3>🧾 ประวัติการชำระ <span class="sp"></span><button class="btn sm" id="payCsv">⬇ CSV</button></h3>
+        <div class="scroll"><table class="tbl"><thead><tr><th>เวลา</th><th>สมาชิก</th><th>รอบ</th><th class="num">ยอด</th><th>ตรวจโดย</th><th class="hide-m">เลขอ้างอิง</th></tr></thead><tbody id="payRows"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- สมาชิก -->
+    <section class="sec" id="s-members">
+      <div class="top"><div><h1>สมาชิก</h1><p id="memCount"></p></div><button class="btn sm" id="memCsv">⬇ CSV</button></div>
+      <div class="card">
+        <div class="row" style="margin-bottom:12px"><input class="grow" id="memQ" placeholder="ค้นหาชื่อ หรือ userId">
+          <select id="memF" style="width:auto"><option value="">ทั้งหมด</option><option value="paid">Pro (จ่ายเงิน)</option><option value="promo">Pro ฟรี</option><option value="free">Free</option><option value="blocked">ถูกระงับ</option><option value="pending">รออนุมัติ</option></select></div>
+        <div class="scroll"><table class="tbl"><thead><tr><th>สมาชิก</th><th>สถานะ</th><th>แพ็กเกจ</th><th class="hide-m">สมัครเมื่อ</th><th class="hide-m">ใช้ล่าสุด</th><th></th></tr></thead><tbody id="memRows"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal" id="modal" hidden><div class="box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== ตั้งค่า =====
+const CONFIG = {
+  apiUrl: 'https://script.google.com/macros/s/AKfycbyNkInSKmjtAbmQdh-kN34Zm-Y9PZF4Dp_KN5jzOTpWPV3hC9tN7oHl9YGeRb3k3S2Rlw/exec', // Web App URL ของ Apps Script
+  liffId: '2011746996-UCr3gHUc',                                         // LIFF app หน้า admin (scope: openid, profile)
+};
+
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const TH_M = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const thD = (s) => { if (!s) return '–'; const [y, m, d] = String(s).slice(0, 10).split('-').map(Number); return d + ' ' + TH_M[m - 1] + ' ' + String(y + 543).slice(2); };
+  const thDT = (iso) => { if (!iso) return '–'; const d = new Date(iso); return thD(new Date(d.getTime() + 7 * 3600e3).toISOString()) + ' ' + d.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Bangkok' }); };
+  const money = (n) => '฿' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+  const today = () => new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+  const addD = (s, n) => { const d = new Date(s + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const daysText = (d) => d % 365 === 0 ? d / 365 + ' ปี' : d % 30 === 0 ? d / 30 + ' เดือน' : d + ' วัน';
+  const PREVIEW = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).has('preview');
+  let idToken = '';
+
+  function toast(msg, err) { const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', 2600); }
+  function modal(html) { $('#modalBox').innerHTML = html; $('#modal').hidden = false; }
+  const closeModal = () => { $('#modal').hidden = true; };
+  $('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  function csv(name, rows) {
+    const s = '﻿' + rows.map((r) => r.map((v) => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(',')).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([s], { type: 'text/csv' })); a.download = name + '_' + today() + '.csv'; a.click();
+  }
+  const copy = async (t) => { try { await navigator.clipboard.writeText(t); toast('คัดลอกแล้ว'); } catch { toast('คัดลอกไม่ได้', true); } };
+
+  /* ---------- API ---------- */
+  async function api(action, args) {
+    if (PREVIEW) return mockApi(action, args || {});
+    const res = await fetch(CONFIG.apiUrl, { method: 'POST', body: JSON.stringify({ adminApi: action, idToken, args: args || {} }) });
+    const j = await res.json();
+    if (!j.ok) {
+      if (/^AUTH/.test(j.error)) { gate('login', 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่'); throw new Error(j.error); }
+      if (/^DENIED/.test(j.error)) { gate('denied', j.error); throw new Error(j.error); }
+      throw new Error(j.error);
+    }
+    return j.data;
+  }
+  async function act(btn, fn) {
+    const b = btn; if (b) b.disabled = true;
+    try { return await fn(); } catch (e) { if (!/^(AUTH|DENIED)/.test(e.message)) toast(e.message, true); } finally { if (b) b.disabled = false; }
+  }
+
+  /* ---------- เข้าสู่ระบบ ---------- */
+  const logo = '<img src="../landing/img/brand/logo.webp" alt="">';
+  function gate(state, msg) {
+    $('#app').hidden = true; $('#gate').hidden = false;
+    const box = $('#gateBox');
+    if (state === 'login') box.innerHTML = logo + '<h1>หลังบ้าน N\'AOMSIN</h1><p>' + esc(msg || 'สำหรับแอดมินเท่านั้น เข้าสู่ระบบด้วยบัญชี LINE ของแอดมิน') + '</p><button class="btn line" id="loginBtn">เข้าสู่ระบบด้วย LINE</button>';
+    if (state === 'denied') box.innerHTML = logo + '<h1>ไม่มีสิทธิ์เข้าหลังบ้าน</h1><p>บัญชี LINE นี้ยังไม่ได้อยู่ในรายชื่อแอดมิน เพิ่ม userId ด้านล่างใน Script Property <b>ADMIN_USER_IDS</b></p><code>' + esc((msg.match(/U[0-9a-f]{32}/) || [''])[0]) + '</code><div style="margin-top:18px"><button class="btn" id="switchBtn">เปลี่ยนบัญชี</button></div>';
+    if (state === 'error') box.innerHTML = logo + '<h1>เปิดหลังบ้านไม่สำเร็จ</h1><p>' + esc(msg) + '</p><button class="btn pri" onclick="location.reload()">ลองใหม่</button>';
+    $('#loginBtn')?.addEventListener('click', () => { try { if (liff.isLoggedIn()) liff.logout(); } catch {} liff.login({ redirectUri: location.href.split('#')[0] }); });
+    $('#switchBtn')?.addEventListener('click', () => { liff.logout(); location.reload(); });
+  }
+  async function start() {
+    if (PREVIEW) return enter({ displayName: 'แอดมิน (ตัวอย่าง)' });
+    if (/YOUR_/.test(CONFIG.apiUrl) || /YOUR_/.test(CONFIG.liffId)) return gate('error', 'ยังไม่ได้ตั้งค่า apiUrl และ liffId ในไฟล์ admin/index.html');
+    if (!window.liff) return gate('error', 'โหลด LINE SDK ไม่ได้');
+    try {
+      await liff.init({ liffId: CONFIG.liffId });
+      if (!liff.isLoggedIn()) return gate('login');
+      idToken = liff.getIDToken();
+      if (!idToken) return gate('error', 'LIFF app ต้องเปิด scope "openid"');
+      const d = liff.getDecodedIDToken();
+      if (d && d.exp * 1000 < Date.now() + 60e3) { liff.logout(); return gate('login', 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่'); }
+      await enter(await liff.getProfile().catch(() => ({})));
+    } catch (e) { if (!/^(AUTH|DENIED)/.test(e.message)) gate('error', e.message || String(e)); }
+  }
+  async function enter(profile) {
+    await loadOverview(); // ตรวจสิทธิ์ครั้งแรก
+    $('#gate').hidden = true; $('#app').hidden = false;
+    $('#meName').textContent = profile.displayName || 'แอดมิน';
+    if (profile.pictureUrl) $('#meImg').src = profile.pictureUrl;
+    const s = location.hash.slice(1); if (s && $('#s-' + s)) show(s);
+  }
+  $('#logout').addEventListener('click', () => { if (!PREVIEW) liff.logout(); location.reload(); });
+
+  /* ---------- นำทาง ---------- */
+  const loaded = {};
+  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers };
+  function show(s) {
+    $$('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.s === s));
+    $$('.sec').forEach((x) => x.classList.toggle('on', x.id === 's-' + s));
+    history.replaceState(null, '', '#' + s); scrollTo(0, 0);
+    if (!loaded[s]) act(null, loaders[s]);
+  }
+  $$('#nav button').forEach((b) => b.addEventListener('click', () => show(b.dataset.s)));
+  $$('[data-reload]').forEach((b) => b.addEventListener('click', () => act(b, loaders[b.closest('.sec').id.slice(2)])));
+
+  /* ---------- ภาพรวม ---------- */
+  async function loadOverview() {
+    const d = await api('overview'); loaded.overview = true;
+    $('#ovDate').textContent = 'ข้อมูล ณ ' + thDT(new Date().toISOString());
+    const k = (label, val, sub, cls, go) => '<div class="kpi ' + (cls || '') + '"' + (go ? ' data-go="' + go + '"' : '') + '><small>' + label + '</small><b>' + val + '</b><em>' + (sub || '') + '</em></div>';
+    const act2 = d.members.byStatus.active || 0;
+    $('#kpis').innerHTML = [
+      k('สมาชิกทั้งหมด', d.members.total.toLocaleString(), 'ใช้งาน ' + act2 + ' · ใหม่เดือนนี้ ' + d.members.newThisMonth, 'hl'),
+      k('ใช้งานวันนี้', d.members.activeToday, 'คน'),
+      k('Pro ที่จ่ายเงิน', d.pro.paidActive, d.pro.freePro ? '🎁 โปรฟรีเปิดอยู่' : 'โปรฟรีปิด'),
+      k('ยอดขายเดือนนี้', money(d.sales.thisMonth.amount), d.sales.thisMonth.count + ' รายการ'),
+      k('สลิปรอตรวจ', d.reviewsPending, d.reviewsPending ? 'กดเพื่อตรวจ →' : 'ไม่มีค้าง', d.reviewsPending ? 'warn' : '', 'payments'),
+      k('โค้ดที่ใช้ได้', d.codes.active, 'แลกเดือนนี้ ' + d.codes.redeemedThisMonth + ' ครั้ง', '', 'codes'),
+      k('ค่า AI เดือนนี้', '$' + d.ai.month.cost.toFixed(2), '≈ ' + money(d.ai.month.cost * d.ai.usdThb) + (d.ai.budgetUsd ? ' · งบ $' + d.ai.budgetUsd : '')),
+      k('เรียก AI เดือนนี้', d.ai.month.calls.toLocaleString(), (d.ai.month.tokens / 1000).toFixed(0) + 'K tokens'),
+    ].join('');
+    $$('#kpis [data-go]').forEach((x) => x.addEventListener('click', () => show(x.dataset.go)));
+    const max = Math.max(1, ...d.sales.months.map((m) => m.amount));
+    $('#salesBars').innerHTML = d.sales.months.map((m) => '<div><b>' + (m.amount ? money(m.amount) : '') + '</b><i style="height:' + Math.max(2, m.amount / max * 120) + 'px"></i>' + TH_M[Number(m.month.slice(5)) - 1] + '</div>').join('');
+    const line = (ok, t) => '<div class="row" style="margin-bottom:10px"><span class="chip ' + (ok ? 'g' : 'y') + '">' + (ok ? 'พร้อม' : 'ตรวจ') + '</span>' + t + '</div>';
+    $('#sysStatus').innerHTML = line(d.config.plansEnabled, 'ระบบแพ็กเกจ ' + (d.config.plansEnabled ? 'เปิด' : 'ปิด (ทุกคนใช้ได้ทุกฟีเจอร์)')) +
+      line(d.config.promptpay !== '-', 'พร้อมเพย์ ' + d.config.promptpay) + line(d.config.easyslip, d.config.easyslip ? 'ตรวจสลิปอัตโนมัติ (EasySlip)' : 'ยังไม่ตั้ง EASYSLIP_API_KEY · แอดมินต้องตรวจสลิปเอง') +
+      line(true, d.pro.freePro ? '🎁 Pro ฟรี' + (d.pro.freePro.until ? ' ถึง ' + thD(d.pro.freePro.until) : ' ไม่มีกำหนด') : 'Pro ฟรีปิดอยู่');
+    const b = $('#revBadge'); b.hidden = !d.reviewsPending; b.textContent = d.reviewsPending;
+  }
+
+  /* ---------- โค้ด ---------- */
+  let codes = [], codeMode = 'custom';
+  $('#cExp').value = addD(today(), 30); $('#cExp').min = today();
+  function codeHint() {
+    const days = Number($('#cDur').value) * Number($('#cUnit').value), uses = Number($('#cUses').value) || 0;
+    $('#codeHint').textContent = codeMode === 'custom'
+      ? 'โค้ด 1 อัน · ใช้ได้ ' + uses + ' คน (คนละ 1 ครั้ง) · ได้ Pro ' + daysText(days || 0) + ($('#cExp').value ? ' · ใช้ได้ถึง ' + thD($('#cExp').value) : ' · ไม่หมดอายุ')
+      : 'สุ่ม ' + ($('#cQty').value || 0) + ' โค้ด · แต่ละโค้ดใช้ได้ ' + uses + ' คน · ได้ Pro ' + daysText(days || 0) + ($('#cExp').value ? ' · ใช้ได้ถึง ' + thD($('#cExp').value) : '');
+  }
+  $$('#codeMode button').forEach((b) => b.addEventListener('click', () => {
+    codeMode = b.dataset.m; $$('#codeMode button').forEach((x) => x.classList.toggle('on', x === b));
+    $('#fCustom').hidden = codeMode !== 'custom'; $('#fQty').hidden = $('#fPrefix').hidden = codeMode === 'custom';
+    $('#cUses').value = codeMode === 'custom' ? 100 : 1; codeHint();
+  }));
+  $$('#s-codes input, #s-codes select').forEach((x) => x.addEventListener('input', codeHint)); codeHint();
+  $('#cCreate').addEventListener('click', (e) => act(e.target, async () => {
+    const a = { days: Number($('#cDur').value) * Number($('#cUnit').value), maxUses: Number($('#cUses').value), expires: $('#cExp').value, note: $('#cNote').value };
+    if (codeMode === 'custom') { a.code = $('#cCode').value.trim(); if (!a.code) throw new Error('ใส่ชื่อโค้ดก่อนนะคะ'); } else { a.qty = Number($('#cQty').value); a.prefix = $('#cPrefix').value.trim(); }
+    const r = await api('codeCreate', a);
+    const list = r.codes.join('\n');
+    $('#cResult').hidden = false;
+    $('#cResult').innerHTML = '<div class="row"><b>✅ สร้าง ' + r.codes.length + ' โค้ดแล้ว</b><span class="grow"></span><button class="btn sm" id="cCopy">คัดลอกทั้งหมด</button>' +
+      (r.codes.length > 1 ? '<button class="btn sm" id="cDl">⬇ CSV</button>' : '') + '</div><pre class="mono">' + esc(list) + '</pre>' +
+      '<p class="hint">ข้อความสำหรับแจก: "พิมพ์ <b>โค้ด ' + esc(r.codes[0]) + '</b> ในแชท LINE น้องออมสิน รับ Pro ฟรี ' + daysText(r.days) + '"</p>';
+    $('#cCopy').addEventListener('click', () => copy(list));
+    $('#cDl')?.addEventListener('click', () => csv('codes_' + (r.batch || 'new'), [['โค้ด', 'Pro (วัน)', 'ใช้ได้ (คน)', 'หมดอายุ'], ...r.codes.map((c) => [c, r.days, r.maxUses, r.expires])]));
+    $('#cCode').value = ''; toast('สร้างโค้ดแล้ว'); await loadCodes();
+  }));
+  const stateChip = { 'ใช้ได้': 'g', 'ใช้ครบแล้ว': 'b', 'หมดอายุ': 'y', 'ปิดแล้ว': 'r' };
+  async function loadCodes() { codes = (await api('codes')).codes; loaded.codes = true; renderCodes(); }
+  function renderCodes() {
+    const q = $('#codeQ').value.trim().toUpperCase(), f = $('#codeF').value;
+    const rows = codes.filter((c) => (!f || c.state === f) && (!q || (c.code + ' ' + c.note + ' ' + c.batch).toUpperCase().includes(q)));
+    $('#codeRows').innerHTML = rows.map((c) => '<tr><td><span class="mono">' + esc(c.code) + '</span>' + (c.batch ? '<small style="display:block;color:var(--dim);font-size:11.5px">ชุด ' + esc(c.batch) + '</small>' : '') + '</td>' +
+      '<td>' + daysText(c.days) + '</td><td style="min-width:90px">' + c.used + ' / ' + c.maxUses + '<div class="prog"><i style="width:' + Math.min(100, c.used / c.maxUses * 100) + '%"></i></div></td>' +
+      '<td>' + (c.expires ? thD(c.expires) : 'ไม่มี') + '</td><td><span class="chip ' + stateChip[c.state] + '">' + c.state + '</span></td><td class="hide-m" style="color:var(--sub)">' + esc(c.note) + '</td>' +
+      '<td><div class="row" style="flex-wrap:nowrap;gap:6px;justify-content:flex-end"><button class="btn sm" data-copy="' + esc(c.code) + '">คัดลอก</button>' +
+      '<button class="btn sm" data-who="' + esc(c.code) + '"' + (c.used ? '' : ' disabled') + '>ใครใช้</button>' +
+      '<button class="btn sm ' + (c.status === 'active' ? 'bad' : 'ok') + '" data-tog="' + esc(c.code) + '" data-on="' + (c.status === 'active' ? 0 : 1) + '">' + (c.status === 'active' ? 'ปิด' : 'เปิด') + '</button></div></td></tr>').join('') ||
+      '<tr><td colspan="7" class="empty">ยังไม่มีโค้ด</td></tr>';
+  }
+  $('#codeQ').addEventListener('input', renderCodes); $('#codeF').addEventListener('change', renderCodes);
+  $('#codeRows').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.copy) return copy(b.dataset.copy);
+    if (b.dataset.tog) return act(b, async () => { await api('codeStatus', { code: b.dataset.tog, active: b.dataset.on === '1' }); toast(b.dataset.on === '1' ? 'เปิดโค้ดแล้ว' : 'ปิดโค้ดแล้ว'); await loadCodes(); });
+    if (b.dataset.who) return act(b, async () => {
+      const list = await api('redemptions', { code: b.dataset.who });
+      modal('<h3>🎟️ ' + esc(b.dataset.who) + ' · ใช้ไป ' + list.length + ' คน</h3><table class="tbl"><thead><tr><th>สมาชิก</th><th>ใช้เมื่อ</th><th>Pro ถึง</th></tr></thead><tbody>' +
+        (list.map((r) => '<tr><td>' + esc(r.name) + '</td><td>' + thDT(r.at) + '</td><td>' + thD(r.until) + '</td></tr>').join('') || '<tr><td colspan="3" class="empty">ยังไม่มีคนใช้</td></tr>') +
+        '</tbody></table><div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn" data-close>ปิด</button></div>');
+    });
+  });
+  $('#codesCsv').addEventListener('click', () => csv('codes', [['โค้ด', 'Pro (วัน)', 'ใช้แล้ว', 'ใช้ได้ (คน)', 'หมดอายุ', 'สถานะ', 'หมายเหตุ', 'ชุด'], ...codes.map((c) => [c.code, c.days, c.used, c.maxUses, c.expires, c.state, c.note, c.batch])]));
+
+  /* ---------- แคมเปญ & โปรฟรี ---------- */
+  let bill = null;
+  $('#kStart').value = today(); $('#kEnd').value = addD(today(), 7);
+  async function loadBilling() { bill = await api('billing'); loaded.billing = true; renderBilling(); }
+  function renderBilling() {
+    const b = bill;
+    $('#fpOn').checked = b.freePro.on; $('#fpUntil').value = b.freePro.until || ''; $('#fpNote').value = b.freePro.note || '';
+    $('#fpState').textContent = b.freeProActive ? '🟢 ผู้ใช้ทุกคนได้ Pro ฟรีอยู่ตอนนี้' : b.freePro.on ? '⏰ ตั้งเปิดไว้แต่หมดเวลาแล้ว' : '⚪ ปิดอยู่ ผู้ใช้ต้องจ่ายหรือใช้โค้ด';
+    const pl = (c, label) => { const p = b.current[c]; return '<div class="row" style="margin-bottom:12px"><span style="width:70px;color:var(--sub)">' + label + '</span><b style="font-family:var(--head);font-size:22px">' + money(p.price) + '</b>' +
+      (p.campaign ? '<s style="color:var(--dim)">' + money(p.base) + '</s><span class="chip y">' + esc(p.campaign.name) + ' −' + p.campaign.percent + '%</span>' : '<span class="chip">ราคาปกติ</span>') + '</div>'; };
+    $('#priceNow').innerHTML = pl('monthly', 'รายเดือน') + pl('yearly', 'รายปี') + '<p class="hint">รายปีปกติประหยัด ' + money(b.yearlySaving) + ' เทียบกับจ่ายรายเดือน 12 เดือน</p>';
+    const cyc = (x) => x.length > 1 ? 'ทั้งหมด' : x[0] === 'monthly' ? 'รายเดือน' : 'รายปี';
+    $('#campRows').innerHTML = b.campaigns.slice().sort((a, z) => z.start.localeCompare(a.start)).map((c) => '<tr><td>' + esc(c.name) + '</td><td>−' + c.percent + '%</td><td>' + cyc(c.cycles) + '</td><td>' + thD(c.start) + ' – ' + thD(c.end) + '</td>' +
+      '<td><span class="chip ' + (c.live ? 'g' : c.expired ? '' : 'y') + '">' + (c.live ? 'ใช้งานอยู่' : c.expired ? 'จบแล้ว' : 'รอเริ่ม') + '</span></td><td style="text-align:right"><button class="btn sm bad" data-del="' + esc(c.id) + '">ลบ</button></td></tr>').join('') ||
+      '<tr><td colspan="6" class="empty">ยังไม่มีแคมเปญ</td></tr>';
+    kPreview();
+  }
+  function kPreview() {
+    if (!bill) return;
+    const pct = Number($('#kPct').value) || 0, c = $('#kCyc').value;
+    const f = (k) => bill.prices[k].label + ' ' + money(bill.prices[k].price) + ' → ' + money(Math.max(1, Math.round(bill.prices[k].price * (100 - pct) / 100)));
+    $('#kPreview').textContent = 'ตัวอย่างราคา: ' + (c === 'all' ? f('monthly') + ' · ' + f('yearly') : f(c));
+  }
+  ['#kPct', '#kCyc'].forEach((s) => $(s).addEventListener('input', kPreview));
+  $('#fpSave').addEventListener('click', (e) => act(e.target, async () => { bill = await api('freePro', { on: $('#fpOn').checked, until: $('#fpUntil').value, note: $('#fpNote').value }); renderBilling(); toast('บันทึกแล้ว'); loaded.overview = false; }));
+  $('#kAdd').addEventListener('click', (e) => act(e.target, async () => {
+    bill = await api('campaignAdd', { name: $('#kName').value.trim(), percent: Number($('#kPct').value), start: $('#kStart').value, end: $('#kEnd').value, cycles: $('#kCyc').value });
+    $('#kName').value = ''; renderBilling(); toast('เพิ่มแคมเปญแล้ว');
+  }));
+  $('#campRows').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b && confirm('ลบแคมเปญนี้?')) act(b, async () => { bill = await api('campaignDelete', { id: b.dataset.del }); renderBilling(); toast('ลบแล้ว'); }); });
+
+  /* ---------- การชำระเงิน ---------- */
+  let pays = null;
+  const CYC = { monthly: 'รายเดือน', yearly: 'รายปี', days: 'เพิ่มวัน' };
+  async function loadPayments() { pays = await api('payments'); loaded.payments = true; renderPayments(); }
+  function renderPayments() {
+    const pend = pays.reviews.filter((r) => r.status === 'pending');
+    const b = $('#revBadge'); b.hidden = !pend.length; b.textContent = pend.length;
+    $('#reviews').innerHTML = pend.map((r) => '<div class="review"><div><b>' + esc(r.name || 'ไม่ทราบชื่อ') + '</b> · Pro ' + (CYC[r.cycle] || r.cycle) + ' ' + money(r.amount) +
+      '<div style="color:var(--amber);font-size:13.5px">⚠️ ' + esc(r.reason) + '</div><div style="color:var(--dim);font-size:12.5px">' + thDT(r.at) + ' · ' + esc(r.orderId) + '</div></div>' +
+      '<div class="acts">' + (r.link ? '<a class="btn sm" href="' + esc(r.link) + '" target="_blank" rel="noopener">ดูสลิป</a>' : '') +
+      '<button class="btn sm ok" data-ok="' + esc(r.orderId) + '" data-u="' + esc(r.userId) + '" data-c="' + esc(r.cycle) + '">✅ อนุมัติ</button><button class="btn sm bad" data-no="' + esc(r.orderId) + '">ปฏิเสธ</button></div></div>').join('') ||
+      '<div class="empty">🎉 ไม่มีสลิปค้างตรวจ</div>';
+    $('#payRows').innerHTML = pays.payments.map((p) => '<tr><td>' + thDT(p.at) + '</td><td>' + esc(p.name) + '</td><td>' + (CYC[p.cycle] || p.cycle) + '</td><td class="num">' + money(p.amount) + '</td>' +
+      '<td><span class="chip ' + (p.by === 'auto' ? 'g' : 'b') + '">' + (p.by === 'auto' ? 'อัตโนมัติ' : 'แอดมิน') + '</span></td><td class="hide-m mono" style="color:var(--dim)">' + esc(p.ref) + '</td></tr>').join('') ||
+      '<tr><td colspan="6" class="empty">ยังไม่มีการชำระ</td></tr>';
+  }
+  $('#reviews').addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.ok) return act(b, async () => { await api('reviewApprove', { orderId: b.dataset.ok, userId: b.dataset.u, cycle: b.dataset.c }); toast('เปิด Pro และแจ้งผู้ใช้แล้ว'); loaded.overview = false; await loadPayments(); });
+    if (b.dataset.no) {
+      modal('<h3>ปฏิเสธสลิป</h3><label>เหตุผล (ส่งให้ผู้ใช้ทาง LINE)</label><textarea id="rjReason" rows="3">ยอดโอนไม่ครบ หรือไม่พบรายการโอน</textarea>' +
+        '<div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn" data-close>ยกเลิก</button><button class="btn bad" id="rjGo">ปฏิเสธและแจ้งผู้ใช้</button></div>');
+      $('#rjGo').addEventListener('click', (ev) => act(ev.target, async () => { await api('reviewReject', { orderId: b.dataset.no, reason: $('#rjReason').value }); closeModal(); toast('แจ้งผู้ใช้แล้ว'); await loadPayments(); }));
+    }
+  });
+  $('#payCsv').addEventListener('click', () => pays && csv('payments', [['เวลา', 'OrderID', 'สมาชิก', 'รอบ', 'ยอด', 'ตรวจโดย', 'เลขอ้างอิง'], ...pays.payments.map((p) => [p.at, p.orderId, p.name, p.cycle, p.amount, p.by, p.ref])]));
+
+  /* ---------- สมาชิก ---------- */
+  let mems = [];
+  const STATUS = { active: ['ใช้งาน', 'g'], pending: ['รออนุมัติ', 'y'], blocked: ['ระงับ', 'r'], registering: ['กำลังสมัคร', ''] };
+  async function loadMembers() { mems = await api('members'); loaded.members = true; renderMembers(); }
+  function planChip(m) {
+    if (m.plan.source === 'paid') return '<span class="chip b">💎 Pro ถึง ' + thD(m.plan.until) + '</span>';
+    if (m.plan.source === 'promo') return '<span class="chip g">🎁 Pro ฟรี</span>' + (m.paidUntil && m.paidUntil < today() ? '' : '');
+    return '<span class="chip">Free</span>';
+  }
+  function renderMembers() {
+    const q = $('#memQ').value.trim().toLowerCase(), f = $('#memF').value;
+    const rows = mems.filter((m) => (!q || (m.name + ' ' + m.lineName + ' ' + m.userId).toLowerCase().includes(q)) &&
+      (!f || (f === 'blocked' || f === 'pending' ? m.status === f : m.plan.source === f)));
+    $('#memCount').textContent = 'ทั้งหมด ' + mems.length + ' คน · แสดง ' + rows.length;
+    $('#memRows').innerHTML = rows.slice(0, 300).map((m) => '<tr><td><div class="who">' + (m.picture ? '<img src="' + esc(m.picture) + '" alt="" loading="lazy">' : '<span class="av">' + esc((m.name || '?').slice(0, 1)) + '</span>') +
+      '<div>' + esc(m.name || m.lineName || '-') + (m.role === 'admin' ? ' <span class="chip b">แอดมิน</span>' : '') + '<small>' + esc(m.lineName && m.lineName !== m.name ? m.lineName : m.userId.slice(0, 12) + '…') + '</small></div></div></td>' +
+      '<td><span class="chip ' + (STATUS[m.status] || ['', ''])[1] + '">' + (STATUS[m.status] || [m.status])[0] + '</span></td><td>' + planChip(m) + '</td>' +
+      '<td class="hide-m">' + thD(m.joinedAt && new Date(new Date(m.joinedAt).getTime() + 7 * 3600e3).toISOString()) + '</td><td class="hide-m">' + (m.lastUsed ? thDT(m.lastUsed) : '–') + '</td>' +
+      '<td style="text-align:right"><button class="btn sm" data-m="' + esc(m.userId) + '">จัดการ</button></td></tr>').join('') ||
+      '<tr><td colspan="6" class="empty">ไม่พบสมาชิก</td></tr>';
+  }
+  $('#memQ').addEventListener('input', renderMembers); $('#memF').addEventListener('change', renderMembers);
+  $('#memRows').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    const m = mems.find((x) => x.userId === b.dataset.m);
+    modal('<h3>' + esc(m.name || m.lineName) + '</h3><p class="hint" style="margin:-6px 0 16px">' + esc(m.userId) + ' <button class="btn sm" id="mCopy">คัดลอก</button></p>' +
+      '<div class="card" style="padding:16px"><b>💎 แพ็กเกจ</b><div style="margin:8px 0 12px">' + planChip(m) + (m.paidUntil ? ' <span class="hint">จ่ายถึง ' + thD(m.paidUntil) + '</span>' : '') + '</div>' +
+      '<div class="row"><input id="mDays" type="number" min="1" value="30" style="width:90px"><span>วัน</span><button class="btn sm ok" data-a="grant">+ เพิ่ม Pro</button></div>' +
+      '<div class="row" style="margin-top:10px"><input id="mUntil" type="date" style="width:170px" value="' + (m.paidUntil || addD(today(), 30)) + '"><button class="btn sm" data-a="setUntil">ตั้งวันหมด Pro</button>' +
+      (m.paidUntil ? '<button class="btn sm bad" data-a="removePro">ยกเลิก Pro</button>' : '') + '</div></div>' +
+      '<div class="row">' + (m.status === 'pending' ? '<button class="btn ok" data-a="approve">อนุมัติสมาชิก</button>' : '') +
+      (m.status === 'blocked' ? '<button class="btn ok" data-a="unblock">ปลดระงับ</button>' : m.role !== 'admin' ? '<button class="btn bad" data-a="block">ระงับการใช้งาน</button>' : '') +
+      '<span class="grow"></span><button class="btn" data-close>ปิด</button></div>');
+    $('#mCopy').addEventListener('click', () => copy(m.userId));
+    $$('#modalBox [data-a]').forEach((x) => x.addEventListener('click', () => {
+      const a = x.dataset.a;
+      if ((a === 'block' || a === 'removePro') && !confirm(a === 'block' ? 'ระงับการใช้งานสมาชิกนี้?' : 'ยกเลิก Pro ของสมาชิกนี้?')) return;
+      act(x, async () => { await api('memberAction', { userId: m.userId, action: a, days: Number($('#mDays').value), until: $('#mUntil').value }); closeModal(); toast('บันทึกแล้ว'); await loadMembers(); });
+    }));
+  });
+  $('#memCsv').addEventListener('click', () => csv('members', [['ชื่อ', 'ชื่อ LINE', 'userId', 'สถานะ', 'แพ็กเกจ', 'Pro ถึง', 'สมัครเมื่อ', 'ใช้ล่าสุด'], ...mems.map((m) => [m.name, m.lineName, m.userId, m.status, m.plan.source, m.plan.until, m.joinedAt, m.lastUsed])]));
+
+  /* ---------- โหมดตัวอย่าง (localhost?preview) ---------- */
+  function mockApi(action, a) {
+    const t = today(), U = (c) => 'U' + c.repeat(32);
+    const M = window.__mock || (window.__mock = {
+      codes: [{ code: 'NAOMSIN2026', days: 90, maxUses: 100, used: 37, expires: addD(t, 60), status: 'active', note: 'เปิดตัว', batch: '' },
+        { code: 'KOL-7HKP2D', days: 30, maxUses: 1, used: 1, expires: addD(t, 20), status: 'active', note: 'อินฟลู', batch: 'B3F9A1' },
+        { code: 'KOL-Q8WZ4M', days: 30, maxUses: 1, used: 0, expires: addD(t, 20), status: 'active', note: 'อินฟลู', batch: 'B3F9A1' },
+        { code: 'SONGKRAN', days: 30, maxUses: 500, used: 212, expires: addD(t, -3), status: 'active', note: 'สงกรานต์', batch: '' }],
+      bill: { prices: { monthly: { price: 35, label: 'รายเดือน' }, yearly: { price: 299, label: 'รายปี' } }, yearlySaving: 121, freePro: { on: true, until: addD(t, 14), note: 'ช่วงทดสอบระบบ' }, freeProActive: true,
+        campaigns: [{ id: 'a1b2', name: '11.11 ลดแรง', percent: 50, start: addD(t, 40), end: addD(t, 42), cycles: ['yearly'], live: false, expired: false }],
+        current: { monthly: { base: 35, price: 35, campaign: null }, yearly: { base: 299, price: 299, campaign: null } } },
+      reviews: [{ at: new Date().toISOString(), orderId: 'a8f3k2', cycle: 'yearly', amount: 299, reason: 'ยอดในสลิป ฿290 น้อยกว่ายอดที่ต้องชำระ ฿299', link: '#', status: 'pending', userId: U('a'), name: 'มิ้นท์' }],
+      payments: [{ at: new Date().toISOString(), orderId: 'x1', name: 'ฝน', cycle: 'yearly', amount: 299, ref: '016268123456ATF01', by: 'auto' },
+        { at: new Date(Date.now() - 864e5).toISOString(), orderId: 'x2', name: 'บีม', cycle: 'monthly', amount: 35, ref: '016267998877ATF02', by: 'auto' }],
+      members: [['มิ้นท์', 'mint 🌸', 'a', 'active', 'promo'], ['บีม', 'Beam', 'b', 'active', 'paid'], ['ฝน', 'Fon', 'c', 'active', 'paid'], ['ต้อม', 'Tom', 'd', 'pending', 'promo'], ['แป้ง', 'Pang', 'e', 'blocked', 'free']]
+        .map(([n, l, c, s, p], i) => ({ userId: U(c), name: n, lineName: l, picture: '', status: s, role: i === 0 ? 'admin' : 'member', joinedAt: new Date(Date.now() - i * 5e8).toISOString(), lastUsed: new Date(Date.now() - i * 4e7).toISOString(),
+          plan: { tier: p === 'free' ? 'free' : 'pro', source: p, until: p === 'paid' ? addD(t, 200 - i * 50) : '' }, paidUntil: p === 'paid' ? addD(t, 200 - i * 50) : '' })),
+    });
+    const stateOf = (c) => c.status !== 'active' ? 'ปิดแล้ว' : c.expires && c.expires < t ? 'หมดอายุ' : c.used >= c.maxUses ? 'ใช้ครบแล้ว' : 'ใช้ได้';
+    const sleep = (v) => new Promise((r) => setTimeout(() => r(v), 250));
+    switch (action) {
+      case 'overview': return sleep({ members: { total: 1284, byStatus: { active: 1240, pending: 12, blocked: 4, registering: 28 }, newThisMonth: 186, activeToday: 402 },
+        pro: { paidActive: 64, freePro: M.bill.freePro.on ? M.bill.freePro : null }, sales: { thisMonth: { amount: 4830, count: 52 },
+          months: [0, 1, 2, 3, 4, 5].map((i) => ({ month: addD(t, -150 + i * 30).slice(0, 7), amount: [0, 420, 1250, 2310, 3620, 4830][i], count: 0 })) },
+        codes: { active: M.codes.filter((c) => stateOf(c) === 'ใช้ได้').length, redeemedThisMonth: 38 }, reviewsPending: M.reviews.filter((r) => r.status === 'pending').length,
+        ai: { month: { calls: 18420, tokens: 41200000, cost: 6.84 }, budgetUsd: 10, usdThb: 36 }, config: { plansEnabled: true, promptpay: '089-xxx-8386', easyslip: true } });
+      case 'codes': return sleep({ codes: M.codes.map((c) => ({ ...c, state: stateOf(c) })) });
+      case 'codeCreate': {
+        const n = a.code ? 1 : a.qty || 1, out = [];
+        for (let i = 0; i < n; i++) out.push(a.code ? a.code.toUpperCase() : (a.prefix ? a.prefix.toUpperCase() + '-' : '') + Math.random().toString(36).slice(2, 8).toUpperCase());
+        const batch = n > 1 ? 'B' + Math.random().toString(16).slice(2, 8).toUpperCase() : '';
+        out.forEach((c) => M.codes.unshift({ code: c, days: a.days, maxUses: a.maxUses, used: 0, expires: a.expires, status: 'active', note: a.note, batch }));
+        return sleep({ codes: out, days: a.days, maxUses: a.maxUses, expires: a.expires, batch });
+      }
+      case 'codeStatus': M.codes.find((c) => c.code === a.code).status = a.active ? 'active' : 'disabled'; return sleep({ ok: true });
+      case 'redemptions': return sleep([{ at: new Date().toISOString(), code: a.code, name: 'ฝน', until: addD(t, 90) }, { at: new Date(Date.now() - 3e8).toISOString(), code: a.code, name: 'บีม', until: addD(t, 86) }]);
+      case 'billing': return sleep(M.bill);
+      case 'freePro': M.bill.freePro = { on: a.on, until: a.until, note: a.note }; M.bill.freeProActive = a.on && (!a.until || a.until >= t); return sleep(M.bill);
+      case 'campaignAdd': {
+        if (!a.name || !(a.percent > 0 && a.percent < 100)) throw new Error('ข้อมูลแคมเปญไม่ถูกต้อง');
+        const c = { id: Math.random().toString(16).slice(2, 6), name: a.name, percent: a.percent, start: a.start, end: a.end, cycles: a.cycles === 'all' ? ['monthly', 'yearly'] : [a.cycles] };
+        c.live = c.start <= t && t <= c.end; M.bill.campaigns.push(c);
+        if (c.live) c.cycles.forEach((k) => { M.bill.current[k] = { base: M.bill.prices[k].price, price: Math.round(M.bill.prices[k].price * (100 - c.percent) / 100), campaign: c }; });
+        return sleep(M.bill);
+      }
+      case 'campaignDelete': M.bill.campaigns = M.bill.campaigns.filter((c) => c.id !== a.id); return sleep(M.bill);
+      case 'payments': return sleep({ payments: M.payments, reviews: M.reviews });
+      case 'reviewApprove': M.reviews.find((r) => r.orderId === a.orderId).status = 'approved'; return sleep({ ok: true });
+      case 'reviewReject': M.reviews.find((r) => r.orderId === a.orderId).status = 'rejected'; return sleep(true);
+      case 'members': return sleep(M.members);
+      case 'memberAction': return sleep({ ok: true });
+    }
+    throw new Error('mock: ' + action);
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>
