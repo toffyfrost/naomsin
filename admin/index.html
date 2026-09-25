@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <style>
   :root { --bg:#050A18; --bg2:#0A1430; --panel:rgba(255,255,255,.04); --panel2:rgba(255,255,255,.07); --stroke:rgba(255,255,255,.09);
           --ink:#EAF1FF; --sub:#94A6C6; --dim:#5C6F92; --blue:#1C7ED6; --blue2:#4DABF7; --sky:#A5D8FF; --mint:#63E6BE; --green:#06C755;
@@ -102,6 +103,57 @@
   .switch input:checked + span::before { transform:translateX(20px); }
   .sec { display:none; } .sec.on { display:block; }
   [hidden] { display:none !important; }
+
+  /* ปุ่มระหว่างทำงาน */
+  .btn.busy { position:relative; color:transparent !important; pointer-events:none; }
+  .btn.busy::after { content:""; position:absolute; width:15px; height:15px; border-radius:50%; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; animation:sp .8s linear infinite; }
+  .btn.busy .lbl-busy { position:absolute; left:0; right:0; color:var(--sub); font-size:12px; bottom:-18px; white-space:nowrap; }
+
+  /* toaster แบบ Sonner */
+  .toaster { position:fixed; right:20px; bottom:20px; z-index:9999; display:flex; flex-direction:column-reverse; gap:8px; width:min(360px,calc(100vw - 32px)); pointer-events:none; }
+  .tst { pointer-events:auto; display:flex; align-items:flex-start; gap:10px; padding:12px 14px; border-radius:14px; background:#0E1836; border:1px solid var(--stroke);
+         box-shadow:0 18px 40px -12px rgba(0,0,0,.7); font-size:14px; animation:tin .35s cubic-bezier(.2,.9,.3,1.2); transition:opacity .25s, transform .25s; }
+  .tst.out { opacity:0; transform:translateX(24px); }
+  .tst .ti { width:20px; height:20px; flex:0 0 20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; margin-top:1px; }
+  .tst.loading .ti { border:2px solid var(--stroke); border-top-color:var(--blue2); animation:sp .8s linear infinite; }
+  .tst.success .ti { background:var(--green); color:#fff; } .tst.success { border-color:rgba(99,230,190,.35); }
+  .tst.error .ti { background:var(--red); color:#1a0505; } .tst.error { border-color:rgba(255,135,135,.45); }
+  .tst b { display:block; font-weight:600; } .tst small { color:var(--sub); }
+  @keyframes tin { from { opacity:0; transform:translateY(16px) scale(.96); } }
+  @media (max-width:760px) { .toaster { right:16px; left:16px; bottom:84px; width:auto; } }
+
+  /* SweetAlert2 ธีมเข้ม */
+  .swal2-popup.nx { background:#0B1330; color:var(--ink); border:1px solid var(--stroke); border-radius:22px; font-family:'Noto Sans Thai',sans-serif; }
+  .swal2-popup.nx .swal2-title { color:var(--ink); font-family:var(--head); font-size:21px; }
+  .swal2-popup.nx .swal2-html-container { color:var(--sub); font-size:15px; }
+  .swal2-popup.nx .swal2-input, .swal2-popup.nx .swal2-textarea { background:rgba(0,0,0,.3); color:var(--ink); border:1px solid var(--stroke); border-radius:12px; box-shadow:none; font-size:15px; }
+  .swal2-popup.nx .swal2-validation-message { background:rgba(255,135,135,.12); color:var(--red); }
+  .swal2-popup.nx .swal2-actions .swal2-styled { border-radius:12px; font-weight:600; padding:10px 20px; }
+  .swal2-popup.nx .swal2-confirm { background:linear-gradient(135deg,var(--blue),var(--blue2)); }
+  .swal2-popup.nx .swal2-confirm.danger { background:#E03131; }
+  .swal2-popup.nx .swal2-cancel { background:var(--panel2); color:var(--ink); }
+  .swal2-container.swal2-backdrop-show { background:rgba(3,6,15,.72); backdrop-filter:blur(4px); }
+
+  /* ลิ้นชักจัดการสมาชิก */
+  .drawer-bg { position:fixed; inset:0; z-index:70; background:rgba(3,6,15,.6); backdrop-filter:blur(3px); opacity:0; pointer-events:none; transition:.25s; }
+  .drawer { position:fixed; top:0; right:0; bottom:0; z-index:71; width:min(560px,100vw); background:#0A1230; border-left:1px solid var(--stroke); transform:translateX(100%); transition:transform .3s cubic-bezier(.2,.8,.2,1); display:flex; flex-direction:column; }
+  body.dr-open .drawer { transform:none; } body.dr-open .drawer-bg { opacity:1; pointer-events:auto; } body.dr-open { overflow:hidden; }
+  .dr-head { display:flex; align-items:center; gap:14px; padding:20px 22px; border-bottom:1px solid var(--stroke); }
+  .dr-head img, .dr-head .av { width:54px; height:54px; border-radius:50%; flex:0 0 54px; object-fit:cover; background:var(--panel2); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .dr-head h2 { font-size:20px; } .dr-head small { color:var(--sub); }
+  .dr-x { margin-left:auto; width:38px; height:38px; border-radius:50%; border:1px solid var(--stroke); background:var(--panel); color:var(--sub); cursor:pointer; font-size:16px; }
+  .dr-body { flex:1; overflow-y:auto; padding:18px 22px 40px; }
+  .dsec { border:1px solid var(--stroke); border-radius:18px; padding:16px; margin-bottom:14px; background:var(--panel); }
+  .dsec h4 { margin:0 0 12px; font-family:var(--head); font-size:15px; display:flex; align-items:center; gap:8px; }
+  .dsec.danger { border-color:rgba(255,135,135,.3); background:rgba(255,135,135,.05); }
+  .kv2 { display:grid; grid-template-columns:120px 1fr; gap:6px 12px; font-size:14px; }
+  .kv2 span { color:var(--dim); } .kv2 b { font-weight:500; word-break:break-all; }
+  .acts2 { display:flex; flex-wrap:wrap; gap:8px; }
+  .ubar { margin:8px 0; font-size:13px; } .ubar .prog { height:7px; margin-top:4px; }
+  .skel { height:14px; border-radius:7px; background:linear-gradient(90deg,var(--panel),var(--panel2),var(--panel)); background-size:200% 100%; animation:sk 1.2s infinite; margin:10px 0; }
+  @keyframes sk { to { background-position:-200% 0; } }
+  .cmdref { font-size:13.5px; } .cmdref code { background:rgba(0,0,0,.3); padding:1px 7px; border-radius:6px; color:var(--sky); font-size:13px; }
+  .cmdref td { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; }
 
   /* modal + toast */
   .modal { position:fixed; inset:0; z-index:50; background:rgba(3,6,15,.7); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -236,7 +288,7 @@
 
     <!-- สมาชิก -->
     <section class="sec" id="s-members">
-      <div class="top"><div><h1>สมาชิก</h1><p id="memCount"></p></div><button class="btn sm" id="memCsv">⬇ CSV</button></div>
+      <div class="top"><div><h1>สมาชิก</h1><p id="memCount"></p></div><div class="row"><button class="btn sm" id="cmdRef">📖 คำสั่งแอดมิน</button><button class="btn sm" data-reload>↻</button><button class="btn sm" id="memCsv">⬇ CSV</button></div></div>
       <div class="card">
         <div class="row" style="margin-bottom:12px"><input class="grow" id="memQ" placeholder="ค้นหาชื่อ หรือ userId">
           <select id="memF" style="width:auto"><option value="">ทั้งหมด</option><option value="paid">Pro (จ่ายเงิน)</option><option value="promo">Pro ฟรี</option><option value="free">Free</option><option value="blocked">ถูกระงับ</option><option value="pending">รออนุมัติ</option></select></div>
@@ -247,7 +299,9 @@
 </div>
 
 <div class="modal" id="modal" hidden><div class="box" id="modalBox"></div></div>
-<div class="toast" id="toast"></div>
+<div class="toaster" id="toaster" aria-live="polite"></div>
+<div class="drawer-bg" id="drBg"></div>
+<aside class="drawer" id="drawer" aria-label="จัดการสมาชิก"><div class="dr-head" id="drHead"></div><div class="dr-body" id="drBody"></div></aside>
 
 <script>
 // ===== ตั้งค่า =====
@@ -269,7 +323,40 @@ const CONFIG = {
   const PREVIEW = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).has('preview');
   let idToken = '';
 
-  function toast(msg, err) { const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = 'toast', 2600); }
+  /* ---------- toast แบบ Sonner ---------- */
+  const T = (() => {
+    let n = 0;
+    const box = () => $('#toaster');
+    function set(el, type, title, desc) {
+      el.className = 'tst ' + type;
+      el.innerHTML = '<span class="ti">' + (type === 'success' ? '✓' : type === 'error' ? '!' : '') + '</span><div><b>' + esc(title) + '</b>' + (desc ? '<small>' + esc(desc) + '</small>' : '') + '</div>';
+      clearTimeout(el._h);
+      if (type !== 'loading') el._h = setTimeout(() => dismiss(el.id), type === 'error' ? 5000 : 2800);
+    }
+    function show(type, title, desc) { const el = document.createElement('div'); el.id = 'tst' + (++n); box().appendChild(el); set(el, type, title, desc); while (box().children.length > 4) box().firstChild.remove(); return el.id; }
+    function update(id, type, title, desc) { const el = document.getElementById(id); if (el) set(el, type, title, desc); else show(type, title, desc); }
+    function dismiss(id) { const el = document.getElementById(id); if (!el) return; el.classList.add('out'); setTimeout(() => el.remove(), 250); }
+    return { loading: (t, d) => show('loading', t, d), success: (t, d) => show('success', t, d), error: (t, d) => show('error', t, d), update, dismiss };
+  })();
+  let activeToast = null;
+  /** toast(msg) ระหว่าง act() → เปลี่ยน toast "กำลังทำงาน" เป็นผลลัพธ์ */
+  function toast(msg, err) {
+    if (activeToast) { T.update(activeToast, err ? 'error' : 'success', msg); activeToast = null; return; }
+    err ? T.error(msg) : T.success(msg);
+  }
+
+  /* ---------- กล่องยืนยัน (SweetAlert2) ---------- */
+  const swalBase = { customClass: { popup: 'nx' }, buttonsStyling: true, reverseButtons: true, cancelButtonText: 'ยกเลิก', focusCancel: false };
+  async function ask(o) {
+    if (!window.Swal) { // ถ้าโหลด SweetAlert ไม่ได้ ใช้กล่องของเบราว์เซอร์แทน
+      if (o.input) { const v = prompt(o.title + (o.text ? '\n' + o.text : ''), o.inputValue || ''); return v === null ? null : v; }
+      return confirm(o.title + (o.text ? '\n' + o.text : '')) || null;
+    }
+    const r = await Swal.fire(Object.assign({}, swalBase, { showCancelButton: true, confirmButtonText: 'ยืนยัน' }, o,
+      { customClass: { popup: 'nx', confirmButton: o.danger ? 'danger' : '' } }));
+    if (!r.isConfirmed) return null;
+    return o.input ? r.value : true;
+  }
   function modal(html) { $('#modalBox').innerHTML = html; $('#modal').hidden = false; }
   const closeModal = () => { $('#modal').hidden = true; };
   $('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal' || e.target.closest('[data-close]')) closeModal(); });
@@ -292,9 +379,23 @@ const CONFIG = {
     }
     return j.data;
   }
-  async function act(btn, fn) {
-    const b = btn; if (b) b.disabled = true;
-    try { return await fn(); } catch (e) { if (!/^(AUTH|DENIED)/.test(e.message)) toast(e.message, true); } finally { if (b) b.disabled = false; }
+  /** ทำงานกับเซิร์ฟเวอร์: ล็อกปุ่ม + สปินเนอร์ + toast "กำลังทำงาน รอสักครู่…" → สำเร็จ/ผิดพลาด */
+  const running = new Set();
+  async function act(btn, fn, loadingText) {
+    if (btn && running.has(btn)) return;
+    if (btn) { running.add(btn); btn.disabled = true; btn.classList.add('busy'); btn.setAttribute('aria-busy', 'true'); }
+    const id = T.loading(loadingText || 'กำลังทำงาน รอสักครู่…');
+    activeToast = id;
+    try {
+      const r = await fn();
+      if (activeToast === id) { T.dismiss(id); activeToast = null; } // fn ไม่ได้แจ้งผลเอง → ปิด toast โหลด
+      return r;
+    } catch (e) {
+      activeToast = null;
+      if (/^(AUTH|DENIED)/.test(e.message)) T.dismiss(id); else T.update(id, 'error', 'ทำไม่สำเร็จ', e.message);
+    } finally {
+      if (btn) { running.delete(btn); btn.disabled = false; btn.classList.remove('busy'); btn.removeAttribute('aria-busy'); }
+    }
   }
 
   /* ---------- เข้าสู่ระบบ ---------- */
@@ -341,7 +442,7 @@ const CONFIG = {
     if (!loaded[s]) act(null, loaders[s]);
   }
   $$('#nav button').forEach((b) => b.addEventListener('click', () => show(b.dataset.s)));
-  $$('[data-reload]').forEach((b) => b.addEventListener('click', () => act(b, loaders[b.closest('.sec').id.slice(2)])));
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-reload]'); if (b) act(b, async () => { await loaders[b.closest('.sec').id.slice(2)](); toast('อัปเดตข้อมูลแล้ว'); }, 'กำลังโหลดข้อมูลล่าสุด…'); });
 
   /* ---------- ภาพรวม ---------- */
   async function loadOverview() {
@@ -414,7 +515,10 @@ const CONFIG = {
   $('#codeRows').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
     if (b.dataset.copy) return copy(b.dataset.copy);
-    if (b.dataset.tog) return act(b, async () => { await api('codeStatus', { code: b.dataset.tog, active: b.dataset.on === '1' }); toast(b.dataset.on === '1' ? 'เปิดโค้ดแล้ว' : 'ปิดโค้ดแล้ว'); await loadCodes(); });
+    if (b.dataset.tog) return (async () => {
+      if (b.dataset.on !== '1' && !(await ask({ title: 'ปิดโค้ด ' + b.dataset.tog + '?', text: 'ผู้ใช้จะใช้โค้ดนี้ไม่ได้ (คนที่ใช้ไปแล้วยังได้ Pro ตามเดิม)', icon: 'warning', confirmButtonText: 'ปิดโค้ด', danger: true }))) return;
+      act(b, async () => { await api('codeStatus', { code: b.dataset.tog, active: b.dataset.on === '1' }); toast(b.dataset.on === '1' ? 'เปิดโค้ดแล้ว' : 'ปิดโค้ดแล้ว'); await loadCodes(); });
+    })();
     if (b.dataset.who) return act(b, async () => {
       const list = await api('redemptions', { code: b.dataset.who });
       modal('<h3>🎟️ ' + esc(b.dataset.who) + ' · ใช้ไป ' + list.length + ' คน</h3><table class="tbl"><thead><tr><th>สมาชิก</th><th>ใช้เมื่อ</th><th>Pro ถึง</th></tr></thead><tbody>' +
@@ -457,7 +561,11 @@ const CONFIG = {
     bill = await api('campaignAdd', { name: $('#kName').value.trim(), percent: Number($('#kPct').value), start: $('#kStart').value, end: $('#kEnd').value, cycles: $('#kCyc').value });
     $('#kName').value = ''; renderBilling(); toast('เพิ่มแคมเปญแล้ว');
   }));
-  $('#campRows').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b && confirm('ลบแคมเปญนี้?')) act(b, async () => { bill = await api('campaignDelete', { id: b.dataset.del }); renderBilling(); toast('ลบแล้ว'); }); });
+  $('#campRows').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    if (!(await ask({ title: 'ลบแคมเปญนี้?', text: 'ราคาจะกลับเป็นปกติทันทีถ้าแคมเปญกำลังใช้งานอยู่', icon: 'warning', confirmButtonText: 'ลบแคมเปญ', danger: true }))) return;
+    act(b, async () => { bill = await api('campaignDelete', { id: b.dataset.del }); renderBilling(); toast('ลบแคมเปญแล้ว'); }, 'กำลังลบแคมเปญ…');
+  });
 
   /* ---------- การชำระเงิน ---------- */
   let pays = null;
@@ -477,12 +585,16 @@ const CONFIG = {
   }
   $('#reviews').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b) return;
-    if (b.dataset.ok) return act(b, async () => { await api('reviewApprove', { orderId: b.dataset.ok, userId: b.dataset.u, cycle: b.dataset.c }); toast('เปิด Pro และแจ้งผู้ใช้แล้ว'); loaded.overview = false; await loadPayments(); });
-    if (b.dataset.no) {
-      modal('<h3>ปฏิเสธสลิป</h3><label>เหตุผล (ส่งให้ผู้ใช้ทาง LINE)</label><textarea id="rjReason" rows="3">ยอดโอนไม่ครบ หรือไม่พบรายการโอน</textarea>' +
-        '<div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn" data-close>ยกเลิก</button><button class="btn bad" id="rjGo">ปฏิเสธและแจ้งผู้ใช้</button></div>');
-      $('#rjGo').addEventListener('click', (ev) => act(ev.target, async () => { await api('reviewReject', { orderId: b.dataset.no, reason: $('#rjReason').value }); closeModal(); toast('แจ้งผู้ใช้แล้ว'); await loadPayments(); }));
-    }
+    if (b.dataset.ok) return (async () => {
+      if (!(await ask({ title: 'อนุมัติสลิปนี้?', text: 'ระบบจะเปิด Pro และแจ้งผู้ใช้ทาง LINE ทันที', icon: 'question', confirmButtonText: 'อนุมัติ' }))) return;
+      act(b, async () => { await api('reviewApprove', { orderId: b.dataset.ok, userId: b.dataset.u, cycle: b.dataset.c }); toast('เปิด Pro และแจ้งผู้ใช้แล้ว'); loaded.overview = false; await loadPayments(); }, 'กำลังเปิด Pro…');
+    })();
+    if (b.dataset.no) return (async () => {
+      const reason = await ask({ title: 'ปฏิเสธสลิป', text: 'เหตุผลจะถูกส่งให้ผู้ใช้ทาง LINE', icon: 'warning', input: 'textarea', inputValue: 'ยอดโอนไม่ครบ หรือไม่พบรายการโอน',
+        confirmButtonText: 'ปฏิเสธและแจ้งผู้ใช้', danger: true, inputValidator: (v) => !v.trim() && 'ใส่เหตุผลก่อนนะคะ' });
+      if (reason == null) return;
+      act(b, async () => { await api('reviewReject', { orderId: b.dataset.no, reason }); toast('ปฏิเสธและแจ้งผู้ใช้แล้ว'); await loadPayments(); }, 'กำลังแจ้งผู้ใช้…');
+    })();
   });
   $('#payCsv').addEventListener('click', () => pays && csv('payments', [['เวลา', 'OrderID', 'สมาชิก', 'รอบ', 'ยอด', 'ตรวจโดย', 'เลขอ้างอิง'], ...pays.payments.map((p) => [p.at, p.orderId, p.name, p.cycle, p.amount, p.by, p.ref])]));
 
@@ -490,7 +602,7 @@ const CONFIG = {
   let mems = [];
   const STATUS = { active: ['ใช้งาน', 'g'], pending: ['รออนุมัติ', 'y'], blocked: ['ระงับ', 'r'], registering: ['กำลังสมัคร', ''] };
   async function loadMembers() { mems = await api('members'); loaded.members = true; renderMembers(); }
-  function planChip(m) {
+  function planChip(m) { // m.plan = { source, until }
     if (m.plan.source === 'paid') return '<span class="chip b">💎 Pro ถึง ' + thD(m.plan.until) + '</span>';
     if (m.plan.source === 'promo') return '<span class="chip g">🎁 Pro ฟรี</span>' + (m.paidUntil && m.paidUntil < today() ? '' : '');
     return '<span class="chip">Free</span>';
@@ -504,27 +616,114 @@ const CONFIG = {
       '<div>' + esc(m.name || m.lineName || '-') + (m.role === 'admin' ? ' <span class="chip b">แอดมิน</span>' : '') + '<small>' + esc(m.lineName && m.lineName !== m.name ? m.lineName : m.userId.slice(0, 12) + '…') + '</small></div></div></td>' +
       '<td><span class="chip ' + (STATUS[m.status] || ['', ''])[1] + '">' + (STATUS[m.status] || [m.status])[0] + '</span></td><td>' + planChip(m) + '</td>' +
       '<td class="hide-m">' + thD(m.joinedAt && new Date(new Date(m.joinedAt).getTime() + 7 * 3600e3).toISOString()) + '</td><td class="hide-m">' + (m.lastUsed ? thDT(m.lastUsed) : '–') + '</td>' +
-      '<td style="text-align:right"><button class="btn sm" data-m="' + esc(m.userId) + '">จัดการ</button></td></tr>').join('') ||
+      '<td style="text-align:right"><button class="btn sm pri" data-m="' + esc(m.userId) + '">จัดการ</button></td></tr>').join('') ||
       '<tr><td colspan="6" class="empty">ไม่พบสมาชิก</td></tr>';
   }
   $('#memQ').addEventListener('input', renderMembers); $('#memF').addEventListener('change', renderMembers);
-  $('#memRows').addEventListener('click', (e) => {
-    const b = e.target.closest('[data-m]'); if (!b) return;
-    const m = mems.find((x) => x.userId === b.dataset.m);
-    modal('<h3>' + esc(m.name || m.lineName) + '</h3><p class="hint" style="margin:-6px 0 16px">' + esc(m.userId) + ' <button class="btn sm" id="mCopy">คัดลอก</button></p>' +
-      '<div class="card" style="padding:16px"><b>💎 แพ็กเกจ</b><div style="margin:8px 0 12px">' + planChip(m) + (m.paidUntil ? ' <span class="hint">จ่ายถึง ' + thD(m.paidUntil) + '</span>' : '') + '</div>' +
-      '<div class="row"><input id="mDays" type="number" min="1" value="30" style="width:90px"><span>วัน</span><button class="btn sm ok" data-a="grant">+ เพิ่ม Pro</button></div>' +
-      '<div class="row" style="margin-top:10px"><input id="mUntil" type="date" style="width:170px" value="' + (m.paidUntil || addD(today(), 30)) + '"><button class="btn sm" data-a="setUntil">ตั้งวันหมด Pro</button>' +
-      (m.paidUntil ? '<button class="btn sm bad" data-a="removePro">ยกเลิก Pro</button>' : '') + '</div></div>' +
-      '<div class="row">' + (m.status === 'pending' ? '<button class="btn ok" data-a="approve">อนุมัติสมาชิก</button>' : '') +
-      (m.status === 'blocked' ? '<button class="btn ok" data-a="unblock">ปลดระงับ</button>' : m.role !== 'admin' ? '<button class="btn bad" data-a="block">ระงับการใช้งาน</button>' : '') +
-      '<span class="grow"></span><button class="btn" data-close>ปิด</button></div>');
-    $('#mCopy').addEventListener('click', () => copy(m.userId));
-    $$('#modalBox [data-a]').forEach((x) => x.addEventListener('click', () => {
-      const a = x.dataset.a;
-      if ((a === 'block' || a === 'removePro') && !confirm(a === 'block' ? 'ระงับการใช้งานสมาชิกนี้?' : 'ยกเลิก Pro ของสมาชิกนี้?')) return;
-      act(x, async () => { await api('memberAction', { userId: m.userId, action: a, days: Number($('#mDays').value), until: $('#mUntil').value }); closeModal(); toast('บันทึกแล้ว'); await loadMembers(); });
-    }));
+  /* ลิ้นชักจัดการสมาชิก: รวมคำสั่งแอดมินทุกอย่าง + เครื่องมือแก้ปัญหา */
+  let cur = null;
+  const openDrawer = () => document.body.classList.add('dr-open');
+  const closeDrawer = () => { document.body.classList.remove('dr-open'); cur = null; };
+  $('#drBg').addEventListener('click', closeDrawer);
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('dr-open') && !document.querySelector('.swal2-container')) closeDrawer(); });
+  $('#memRows').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) openMember(b.dataset.m, b); });
+
+  async function openMember(userId, btn) {
+    const m = mems.find((x) => x.userId === userId) || { userId, name: '' };
+    $('#drHead').innerHTML = (m.picture ? '<img src="' + esc(m.picture) + '" alt="">' : '<span class="av">' + esc((m.name || '?').slice(0, 1)) + '</span>') +
+      '<div><h2>' + esc(m.name || m.lineName || '...') + '</h2><small>กำลังโหลดข้อมูล…</small></div><button class="dr-x" aria-label="ปิด">✕</button>';
+    $('#drHead .dr-x').addEventListener('click', closeDrawer);
+    $('#drBody').innerHTML = '<div class="dsec"><div class="skel" style="width:60%"></div><div class="skel"></div><div class="skel" style="width:80%"></div></div><div class="dsec"><div class="skel"></div><div class="skel" style="width:50%"></div></div>';
+    openDrawer();
+    await act(btn, async () => { cur = await api('memberDetail', { userId }); renderDrawer(); }, 'กำลังโหลดข้อมูลสมาชิก…');
+  }
+
+  function renderDrawer() {
+    const d = cur; if (!d) return;
+    const st = STATUS[d.status] || [d.status, ''];
+    $('#drHead').innerHTML = (d.picture ? '<img src="' + esc(d.picture) + '" alt="">' : '<span class="av">' + esc((d.name || '?').slice(0, 1)) + '</span>') +
+      '<div><h2>' + esc(d.name || d.lineName) + '</h2><small>' + esc(d.lineName) + ' · <span class="chip ' + st[1] + '">' + st[0] + '</span>' + (d.role === 'admin' ? ' <span class="chip b">แอดมิน</span>' : '') + '</small></div><button class="dr-x" aria-label="ปิด">✕</button>';
+    $('#drHead .dr-x').addEventListener('click', closeDrawer);
+    const B = (a, label, cls) => '<button class="btn sm ' + (cls || '') + '" data-a="' + a + '">' + label + '</button>';
+    const pct = (u, l) => l ? Math.min(100, Math.round(u / l * 100)) : 0;
+    const ubar = (label, u, l) => '<div class="ubar">' + label + ' <span style="float:right;color:var(--sub)">' + (u.tokens / 1000).toFixed(1) + 'K' + (l ? ' / ' + (l / 1000).toFixed(0) + 'K' : ' · ไม่จำกัด') + '</span>' +
+      '<div class="prog"><i style="width:' + pct(u.tokens, l) + '%;background:' + (pct(u.tokens, l) >= 90 ? 'var(--red)' : pct(u.tokens, l) >= 70 ? 'var(--amber)' : 'var(--blue2)') + '"></i></div></div>';
+    const stuck = d.status !== 'active' && d.status !== 'blocked';
+    const hist = [...d.payments.map((x) => ({ at: x.at, t: '💳 ชำระ ' + (CYC[x.cycle] || x.cycle) + ' ' + money(x.amount) + ' · ' + (x.by === 'auto' ? 'อัตโนมัติ' : 'แอดมิน') })),
+      ...d.codes.map((x) => ({ at: x.at, t: '🎟️ ใช้โค้ด ' + x.code + ' → Pro ถึง ' + thD(x.until) }))].sort((a, z) => z.at.localeCompare(a.at));
+    $('#drBody').innerHTML =
+      (stuck ? '<div class="dsec" style="border-color:rgba(255,192,120,.4);background:rgba(255,192,120,.07)"><h4>⚠️ บัญชียังไม่พร้อมใช้งาน</h4><p class="hint" style="margin:0 0 10px">สถานะ "' + st[0] + '"' + (d.step ? ' · ค้างที่ขั้นตอน ' + esc(d.step) : '') + ' ผู้ใช้จะใช้บอทไม่ได้จนกว่าจะสมัครเสร็จ</p><div class="acts2">' +
+        B('activate', '✅ เปิดใช้งานทันที', 'ok') + B('restartReg', '↻ ส่งการ์ดสมัครใหม่') + (d.status === 'pending' ? B('approve', 'อนุมัติสมาชิก', 'ok') : '') + '</div></div>' : '') +
+      '<div class="dsec"><h4>👤 ข้อมูล</h4><div class="kv2">' +
+        '<span>ชื่อ</span><b>' + esc(d.name || '–') + ' <button class="btn sm" data-a="setName" style="padding:1px 8px">แก้</button></b>' +
+        '<span>ชื่อ LINE</span><b>' + esc(d.lineName || '–') + '</b><span>อีเมล</span><b>' + esc(d.email || '–') + '</b><span>เบอร์โทร</span><b>' + esc(d.phone || '–') + '</b>' +
+        '<span>userId</span><b class="mono" style="font-size:12px">' + esc(d.userId) + ' <button class="btn sm" data-copy="' + esc(d.userId) + '" style="padding:1px 8px">คัดลอก</button></b>' +
+        '<span>สมัครเมื่อ</span><b>' + thDT(d.joinedAt) + '</b><span>ใช้ล่าสุด</span><b>' + thDT(d.lastUsed) + '</b><span>ยอมรับเงื่อนไข</span><b>' + thDT(d.consentAt) + '</b></div></div>' +
+      '<div class="dsec"><h4>💎 แพ็กเกจ <span style="margin-left:auto">' + planChip(d) + '</span></h4>' + (d.paidUntil ? '<p class="hint" style="margin:-4px 0 10px">Pro ที่จ่าย/ได้จากโค้ด ถึง ' + thD(d.paidUntil) + '</p>' : '') +
+        '<div class="acts2">' + B('grant', '+ เพิ่มวัน Pro', 'ok') + B('setUntil', '📅 ตั้งวันหมด Pro') + B('redeem', '🎟️ ใช้โค้ดแทนผู้ใช้') + (d.paidUntil ? B('removePro', 'ยกเลิก Pro', 'bad') : '') + '</div></div>' +
+      '<div class="dsec"><h4>🤖 การใช้ AI <span class="chip" style="margin-left:auto">โควตา ×' + d.usage.mult + '</span></h4>' +
+        ubar('วันนี้', d.usage.day, d.usage.limits.day) + ubar('สัปดาห์นี้', d.usage.week, d.usage.limits.week) + ubar('เดือนนี้', d.usage.month, d.usage.limits.month) +
+        '<p class="hint">เดือนนี้เรียก AI ' + d.usage.month.calls + ' ครั้ง · ≈ $' + d.usage.month.cost.toFixed(3) + ' · ถ้าโควตาเต็ม ให้เพิ่ม Pro (โควตา ×3)</p></div>' +
+      '<div class="dsec"><h4>📒 สมุดบัญชี</h4><div class="kv2"><span>รายการทั้งหมด</span><b>' + d.ledger.txCount.toLocaleString() + ' รายการ</b><span>กระเป๋าเงิน</span><b>' + d.ledger.wallets + ' ใบ</b>' +
+        '<span>เป้าหมาย / ประจำ</span><b>' + d.ledger.goals + ' / ' + d.ledger.recurring + '</b><span>รอบงบ</span><b>วันที่ ' + d.ledger.cycleDay + '</b>' +
+        '<span>เตือนจด</span><b>' + (d.ledger.reminder.enabled ? 'เปิด ' + d.ledger.reminder.hour + ':00' : 'ปิด') + '</b><span>สถานะค้างในแชท</span><b>' + (d.pendingState ? '<span class="chip y">' + esc(d.pendingState) + '</span>' : 'ไม่มี') + '</b></div>' +
+        '<div class="acts2" style="margin-top:12px">' + B('toggleDaily', (d.daily ? '🔕 ปิด' : '🔔 เปิด') + 'สรุปรายวัน') + B('toggleMonthly', (d.monthly ? '🔕 ปิด' : '🔔 เปิด') + 'รายงานรายเดือน') + '</div></div>' +
+      '<div class="dsec"><h4>💬 ติดต่อผู้ใช้</h4><div class="acts2">' + B('message', '✉️ ส่งข้อความ', 'pri') + B('sendDashboard', '📊 ส่งลิงก์แดชบอร์ด') + B('sendHelp', '📚 ส่งวิธีใช้') + '</div></div>' +
+      '<div class="dsec"><h4>🛠️ แก้ปัญหา</h4><p class="hint" style="margin:-4px 0 10px">บอทไม่ตอบหรือค้างรอคำตอบ → ล้างสถานะค้าง · ชื่อ/รูปเก่า → อัปเดตโปรไฟล์ · สมัครไม่ผ่าน → เปิดใช้งานทันที</p><div class="acts2">' +
+        B('clearState', '🧹 ล้างสถานะค้าง') + B('refreshProfile', '🔄 อัปเดตโปรไฟล์ LINE') + (d.status !== 'active' ? B('activate', '✅ เปิดใช้งานทันที', 'ok') : '') + B('restartReg', '↻ ให้สมัครใหม่') + '</div></div>' +
+      '<div class="dsec"><h4>🧾 ประวัติ Pro</h4>' + (hist.map((h) => '<div style="font-size:13.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)">' + h.t + '<span style="float:right;color:var(--dim)">' + thDT(h.at) + '</span></div>').join('') || '<p class="hint" style="margin:0">ยังไม่มี</p>') + '</div>' +
+      (d.role !== 'admin' ? '<div class="dsec danger"><h4>⛔ โซนอันตราย</h4><div class="acts2">' +
+        (d.status === 'blocked' ? B('unblock', 'ปลดระงับ', 'ok') : B('block', 'ระงับการใช้งาน', 'bad')) + B('deleteAccount', '🗑️ ลบบัญชีและข้อมูลทั้งหมด', 'bad') + '</div></div>' : '');
+  }
+
+  // ค่าที่ต้องถามก่อนทำ (SweetAlert2) · คืน null = ยกเลิก
+  async function askFor(a, d) {
+    const nm = esc(d.name || d.lineName);
+    switch (a) {
+      case 'grant': { const v = await ask({ title: 'เพิ่มวัน Pro', html: 'ให้ <b>' + nm + '</b> ใช้ Pro เพิ่ม (ต่อจากวันหมดเดิม)', input: 'number', inputValue: 30, inputAttributes: { min: 1, max: 3650 }, confirmButtonText: 'เพิ่ม Pro',
+        inputValidator: (x) => !(Number(x) >= 1) && 'ใส่จำนวนวันอย่างน้อย 1' }); return v == null ? null : { days: Number(v) }; }
+      case 'setUntil': { const v = await ask({ title: 'ตั้งวันหมด Pro', html: 'Pro ของ <b>' + nm + '</b> จะใช้ได้ถึงวันที่', input: 'date', inputValue: d.paidUntil || addD(today(), 30), confirmButtonText: 'บันทึก',
+        inputValidator: (x) => !x && 'เลือกวันที่' }); return v == null ? null : { until: v }; }
+      case 'redeem': { const v = await ask({ title: 'ใช้โค้ดแทนผู้ใช้', html: 'ใส่โค้ดให้ <b>' + nm + '</b> (ผู้ใช้จะได้รับข้อความแจ้ง)', input: 'text', inputPlaceholder: 'เช่น NAOMSIN2026', confirmButtonText: 'ใช้โค้ด',
+        inputValidator: (x) => !x.trim() && 'ใส่โค้ดก่อน' }); return v == null ? null : { code: v.trim() }; }
+      case 'setName': { const v = await ask({ title: 'แก้ชื่อที่บอทเรียก', input: 'text', inputValue: d.name, inputAttributes: { maxlength: 30 }, confirmButtonText: 'บันทึก',
+        inputValidator: (x) => !x.trim() && 'ใส่ชื่อก่อน' }); return v == null ? null : { name: v.trim() }; }
+      case 'message': { const v = await ask({ title: 'ส่งข้อความถึง ' + (d.name || d.lineName), text: 'ส่งทาง LINE ในนามน้องออมสิน (ขึ้นต้นว่า "ข้อความจากแอดมิน")', input: 'textarea', inputPlaceholder: 'พิมพ์ข้อความ…', confirmButtonText: 'ส่งข้อความ',
+        inputValidator: (x) => !x.trim() && 'พิมพ์ข้อความก่อน' }); return v == null ? null : { text: v }; }
+      case 'removePro': return (await ask({ title: 'ยกเลิก Pro?', html: '<b>' + nm + '</b> จะกลับเป็น Free ทันที (ไม่คืนเงินอัตโนมัติ)', icon: 'warning', confirmButtonText: 'ยกเลิก Pro', danger: true })) ? {} : null;
+      case 'block': return (await ask({ title: 'ระงับการใช้งาน?', html: '<b>' + nm + '</b> จะใช้บอทไม่ได้จนกว่าจะปลดระงับ', icon: 'warning', confirmButtonText: 'ระงับ', danger: true })) ? {} : null;
+      case 'restartReg': return (await ask({ title: 'ให้สมัครใหม่?', html: 'ส่งการ์ดยอมรับเงื่อนไขให้ <b>' + nm + '</b> อีกครั้ง ข้อมูลรายการยังอยู่ครบ', icon: 'question', confirmButtonText: 'ส่งการ์ดสมัคร' })) ? {} : null;
+      case 'activate': return (await ask({ title: 'เปิดใช้งานทันที?', html: 'ข้ามขั้นตอนสมัครที่ค้าง และแจ้ง <b>' + nm + '</b> ว่าใช้งานได้แล้ว', icon: 'question', confirmButtonText: 'เปิดใช้งาน' })) ? {} : null;
+      case 'deleteAccount': { const v = await ask({ title: 'ลบบัญชีถาวร?', html: 'ลบ <b>' + nm + '</b> พร้อมรายการ ' + d.ledger.txCount + ' รายการ ไฟล์สลิป และการตั้งค่าทั้งหมด <b style="color:var(--red)">กู้คืนไม่ได้</b><br>พิมพ์ <b>DELETE</b> เพื่อยืนยัน',
+        icon: 'error', input: 'text', inputPlaceholder: 'DELETE', confirmButtonText: 'ลบถาวร', danger: true, inputValidator: (x) => x.trim().toUpperCase() !== 'DELETE' && 'พิมพ์ DELETE ให้ตรง' }); return v == null ? null : { confirm: v }; }
+    }
+    return {};
+  }
+  const ACT_LOADING = { grant: 'กำลังเพิ่ม Pro…', setUntil: 'กำลังบันทึกวันหมด Pro…', removePro: 'กำลังยกเลิก Pro…', redeem: 'กำลังใช้โค้ด…', message: 'กำลังส่งข้อความ…',
+    sendDashboard: 'กำลังส่งลิงก์…', sendHelp: 'กำลังส่งวิธีใช้…', clearState: 'กำลังล้างสถานะ…', refreshProfile: 'กำลังดึงโปรไฟล์ LINE…', activate: 'กำลังเปิดใช้งาน…',
+    restartReg: 'กำลังส่งการ์ดสมัคร…', block: 'กำลังระงับ…', unblock: 'กำลังปลดระงับ…', approve: 'กำลังอนุมัติ…', deleteAccount: 'กำลังลบข้อมูลทั้งหมด…' };
+  $('#drBody').addEventListener('click', async (e) => {
+    const cp = e.target.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
+    const b = e.target.closest('[data-a]'); if (!b || !cur) return;
+    const a = b.dataset.a, d = cur, extra = await askFor(a, d);
+    if (extra == null) return;
+    act(b, async () => {
+      const r = await api('memberAction', Object.assign({ userId: d.userId, action: a }, extra));
+      toast((r && r.message) || 'บันทึกแล้ว');
+      if (a === 'deleteAccount') { closeDrawer(); mems = mems.filter((x) => x.userId !== d.userId); renderMembers(); return; }
+      cur = await api('memberDetail', { userId: d.userId }); renderDrawer();
+      loadMembers(); // รีเฟรชตารางเบื้องหลัง
+    }, ACT_LOADING[a]);
+  });
+
+  // คู่มือคำสั่งแอดมินในแชท
+  $('#cmdRef').addEventListener('click', () => {
+    const rows = [['#สมาชิก', 'สรุปจำนวนสมาชิก + 10 คนล่าสุด'], ['#อนุมัติ <userId>', 'อนุมัติสมาชิก'], ['#บล็อก <userId>', 'ระงับการใช้งาน'], ['#ปลดบล็อก <userId>', 'ปลดระงับ'],
+      ['#อัปเกรด <userId> <วัน>', 'เพิ่มวัน Pro'], ['#ai', 'การใช้ AI ทั้งระบบ'], ['#โปรฟรี [เปิด [YYYY-MM-DD] ข้อความ | ปิด]', 'Pro ฟรีให้ทุกคน'],
+      ['#แคมเปญ [เพิ่ม ชื่อ ลด% เริ่ม จบ รอบ | ลบ รหัส]', 'แคมเปญลดราคา'], ['#โค้ด [สร้าง ระยะ คน หมดอายุ x จำนวน ชื่อ | ดู | ปิด | เปิด]', 'โค้ดพิเศษ'],
+      ['#โปรโมชั่น [โค้ด CODE ข้อความ | ปิด]', 'โปรในการ์ดชวนอัปเกรด'], ['#ยอดขาย [YYYY-MM]', 'สรุปยอดขาย']];
+    modal('<h3>📖 คำสั่งแอดมินในแชท LINE</h3><p class="hint" style="margin:-6px 0 12px">ทุกคำสั่งทำได้จากหน้านี้เช่นกัน (กด "จัดการ" ที่สมาชิก หรือเมนูด้านซ้าย)</p><table class="cmdref">' +
+      rows.map((r) => '<tr><td><code>' + esc(r[0]) + '</code></td><td>' + esc(r[1]) + '</td></tr>').join('') + '</table><div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn" data-close>ปิด</button></div>');
   });
   $('#memCsv').addEventListener('click', () => csv('members', [['ชื่อ', 'ชื่อ LINE', 'userId', 'สถานะ', 'แพ็กเกจ', 'Pro ถึง', 'สมัครเมื่อ', 'ใช้ล่าสุด'], ...mems.map((m) => [m.name, m.lineName, m.userId, m.status, m.plan.source, m.plan.until, m.joinedAt, m.lastUsed])]));
 
@@ -542,7 +741,7 @@ const CONFIG = {
       reviews: [{ at: new Date().toISOString(), orderId: 'a8f3k2', cycle: 'yearly', amount: 299, reason: 'ยอดในสลิป ฿290 น้อยกว่ายอดที่ต้องชำระ ฿299', link: '#', status: 'pending', userId: U('a'), name: 'มิ้นท์' }],
       payments: [{ at: new Date().toISOString(), orderId: 'x1', name: 'ฝน', cycle: 'yearly', amount: 299, ref: '016268123456ATF01', by: 'auto' },
         { at: new Date(Date.now() - 864e5).toISOString(), orderId: 'x2', name: 'บีม', cycle: 'monthly', amount: 35, ref: '016267998877ATF02', by: 'auto' }],
-      members: [['มิ้นท์', 'mint 🌸', 'a', 'active', 'promo'], ['บีม', 'Beam', 'b', 'active', 'paid'], ['ฝน', 'Fon', 'c', 'active', 'paid'], ['ต้อม', 'Tom', 'd', 'pending', 'promo'], ['แป้ง', 'Pang', 'e', 'blocked', 'free']]
+      members: [['มิ้นท์', 'mint 🌸', 'a', 'active', 'promo'], ['บีม', 'Beam', 'b', 'active', 'paid'], ['ฝน', 'Fon', 'c', 'active', 'paid'], ['ต้อม', 'Tom', 'd', 'pending', 'promo'], ['แป้ง', 'Pang', 'e', 'blocked', 'free'], ['SAND', 'SAND', 'f', 'registering', 'free']]
         .map(([n, l, c, s, p], i) => ({ userId: U(c), name: n, lineName: l, picture: '', status: s, role: i === 0 ? 'admin' : 'member', joinedAt: new Date(Date.now() - i * 5e8).toISOString(), lastUsed: new Date(Date.now() - i * 4e7).toISOString(),
           plan: { tier: p === 'free' ? 'free' : 'pro', source: p, until: p === 'paid' ? addD(t, 200 - i * 50) : '' }, paidUntil: p === 'paid' ? addD(t, 200 - i * 50) : '' })),
     });
@@ -579,7 +778,23 @@ const CONFIG = {
       case 'reviewApprove': M.reviews.find((r) => r.orderId === a.orderId).status = 'approved'; return sleep({ ok: true });
       case 'reviewReject': M.reviews.find((r) => r.orderId === a.orderId).status = 'rejected'; return sleep(true);
       case 'members': return sleep(M.members);
-      case 'memberAction': return sleep({ ok: true });
+      case 'memberAction': {
+        const mm = M.members.find((x) => x.userId === a.userId);
+        if (a.action === 'redeem' && a.code.toUpperCase() !== 'NAOMSIN2026') throw new Error('❌ ไม่พบโค้ด "' + a.code.toUpperCase() + '" ค่ะ');
+        if (a.action === 'block') mm.status = 'blocked'; if (a.action === 'unblock' || a.action === 'activate') mm.status = 'active';
+        if (a.action === 'setName') mm.name = a.name; if (a.action === 'toggleDaily') mm.daily = !mm.daily;
+        if (a.action === 'grant') { mm.plan = { tier: 'pro', source: 'paid', until: addD(mm.paidUntil && mm.paidUntil > t ? mm.paidUntil : t, a.days) }; mm.paidUntil = mm.plan.until; }
+        if (a.action === 'deleteAccount') M.members = M.members.filter((x) => x !== mm);
+        return new Promise((r) => setTimeout(() => r({ ok: true, message: { grant: 'เพิ่ม Pro ' + a.days + ' วันแล้ว', message: 'ส่งข้อความแล้ว', clearState: 'ล้างสถานะค้างแล้ว', deleteAccount: 'ลบบัญชีแล้ว' }[a.action] || 'บันทึกแล้ว' }), 900));
+      }
+      case 'memberDetail': {
+        const mm = M.members.find((x) => x.userId === a.userId);
+        return new Promise((r) => setTimeout(() => r({ ...mm, email: 'user@example.com', phone: '081-234-5678', step: mm.status === 'registering' ? 'email' : '', consentAt: mm.joinedAt, daily: !!mm.daily, monthly: true,
+          ledger: { txCount: 342, wallets: 3, goals: 1, recurring: 2, reminder: { enabled: true, hour: 21 }, coach: false, shopMode: false, cycleDay: 25 },
+          usage: { day: { tokens: 38000, calls: 14, cost: .02 }, week: { tokens: 120000, calls: 50, cost: .07 }, month: { tokens: 410000, calls: 160, cost: .21 }, limits: { day: 50000, week: 250000, month: 800000 }, mult: 1 },
+          payments: mm.plan.source === 'paid' ? [{ at: new Date(Date.now() - 5e8).toISOString(), cycle: 'yearly', amount: 299, by: 'auto' }] : [], codes: [{ at: new Date(Date.now() - 9e8).toISOString(), code: 'NAOMSIN2026', until: addD(t, 20) }],
+          pendingState: mm.status === 'active' ? 'payslip' : '' }), 700));
+      }
     }
     throw new Error('mock: ' + action);
   }
