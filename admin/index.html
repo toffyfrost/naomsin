@@ -203,6 +203,13 @@
         <div class="card"><h3>💎 ราคาตอนนี้</h3><div id="priceNow"></div></div>
       </div>
       <div class="card">
+        <h3>📣 โปรโมชั่นในการ์ดชวนอัปเกรด</h3>
+        <p class="hint" style="margin:-6px 0 12px">แสดงเมื่อผู้ใช้ Free กดฟีเจอร์ Pro พร้อมปุ่ม "ใช้โค้ด" แตะเดียว (ต้องเป็นโค้ดที่สร้างไว้และยังใช้ได้)</p>
+        <div class="fields"><div><label>โค้ด</label><input id="prCode" placeholder="เช่น NEWPRO" style="text-transform:uppercase"></div>
+          <div style="grid-column:span 2"><label>ข้อความ</label><input id="prText" placeholder="พิเศษ! เดือนแรกใช้ฟรี"></div></div>
+        <div class="row" style="margin-top:12px"><button class="btn pri" id="prSave">บันทึก</button><button class="btn" id="prOff">ปิดโปรโมชั่น</button><span class="hint" id="prState" style="margin:0"></span></div>
+      </div>
+      <div class="card">
         <h3>🏷️ เพิ่มแคมเปญส่วนลด</h3>
         <div class="fields">
           <div><label>ชื่อแคมเปญ</label><input id="kName" placeholder="เช่น 11.11 ลดแรง"></div>
@@ -432,6 +439,8 @@ const CONFIG = {
     $('#campRows').innerHTML = b.campaigns.slice().sort((a, z) => z.start.localeCompare(a.start)).map((c) => '<tr><td>' + esc(c.name) + '</td><td>−' + c.percent + '%</td><td>' + cyc(c.cycles) + '</td><td>' + thD(c.start) + ' – ' + thD(c.end) + '</td>' +
       '<td><span class="chip ' + (c.live ? 'g' : c.expired ? '' : 'y') + '">' + (c.live ? 'ใช้งานอยู่' : c.expired ? 'จบแล้ว' : 'รอเริ่ม') + '</span></td><td style="text-align:right"><button class="btn sm bad" data-del="' + esc(c.id) + '">ลบ</button></td></tr>').join('') ||
       '<tr><td colspan="6" class="empty">ยังไม่มีแคมเปญ</td></tr>';
+    $('#prCode').value = (b.promo && b.promo.code) || ''; $('#prText').value = (b.promo && b.promo.text) || '';
+    $('#prState').textContent = b.offer ? '🟢 แสดงอยู่: ใช้โค้ด ' + b.offer.code : b.promo && b.promo.code ? '⚠️ โค้ดนี้ใช้ไม่ได้แล้ว จึงไม่แสดง' : '⚪ ปิดอยู่';
     kPreview();
   }
   function kPreview() {
@@ -441,6 +450,8 @@ const CONFIG = {
     $('#kPreview').textContent = 'ตัวอย่างราคา: ' + (c === 'all' ? f('monthly') + ' · ' + f('yearly') : f(c));
   }
   ['#kPct', '#kCyc'].forEach((s) => $(s).addEventListener('input', kPreview));
+  $('#prSave').addEventListener('click', (e) => act(e.target, async () => { bill = await api('promo', { code: $('#prCode').value.trim(), text: $('#prText').value.trim() }); renderBilling(); toast('บันทึกโปรโมชั่นแล้ว'); }));
+  $('#prOff').addEventListener('click', (e) => act(e.target, async () => { bill = await api('promo', {}); renderBilling(); toast('ปิดโปรโมชั่นแล้ว'); }));
   $('#fpSave').addEventListener('click', (e) => act(e.target, async () => { bill = await api('freePro', { on: $('#fpOn').checked, until: $('#fpUntil').value, note: $('#fpNote').value }); renderBilling(); toast('บันทึกแล้ว'); loaded.overview = false; }));
   $('#kAdd').addEventListener('click', (e) => act(e.target, async () => {
     bill = await api('campaignAdd', { name: $('#kName').value.trim(), percent: Number($('#kPct').value), start: $('#kStart').value, end: $('#kEnd').value, cycles: $('#kCyc').value });
@@ -562,6 +573,7 @@ const CONFIG = {
         if (c.live) c.cycles.forEach((k) => { M.bill.current[k] = { base: M.bill.prices[k].price, price: Math.round(M.bill.prices[k].price * (100 - c.percent) / 100), campaign: c }; });
         return sleep(M.bill);
       }
+      case 'promo': M.bill.promo = { code: (a.code || '').toUpperCase(), text: a.text || '' }; M.bill.offer = a.code ? { code: a.code.toUpperCase(), text: a.text, days: 30 } : null; return sleep(M.bill);
       case 'campaignDelete': M.bill.campaigns = M.bill.campaigns.filter((c) => c.id !== a.id); return sleep(M.bill);
       case 'payments': return sleep({ payments: M.payments, reviews: M.reviews });
       case 'reviewApprove': M.reviews.find((r) => r.orderId === a.orderId).status = 'approved'; return sleep({ ok: true });
