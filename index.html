@@ -107,14 +107,18 @@
   .hero { background:linear-gradient(135deg,var(--brand),#5AB0F0); color:#fff; }
   .hero .muted, .hero .sub { color:#DDEEFD; }
   .stack { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:10px 0 4px; background:var(--track); }
-  .avatar { width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
+  #app { transition:opacity .2s; } #app.refreshing { opacity:.45; pointer-events:none; }
+  .chip.wait::after { content:""; display:inline-block; width:11px; height:11px; margin-left:6px; vertical-align:-1px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:sp .7s linear infinite; }
+  .avatar.sm { width:30px; height:30px; font-size:13px; }
+  .avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+  .avatar { overflow:hidden; flex:0 0 auto; box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--line); width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
   .badge { background:#FFF4E5; color:#B45309; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:600; }
   .empty { text-align:center; color:var(--muted); padding:28px 0; font-size:14px; }
   .del { color:var(--danger); background:none; border:0; font:inherit; font-size:13px; cursor:pointer; }
 </style>
 </head>
 <body>
-<div class="top"><h1 id="title">สรุป</h1><span class="muted" id="rangeLabel"></span></div>
+<div class="top"><div class="row" style="gap:10px;min-width:0"><span id="meAvatar"></span><h1 id="title">สรุป</h1></div><span class="muted" id="rangeLabel"></span></div>
 <div class="wrap" id="app"><div class="loading">กำลังโหลด…</div></div>
 <button class="fab" id="fab" title="เพิ่มรายการ">+</button>
 <nav id="nav"></nav>
@@ -151,6 +155,13 @@ const money = (n, dec) => { n = Number(n) || 0; return (n < 0 ? '-' : '') + '฿
 const thDate = (ymd) => { const p = ymd.split('-').map(Number); return p[2] + ' ' + TH_M[p[1]-1] + ' ' + String(p[0] + 543).slice(2); };
 const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 const catColor = (c, list) => PALETTE[Math.max(0, list.indexOf(c)) % PALETTE.length];
+/** รูปโปรไฟล์ LINE (โหลดไม่ได้ → ตัวอักษรแรกของชื่อ) */
+const avatarHtml = (o, cls) => {
+  const initial = esc((o.name || '?').trim().slice(0, 1) || '?');
+  return /^https:\/\//.test(o.picture || '')
+    ? `<div class="avatar ${cls||''}"><img src="${esc(o.picture)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentNode.textContent='${initial}'"></div>`
+    : `<div class="avatar ${cls||''}">${initial}</div>`;
+};
 const wallet = (id) => (D.settings.wallets.find((w) => w.id === id) || null);
 
 /* ---------- Toast สไตล์ Sonner: loading → success / error ในกล่องเดิม ---------- */
@@ -206,6 +217,7 @@ async function call(fn, ...args) {
     const res = await fetch(BOOT.api, { method: 'POST', body: JSON.stringify({ api: fn, t: BOOT.token, args }) });
     const j = await res.json();
     if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
+    if (action && fn !== 'dashExport') invalidateCache(j.data && j.data.range ? j.data : null);
     return j.data;
   } catch (e) {
     toast('⚠️ ' + (e.message === 'Failed to fetch' ? 'เชื่อมต่อไม่ได้ ลองใหม่อีกครั้งนะคะ' : (e.message || e)));
@@ -220,10 +232,36 @@ function fatal(msg) {
   $('nav').innerHTML = ''; $('fab').style.display = 'none';
 }
 
+/* ---------- โหลดข้อมูลตามช่วงวันที่: จำไว้ + โหลดล่วงหน้า ให้กดตัวกรองแล้วเปลี่ยนทันที ---------- */
+const CACHE = {}; // 'start|end' → ข้อมูลแดชบอร์ด
+const rkey = (r) => r.start + '|' + r.end;
+let loadSeq = 0;
+async function fetchLoad(r) { // ดึงเงียบๆ (ไม่ขึ้น toast/ไม่ล็อกปุ่ม) ใช้กับโหลดล่วงหน้า
+  const res = await fetch(BOOT.api, { method: 'POST', body: JSON.stringify({ api: 'dashLoad', t: BOOT.token, args: [r] }) });
+  const j = await res.json(); if (!j.ok) throw new Error(j.error || 'โหลดไม่สำเร็จ');
+  return j.data;
+}
 async function load() {
   try { D = await call('dashLoad', range); } catch (e) { return fatal(e.message || 'โหลดข้อมูลไม่สำเร็จ'); }
-  range = D.range;
+  range = D.range; CACHE[rkey(range)] = D;
   render();
+  prefetch();
+}
+let prefetching = false;
+async function prefetch() {
+  if (prefetching) return; prefetching = true;
+  try {
+    for (const [, , s, e] of presets()) {
+      const r = { start: s, end: e };
+      if (CACHE[rkey(r)]) continue;
+      try { CACHE[rkey(r)] = await fetchLoad(r); } catch (err) { break; }
+    }
+  } finally { prefetching = false; }
+}
+function invalidateCache(fresh) { // หลังบันทึก/แก้/ลบ ข้อมูลช่วงอื่นเก่าแล้ว
+  Object.keys(CACHE).forEach((k) => delete CACHE[k]);
+  if (fresh && fresh.range) CACHE[rkey(fresh.range)] = fresh;
+  setTimeout(prefetch, 1500);
 }
 
 function summarize(txs) {
@@ -254,9 +292,26 @@ function rangeChips() {
   let marked = false; // รอบงบกับเดือนนี้อาจเป็นช่วงเดียวกัน ไฮไลต์แค่อันแรก
   return '<div class="chips" style="margin-top:4px">' + presets().map(([k,l,s,e]) => {
     const on = !marked && range.start === s && range.end === e; if (on) marked = true;
-    return `<span class="chip ${on?'on':''}" onclick="setRange('${s}','${e}')">${l}</span>`; }).join('') + '</div>';
+    return `<span class="chip ${on?'on':''}" onclick="setRange('${s}','${e}',this)">${l}</span>`; }).join('') + '</div>';
 }
-async function setRange(s, e) { range = { start:s, end:e }; $('app').innerHTML = '<div class="loading">กำลังโหลด…</div>'; await load(); }
+async function setRange(s, e, el) {
+  const r = { start: s, end: e }, k = rkey(r), seq = ++loadSeq;
+  if (CACHE[k]) { D = CACHE[k]; range = D.range; render(); return; } // มีแล้ว → เปลี่ยนทันที
+  // ยังไม่มี → คงหน้าเดิมไว้ หรี่จอ + หมุนที่ชิปที่กด (ไม่ขึ้นหน้าว่าง)
+  document.querySelectorAll('.chip.on').forEach((c) => c.classList.remove('on'));
+  if (el) { el.classList.add('on', 'wait'); }
+  $('app').classList.add('refreshing'); document.body.classList.add('busy');
+  try {
+    const data = await fetchLoad(r);
+    CACHE[k] = data;
+    if (seq !== loadSeq) return; // ผู้ใช้กดช่วงอื่นไปแล้ว
+    D = data; range = D.range; render();
+  } catch (err) {
+    if (seq === loadSeq) { toast('⚠️ ' + (err.message || err)); render(); }
+  } finally {
+    if (seq === loadSeq) { $('app').classList.remove('refreshing'); document.body.classList.remove('busy'); }
+  }
+}
 
 /* ---------- แท็บ ---------- */
 function render() {
@@ -264,6 +319,7 @@ function render() {
   $('nav').innerHTML = TABS.map(([k,l,svg]) => `<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${svg}</svg>${l}</button>`).join('');
   $('title').textContent = TABS.find((t) => t[0] === tab)[1];
   $('rangeLabel').textContent = thDate(range.start) + ' – ' + thDate(range.end);
+  if (!$('meAvatar').firstChild) $('meAvatar').innerHTML = avatarHtml(D.owner, 'sm');
   $('fab').style.display = tab === 'list' || tab === 'summary' ? 'block' : 'none';
   ({ summary:renderSummary, analysis:renderAnalysis, budget:renderBudget, list:renderList, settings:renderSettings })[tab]();
   window.scrollTo(0, 0);
@@ -276,7 +332,7 @@ function renderSummary() {
   const top = sorted(s.byCat);
   $('app').innerHTML = `
     <div class="card row between">
-      <div class="row"><div class="avatar">${esc((D.owner.name||'?').slice(0,1))}</div>
+      <div class="row">${avatarHtml(D.owner)}
         <div><div style="font-weight:700;font-size:18px">${esc(D.owner.name)}</div><div class="muted">${D.owner.isGroup?'สมุดกลุ่ม':'สมุดส่วนตัว'}</div></div></div>
       <span class="badge">🔥 ${D.streak} วัน</span>
     </div>
@@ -305,7 +361,7 @@ function renderSummary() {
         </div>
       </div>
       ${top.slice(0,5).map(([c,v]) => `<div class="row" style="margin-top:8px"><span class="dot" style="background:${catColor(c,cats)}"></span>
-        <span class="grow ellipsis sub">${esc(c)}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
+        <span class="grow ellipsis sub">${esc(c)}</span><span class="muted" style="font-size:12px;margin-right:4px">${pctOf(v, top.map((x)=>x[1]))}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
     </div>
     ${D.shop ? `<div class="card"><div class="h2">🏪 ร้านค้า</div>
       <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
@@ -324,8 +380,24 @@ function renderSummary() {
     </div>`;
   if (top.length) charts.push(new Chart($('donut'), { type:'doughnut',
     data:{ labels: top.map((x)=>x[0]), datasets:[{ data: top.map((x)=>x[1]), backgroundColor: top.map((x)=>catColor(x[0],cats)), borderWidth:2, borderColor:'#fff' }] },
-    options:{ cutout:'62%', plugins:{ legend:{ display:false } } } }));
+    options:{ cutout:'58%', plugins:{ legend:{ display:false },
+      tooltip:{ callbacks:{ label:(c) => ' ' + c.label + ': ' + money(c.raw) + ' (' + pctOf(c.raw, c.dataset.data) + ')' } } } },
+    plugins:[donutPct] }));
 }
+
+/** เขียน % บนแต่ละชิ้นของโดนัท (ชิ้นเล็กกว่า 4% ไม่เขียน กันตัวหนังสือซ้อน) */
+function pctOf(v, arr) { const t = arr.reduce((a, b) => a + b, 0); const p = t ? v * 100 / t : 0; return (p >= 10 || p === 0 ? Math.round(p) : p.toFixed(1)) + '%'; }
+const donutPct = { id:'donutPct', afterDatasetsDraw(chart) {
+  const { ctx } = chart, ds = chart.data.datasets[0], total = ds.data.reduce((a, b) => a + b, 0);
+  if (!total) return;
+  chart.getDatasetMeta(0).data.forEach((arc, i) => {
+    const p = ds.data[i] * 100 / total; if (p < 4) return;
+    const { x, y } = arc.tooltipPosition();
+    ctx.save(); ctx.font = '700 12px "Noto Sans Thai", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 3;
+    ctx.fillText(pctOf(ds.data[i], ds.data), x, y); ctx.restore();
+  });
+} };
 
 function renderAnalysis() {
   const h = D.history, s = summarize(D.txs), cats = D.categories.expense;
