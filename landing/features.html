@@ -117,6 +117,8 @@
         background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012)); scroll-margin-top:96px; }
   .fe-n { font-family:var(--head); font-size:13px; color:var(--dim); letter-spacing:.1em; }
   .fe h4 { font-family:var(--head); font-size:26px; font-weight:700; margin:6px 0 12px; display:flex; align-items:center; gap:12px; }
+  .pro-tag { margin-left:auto; font-family:var(--head); font-size:11px; font-weight:700; letter-spacing:.1em; color:#fff; padding:3px 10px; border-radius:999px; background:linear-gradient(135deg,var(--blue),#7950F2); }
+  .pro-dot { margin-left:auto; font-style:normal; font-size:9.5px; font-weight:700; letter-spacing:.08em; color:var(--sky); border:1px solid rgba(165,216,255,.35); padding:0 6px; border-radius:999px; }
   .fe-ic { width:46px; height:46px; flex:0 0 46px; border-radius:14px; background:rgba(28,126,214,.18); display:flex; align-items:center; justify-content:center; font-size:23px; }
   .fe-d { color:var(--sub); font-weight:300; margin:0 0 22px; }
   .fe-h { font-size:12px; font-weight:600; letter-spacing:.14em; color:var(--blue2); margin:20px 0 10px; }
@@ -201,11 +203,11 @@
     <div class="head">
       <span class="eyebrow">คู่มือฟีเจอร์</span>
       <h2>ทำอะไรได้บ้าง<br><span class="grad">ครบทั้ง 26 ฟีเจอร์</span></h2>
-      <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย</p>
+      <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย ฟีเจอร์ที่มีป้าย <span class="pro-tag" style="margin:0">PRO</span> ต้องใช้แพ็กเกจ Pro (ช่วงนี้ใช้ฟรี)</p>
     </div>
     <button class="m-nav" id="mNav" aria-label="เปิดรายการฟีเจอร์"><span class="m-ic" id="mIc">👋</span><span class="m-t"><small id="mCat">เริ่มต้นใช้งาน</small><b id="mName">สมัครใช้งาน</b></span><span class="m-n" id="mNum">1/26</span><span class="m-chev">▾</span><i class="m-bar" id="mBar"></i></button>
     <div class="g-grid">
-      <aside class="g-nav" id="gnav"><div class="gn-sheet-h"><b>ฟีเจอร์ทั้งหมด</b><button class="gn-x" id="gnClose" aria-label="ปิด">✕</button></div><div class="gn-list"><div class="gn-g" data-c="start"><a class="gn-cat" href="#c-start"><b>เริ่มต้นใช้งาน</b><em>3</em></a><div class="gn-items"><div><a href="#f-register" data-f="register"><span>👋</span>สมัครใช้งาน</a><a href="#f-richmenu" data-f="richmenu"><span>📱</span>เมนูลัดใต้แชท</a><a href="#f-help" data-f="help"><span>📚</span>คู่มือในแชท</a></div></div></div><div class="gn-g" data-c="record"><a class="gn-cat" href="#c-record"><b>จดบันทึก</b><em>6</em></a><div class="gn-items"><div><a href="#f-text" data-f="text"><span>📝</span>จดด้วยข้อความ</a><a href="#f-file" data-f="file"><span>📎</span>แนบรูป สลิป หรือ PDF</a><a href="#f-voice" data-f="voice"><span>🎙️</span>จดด้วยเสียง</a><a href="#f-edit" data-f="edit"><span>✏️</span>แก้ไขและลบ</a><a href="#f-quick" data-f="quick"><span>⚡</span>จดด่วน</a><a href="#f-smart" data-f="smart"><span>🧠</span>ฉลาดขึ้นเอง</a></div></div></div><div class="gn-g" data-c="see"><a class="gn-cat" href="#c-see"><b>ดูเงินของคุณ</b><em>5</em></a><div class="gn-items"><div><a href="#f-wallet" data-f="wallet"><span>👛</span>กระเป๋าเงิน</a><a href="#f-summary" data-f="summary"><span>📊</span>สรุปรายรับรายจ่าย</a><a href="#f-report" data-f="report"><span>📄</span>รายงาน PDF</a><a href="#f-dashboard" data-f="dashboard"><span>📈</span>แดชบอร์ด</a><a href="#f-export" data-f="export"><span>📥</span>ส่งออก Excel / CSV</a></div></div></div><div class="gn-g" data-c="plan"><a class="gn-cat" href="#c-plan"><b>วางแผนการเงิน</b><em>5</em></a><div class="gn-items"><div><a href="#f-budget" data-f="budget"><span>🎯</span>งบประมาณและรอบงบ</a><a href="#f-goal" data-f="goal"><span>✈️</span>เป้าหมายการออม</a><a href="#f-reminder" data-f="reminder"><span>🔔</span>เตือนจด สถิติ และรายการประจำ</a><a href="#f-card" data-f="card"><span>💳</span>บัตรเครดิตและผ่อนชำระ</a><a href="#f-debt" data-f="debt"><span>🤝</span>ยืม-คืนเงิน</a></div></div></div><div class="gn-g" data-c="ai"><a class="gn-cat" href="#c-ai"><b>ผู้ช่วยอัจฉริยะ</b><em>2</em></a><div class="gn-items"><div><a href="#f-ask" data-f="ask"><span>💬</span>ถามเรื่องเงิน</a><a href="#f-coach" data-f="coach"><span>☀️</span>โค้ชการเงินรายสัปดาห์</a></div></div></div><div class="gn-g" data-c="group"><a class="gn-cat" href="#c-group"><b>กลุ่มและธุรกิจ</b><em>3</em></a><div class="gn-items"><div><a href="#f-groupbook" data-f="groupbook"><span>👨‍👩‍👧</span>สมุดกลุ่ม</a><a href="#f-split" data-f="split"><span>🧾</span>หารบิล</a><a href="#f-shop" data-f="shop"><span>🏪</span>โหมดร้านค้า</a></div></div></div><div class="gn-g" data-c="account"><a class="gn-cat" href="#c-account"><b>ตั้งค่าและบัญชี</b><em>2</em></a><div class="gn-items"><div><a href="#f-settings" data-f="settings"><span>⚙️</span>ตั้งค่า</a><a href="#f-privacy" data-f="privacy"><span>🔒</span>บัญชีและความปลอดภัย</a></div></div></div></div><div class="gn-prog"><i id="gnBar"></i></div></aside><div class="gn-bg" id="gnBg"></div>
+      <aside class="g-nav" id="gnav"><div class="gn-sheet-h"><b>ฟีเจอร์ทั้งหมด</b><button class="gn-x" id="gnClose" aria-label="ปิด">✕</button></div><div class="gn-list"><div class="gn-g" data-c="start"><a class="gn-cat" href="#c-start"><b>เริ่มต้นใช้งาน</b><em>3</em></a><div class="gn-items"><div><a href="#f-register" data-f="register"><span>👋</span>สมัครใช้งาน</a><a href="#f-richmenu" data-f="richmenu"><span>📱</span>เมนูลัดใต้แชท</a><a href="#f-help" data-f="help"><span>📚</span>คู่มือในแชท</a></div></div></div><div class="gn-g" data-c="record"><a class="gn-cat" href="#c-record"><b>จดบันทึก</b><em>6</em></a><div class="gn-items"><div><a href="#f-text" data-f="text"><span>📝</span>จดด้วยข้อความ</a><a href="#f-file" data-f="file"><span>📎</span>แนบรูป สลิป หรือ PDF</a><a href="#f-voice" data-f="voice"><span>🎙️</span>จดด้วยเสียง<i class="pro-dot">PRO</i></a><a href="#f-edit" data-f="edit"><span>✏️</span>แก้ไขและลบ</a><a href="#f-quick" data-f="quick"><span>⚡</span>จดด่วน</a><a href="#f-smart" data-f="smart"><span>🧠</span>ฉลาดขึ้นเอง</a></div></div></div><div class="gn-g" data-c="see"><a class="gn-cat" href="#c-see"><b>ดูเงินของคุณ</b><em>5</em></a><div class="gn-items"><div><a href="#f-wallet" data-f="wallet"><span>👛</span>กระเป๋าเงิน</a><a href="#f-summary" data-f="summary"><span>📊</span>สรุปรายรับรายจ่าย</a><a href="#f-report" data-f="report"><span>📄</span>รายงาน PDF<i class="pro-dot">PRO</i></a><a href="#f-dashboard" data-f="dashboard"><span>📈</span>แดชบอร์ด</a><a href="#f-export" data-f="export"><span>📥</span>ส่งออก Excel / CSV<i class="pro-dot">PRO</i></a></div></div></div><div class="gn-g" data-c="plan"><a class="gn-cat" href="#c-plan"><b>วางแผนการเงิน</b><em>5</em></a><div class="gn-items"><div><a href="#f-budget" data-f="budget"><span>🎯</span>งบประมาณและรอบงบ</a><a href="#f-goal" data-f="goal"><span>✈️</span>เป้าหมายการออม<i class="pro-dot">PRO</i></a><a href="#f-reminder" data-f="reminder"><span>🔔</span>เตือนจด สถิติ และรายการประจำ</a><a href="#f-card" data-f="card"><span>💳</span>บัตรเครดิตและผ่อนชำระ<i class="pro-dot">PRO</i></a><a href="#f-debt" data-f="debt"><span>🤝</span>ยืม-คืนเงิน</a></div></div></div><div class="gn-g" data-c="ai"><a class="gn-cat" href="#c-ai"><b>ผู้ช่วยอัจฉริยะ</b><em>2</em></a><div class="gn-items"><div><a href="#f-ask" data-f="ask"><span>💬</span>ถามเรื่องเงิน<i class="pro-dot">PRO</i></a><a href="#f-coach" data-f="coach"><span>☀️</span>โค้ชการเงินรายสัปดาห์<i class="pro-dot">PRO</i></a></div></div></div><div class="gn-g" data-c="group"><a class="gn-cat" href="#c-group"><b>กลุ่มและธุรกิจ</b><em>3</em></a><div class="gn-items"><div><a href="#f-groupbook" data-f="groupbook"><span>👨‍👩‍👧</span>สมุดกลุ่ม</a><a href="#f-split" data-f="split"><span>🧾</span>หารบิล</a><a href="#f-shop" data-f="shop"><span>🏪</span>โหมดร้านค้า<i class="pro-dot">PRO</i></a></div></div></div><div class="gn-g" data-c="account"><a class="gn-cat" href="#c-account"><b>ตั้งค่าและบัญชี</b><em>2</em></a><div class="gn-items"><div><a href="#f-settings" data-f="settings"><span>⚙️</span>ตั้งค่า</a><a href="#f-privacy" data-f="privacy"><span>🔒</span>บัญชีและความปลอดภัย</a></div></div></div></div><div class="gn-prog"><i id="gnBar"></i></div></aside><div class="gn-bg" id="gnBg"></div>
       <div class="g-main">
 <h3 class="g-cat" id="c-start">เริ่มต้นใช้งาน</h3>
 <article class="fe" id="f-register">
@@ -272,7 +274,7 @@
 <article class="fe" id="f-voice">
   <div class="fe-txt">
     <div class="fe-n">06</div>
-    <h4><span class="fe-ic">🎙️</span>จดด้วยเสียง</h4>
+    <h4><span class="fe-ic">🎙️</span>จดด้วยเสียง<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">กดไมค์แล้วพูดบอกได้เลย ระบบถอดเสียงเป็นข้อความแล้วจด พร้อมแสดงว่าได้ยินว่าอะไร ให้ตรวจได้ทันที</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>กดค้างที่ไอคอนไมค์ในช่องพิมพ์</li><li>พูดชื่อรายการ จำนวนเงิน และวิธีจ่าย</li><li>ตรวจข้อความ &quot;ได้ยินว่า&quot; บนการ์ด</li></ol>
@@ -345,7 +347,7 @@
 <article class="fe" id="f-report">
   <div class="fe-txt">
     <div class="fe-n">12</div>
-    <h4><span class="fe-ic">📄</span>รายงาน PDF</h4>
+    <h4><span class="fe-ic">📄</span>รายงาน PDF<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">รายงาน A4 พร้อมการ์ดสรุปเทียบช่วงก่อน กราฟแยกหมวด 5 รายจ่ายสูงสุด บทวิเคราะห์จาก AI และตารางรายการทั้งหมด</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>พิมพ์ &quot;รายงาน PDF&quot;</li><li>กด &quot;เปิดรายงาน&quot;</li><li>กด &quot;บันทึกเป็น PDF&quot; ด้านบนหน้า</li></ol>
@@ -369,7 +371,7 @@
 <article class="fe" id="f-export">
   <div class="fe-txt">
     <div class="fe-n">14</div>
-    <h4><span class="fe-ic">📥</span>ส่งออก Excel / CSV</h4>
+    <h4><span class="fe-ic">📥</span>ส่งออก Excel / CSV<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">ส่งออกรายการทั้งหมดเป็นไฟล์ Excel หรือ CSV เพื่อทำบัญชีหรือวิเคราะห์ต่อ สั่งจากแชทหรือกดปุ่มในแดชบอร์ดก็ได้</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>พิมพ์ &quot;ส่งออก excel&quot; หรือ &quot;ส่งออก csv&quot;</li><li>กด &quot;ดาวน์โหลด&quot;</li></ol>
@@ -394,7 +396,7 @@
 <article class="fe" id="f-goal">
   <div class="fe-txt">
     <div class="fe-n">16</div>
-    <h4><span class="fe-ic">✈️</span>เป้าหมายการออม</h4>
+    <h4><span class="fe-ic">✈️</span>เป้าหมายการออม<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">ตั้งเป้าพร้อมกำหนดเวลา ดูความคืบหน้าเป็นเปอร์เซ็นต์ และรู้ว่าต้องเก็บวันละเท่าไหร่ถึงจะทัน</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>ตั้งชื่อเป้า จำนวนเงิน และกำหนดเวลา</li><li>ออมเข้าเป้าเมื่อเก็บเงินได้</li><li>พิมพ์ &quot;เป้าหมาย&quot; ดูความคืบหน้า</li></ol>
@@ -418,7 +420,7 @@
 <article class="fe" id="f-card">
   <div class="fe-txt">
     <div class="fe-n">18</div>
-    <h4><span class="fe-ic">💳</span>บัตรเครดิตและผ่อนชำระ</h4>
+    <h4><span class="fe-ic">💳</span>บัตรเครดิตและผ่อนชำระ<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">ตั้งวันจ่ายบัตร แล้วน้องออมสินจะเตือนล่วงหน้า 3 วันพร้อมยอดค้าง ตั้งผ่อน 0% แล้วระบบจดงวดให้อัตโนมัติทุกเดือนจนครบ</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>ตั้งวันครบกำหนดจ่ายของบัตร</li><li>ตั้งผ่อนพร้อมจำนวนงวด</li><li>จดการจ่ายบัตรเมื่อชำระ</li></ol>
@@ -443,7 +445,7 @@
 <article class="fe" id="f-ask">
   <div class="fe-txt">
     <div class="fe-n">20</div>
-    <h4><span class="fe-ic">💬</span>ถามเรื่องเงิน</h4>
+    <h4><span class="fe-ic">💬</span>ถามเรื่องเงิน<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">ถามแบบคุยกันได้เลย น้องออมสินค้นจากรายการจริงของคุณ แล้วตอบพร้อมตัวเลขและคำแนะนำ</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>พิมพ์คำถามเรื่องเงินแบบปกติ</li><li>แตะคำถามแนะนำด้านล่างเพื่อถามต่อ</li></ol>
@@ -455,7 +457,7 @@
 <article class="fe" id="f-coach">
   <div class="fe-txt">
     <div class="fe-n">21</div>
-    <h4><span class="fe-ic">☀️</span>โค้ชการเงินรายสัปดาห์</h4>
+    <h4><span class="fe-ic">☀️</span>โค้ชการเงินรายสัปดาห์<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">ทุกเช้าวันจันทร์ 08:00 ส่งสรุปสิ่งที่ทำได้ดี สิ่งที่ควรระวัง และคาดการณ์ยอดสิ้นรอบงบ</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>พิมพ์ &quot;เปิดโค้ช&quot;</li><li>รอรับสรุปเช้าวันจันทร์</li></ol>
@@ -492,7 +494,7 @@
 <article class="fe" id="f-shop">
   <div class="fe-txt">
     <div class="fe-n">24</div>
-    <h4><span class="fe-ic">🏪</span>โหมดร้านค้า</h4>
+    <h4><span class="fe-ic">🏪</span>โหมดร้านค้า<span class="pro-tag">PRO</span></h4>
     <p class="fe-d">สำหรับร้านเล็กๆ บันทึกยอดขายและต้นทุน ดูกำไร อัตรากำไร จำนวนออร์เดอร์ และสินค้าขายดี</p>
     <div class="fe-h">วิธีใช้</div>
     <ol class="fe-steps"><li>พิมพ์ &quot;เปิดโหมดร้านค้า&quot;</li><li>จดยอดขายและต้นทุน</li><li>พิมพ์ &quot;สรุปร้าน&quot;</li></ol>
