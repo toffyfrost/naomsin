@@ -77,6 +77,7 @@
   .phone .screen { position:relative; border-radius:38px; overflow:hidden; aspect-ratio:390/844; background:#F4F8FD; }
   .phone .screen > * { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1); transform:scale(1.04); }
   .phone .screen > .on { opacity:1; transform:none; }
+  .phone .screen > img.top { object-position:top; }
   .phone::before { content:""; position:absolute; top:22px; left:50%; transform:translateX(-50%); width:86px; height:24px; background:#05080F; border-radius:20px; z-index:3; }
   .chip { position:absolute; z-index:4; background:rgba(10,20,48,.75); backdrop-filter:blur(14px); border:1px solid var(--stroke); border-radius:16px; padding:10px 14px; font-size:14px; white-space:nowrap; box-shadow:0 20px 40px -10px rgba(0,0,0,.6); animation:bob 5s ease-in-out infinite; }
   .chip small { display:block; color:var(--sub); font-size:12px; }
@@ -84,22 +85,6 @@
   @keyframes bob { 50% { transform:translateY(-12px); } }
   @media (max-width:560px) { .chip.a { left:-10px; } .chip.b { right:-10px; } }
 
-  /* chat inside phone */
-  .chatui { background:linear-gradient(#7FA6D6,#9DB9E0); padding:54px 12px 12px; display:flex; flex-direction:column; gap:8px; font-size:12.5px; line-height:1.45; color:#1F2937; }
-  .chatui .top { display:flex; align-items:center; gap:8px; color:#fff; font-weight:600; font-size:14px; margin-bottom:6px; }
-  .chatui .top img { width:28px; height:28px; border-radius:50%; }
-  .m { max-width:84%; padding:8px 11px; border-radius:16px; background:#fff; opacity:0; transform:translateY(10px); transition:.5s cubic-bezier(.2,.8,.2,1); }
-  .m.me { align-self:flex-end; background:#06C755; color:#fff; border-bottom-right-radius:4px; }
-  .m.bot { border-bottom-left-radius:4px; }
-  .on .m { opacity:1; transform:none; }
-  .on .m:nth-of-type(2) { transition-delay:.35s; } .on .m:nth-of-type(3) { transition-delay:1s; } .on .m:nth-of-type(4) { transition-delay:1.6s; } .on .m:nth-of-type(5) { transition-delay:2.2s; }
-  .rc b { color:var(--blue); } .rc .r { display:flex; justify-content:space-between; gap:14px; border-bottom:1px dashed #E5E7EB; padding:2px 0; }
-  .rc .bar { height:5px; background:#E2EAF3; border-radius:3px; margin-top:6px; overflow:hidden; } .rc .bar i { display:block; height:100%; width:34%; background:var(--blue); }
-  .slip { width:100%; border-radius:10px; background:#fff; padding:10px; text-align:center; font-size:11px; color:#6B7280; }
-  .slip b { display:block; font-size:18px; color:#1F2937; }
-  .voice { display:flex; align-items:center; gap:8px; } .voice span { display:flex; gap:2px; align-items:center; }
-  .voice span i { width:3px; background:#fff; border-radius:2px; animation:eq 1s ease-in-out infinite; }
-  @keyframes eq { 50% { height:4px !important; } }
 
   /* statement (word scrub) */
   .statement { padding:160px 0; }
@@ -143,21 +128,60 @@
   .head h2 { font-size:clamp(34px,4.4vw,56px); line-height:1.2; margin:18px 0 16px; }
   .head p { color:var(--sub); font-weight:300; font-size:18px; margin:0; }
 
-  /* bento */
-  .bento { display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:minmax(200px,auto); gap:18px; }
-  .cell { position:relative; overflow:hidden; border-radius:28px; padding:30px; background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.015)); border:1px solid var(--stroke); transition:border-color .3s; }
-  .cell:hover { border-color:rgba(77,171,247,.4); }
-  .cell::after { content:""; position:absolute; inset:0; background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(77,171,247,.12),transparent 40%); opacity:0; transition:.3s; pointer-events:none; }
-  .cell:hover::after { opacity:1; }
-  .cell .ic { font-size:28px; margin-bottom:16px; }
-  .cell h3 { font-size:21px; margin-bottom:8px; }
-  .cell p { color:var(--sub); font-size:15px; margin:0; font-weight:300; }
-  .cell.w2 { grid-column:span 2; } .cell.h2 { grid-row:span 2; }
-  .cell.feature { background:linear-gradient(160deg,rgba(28,126,214,.35),rgba(28,126,214,.05)); }
-  .cell.feature img { margin-top:24px; border-radius:18px; box-shadow:0 30px 60px -20px rgba(0,0,0,.6); }
-  .big-n { font-family:var(--head); font-size:64px; font-weight:700; line-height:1; margin-bottom:10px; }
-  @media (max-width:960px) { .bento { grid-template-columns:1fr 1fr; } }
-  @media (max-width:600px) { .bento { grid-template-columns:1fr; } .cell.w2 { grid-column:auto; } .cell.h2 { grid-row:auto; } }
+
+  /* feature guide */
+  .g-grid { display:grid; grid-template-columns:230px 1fr; gap:56px; align-items:start; }
+  .g-nav { position:sticky; top:96px; max-height:calc(100vh - 120px); overflow:auto; padding-right:6px; scrollbar-width:thin; }
+  .gn-cat { font-size:12px; font-weight:600; letter-spacing:.12em; color:var(--dim); margin:22px 0 8px; }
+  .gn-cat:first-child { margin-top:0; }
+  .g-nav a { display:flex; align-items:center; gap:10px; padding:7px 12px; border-radius:10px; font-size:15px; color:var(--sub); border-left:2px solid transparent; transition:.2s; }
+  .g-nav a span { width:20px; text-align:center; }
+  .g-nav a:hover { color:#fff; background:var(--panel); }
+  .g-nav a.on { color:#fff; background:rgba(28,126,214,.16); border-left-color:var(--blue2); }
+  .g-cat { font-size:14px; font-weight:600; letter-spacing:.14em; color:var(--blue2); margin:40px 0 18px; padding-bottom:14px; border-bottom:1px solid var(--stroke); scroll-margin-top:100px; }
+  .g-cat:first-child { margin-top:0; }
+  .fe { display:grid; grid-template-columns:1fr 330px; gap:40px; align-items:start; padding:34px; margin-bottom:22px; border-radius:28px; border:1px solid var(--stroke);
+        background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012)); scroll-margin-top:96px; }
+  .fe-n { font-family:var(--head); font-size:13px; color:var(--dim); letter-spacing:.1em; }
+  .fe h4 { font-family:var(--head); font-size:26px; font-weight:700; margin:6px 0 12px; display:flex; align-items:center; gap:12px; }
+  .fe-ic { width:46px; height:46px; flex:0 0 46px; border-radius:14px; background:rgba(28,126,214,.18); display:flex; align-items:center; justify-content:center; font-size:23px; }
+  .fe-d { color:var(--sub); font-weight:300; margin:0 0 22px; }
+  .fe-h { font-size:12px; font-weight:600; letter-spacing:.14em; color:var(--blue2); margin:20px 0 10px; }
+  .fe-steps { margin:0; padding:0; list-style:none; counter-reset:s; display:grid; gap:10px; }
+  .fe-steps li { counter-increment:s; display:flex; gap:12px; font-size:15.5px; }
+  .fe-steps li::before { content:counter(s); flex:0 0 24px; height:24px; border-radius:8px; background:var(--panel); border:1px solid var(--stroke); font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; color:var(--sky); margin-top:2px; }
+  .fe-try { display:flex; flex-wrap:wrap; gap:8px; }
+  .cmd { font:inherit; font-size:14px; color:#DDEBFF; background:rgba(6,199,85,.1); border:1px solid rgba(6,199,85,.35); padding:6px 14px; border-radius:999px; cursor:pointer; transition:.2s; }
+  .cmd:hover { background:rgba(6,199,85,.22); }
+  .cmd.ok { background:var(--line-green); color:#fff; }
+  .fe-note { font-size:14px; color:var(--sub); background:rgba(255,193,7,.07); border:1px solid rgba(255,193,7,.22); border-radius:12px; padding:10px 14px; margin:20px 0 0; }
+  .fe-shot { position:sticky; top:96px; }
+  .sh { position:relative; border-radius:26px; overflow:hidden; max-height:600px; background:#8FAAD0; box-shadow:var(--glow); border:6px solid #1A2338; }
+  .sh img { display:none; width:100%; }
+  .sh img.on { display:block; }
+  .sh::after { content:""; position:absolute; left:0; right:0; bottom:0; height:90px; background:linear-gradient(transparent,rgba(5,10,24,.85)); pointer-events:none; }
+  .sh-zoom { position:absolute; z-index:2; bottom:14px; left:50%; transform:translateX(-50%); font:inherit; font-size:13px; font-weight:600; color:#fff; background:rgba(28,126,214,.9); border:0; padding:7px 16px; border-radius:999px; cursor:pointer; }
+  .fe-shot.wide .sh { max-height:none; background:#fff; }
+  .fe-shot.wide .sh::after { display:none; }
+  .fe-shot.wide .sh-zoom { bottom:10px; }
+  .sh-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .sh-tabs button { font:inherit; font-size:13px; color:var(--sub); background:var(--panel); border:1px solid var(--stroke); padding:4px 12px; border-radius:999px; cursor:pointer; }
+  .sh-tabs button.on { color:#fff; background:var(--blue); border-color:var(--blue); }
+  .lb { position:fixed; inset:0; z-index:100; background:rgba(3,6,15,.88); backdrop-filter:blur(8px); display:flex; align-items:flex-start; justify-content:center; overflow:auto; padding:40px 16px; }
+  .lb[hidden] { display:none; }
+  .lb-in img { width:min(420px,100%); border-radius:20px; box-shadow:0 30px 80px rgba(0,0,0,.6); }
+  .lb-in img.wide { width:min(900px,100%); }
+  .lb-x { position:fixed; top:18px; right:18px; width:44px; height:44px; border-radius:50%; border:1px solid var(--stroke); background:rgba(255,255,255,.08); color:#fff; font-size:18px; cursor:pointer; }
+  @media (max-width:1100px) { .fe { grid-template-columns:1fr 280px; gap:28px; padding:26px; } }
+  @media (max-width:900px) {
+    .g-grid { grid-template-columns:1fr; gap:0; }
+    .g-nav { position:sticky; top:72px; z-index:10; display:flex; gap:6px; overflow-x:auto; max-height:none; margin:0 -24px 20px; padding:10px 24px; background:rgba(5,10,24,.9); backdrop-filter:blur(12px); border-bottom:1px solid var(--stroke); }
+    .g-nav .gn-cat { display:none; }
+    .g-nav a { flex:0 0 auto; border:1px solid var(--stroke); border-radius:999px; padding:6px 12px; font-size:14px; }
+    .fe { grid-template-columns:1fr; }
+    .fe-shot { position:static; max-width:340px; margin:0 auto; width:100%; }
+    .g-cat, .fe { scroll-margin-top:170px; }
+  }
 
   /* rich menu tilt */
   .rich-wrap { perspective:1600px; max-width:980px; margin:0 auto; }
@@ -181,6 +205,8 @@
   .plan ul { list-style:none; padding:0; margin:26px 0 32px; display:grid; gap:12px; color:var(--sub); }
   .plan li::before { content:"✓"; color:var(--mint); margin-right:12px; font-weight:700; }
   .plan .btn { width:100%; justify-content:center; }
+  .plans.one { grid-template-columns:1fr; max-width:520px; }
+  .plan-note { color:var(--sub); font-size:14px; font-weight:300; margin:-12px 0 24px; }
   @media (max-width:760px) { .plans { grid-template-columns:1fr; } }
 
   /* faq */
@@ -215,7 +241,7 @@
 <header id="hdr">
   <div class="wrap">
     <a class="logo" href="#top"><img src="img/icon-512.png" alt="">N'AOMSIN</a>
-    <nav class="menu"><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
+    <nav class="menu"><a href="#story">เรื่องราว</a><a href="#features">คู่มือฟีเจอร์</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
     <a class="btn pri" href="#add">เพิ่มเพื่อน</a>
   </div>
 </header>
@@ -264,13 +290,14 @@
         <h2>พิมพ์รวดเดียว<br><span class="grad">AI แยกให้เอง</span></h2>
         <p>เช้า เที่ยง เย็น พิมพ์รวมกันในข้อความเดียว น้องออมสินแยกเป็นรายการ เดาหมวด แล้วบอกยอดเทียบงบให้ทันที</p>
         <div class="tags"><span>แยกหลายรายการ</span><span>เดาหมวดอัตโนมัติ</span><span>ยกเลิกทั้งชุดได้</span></div>
-        <img class="m-shot" src="img/dash-list.png" alt="">
+        <img class="m-shot" src="img/chat/chat-record.webp" alt="" loading="lazy">
       </div>
       <div class="chap">
         <span class="num">02 / สลิปและเสียง</span>
         <h2>ขี้เกียจพิมพ์?<br><span class="grad">ส่งรูปหรือพูดเลย</span></h2>
-        <p>ส่งสลิปโอนเงินหรือใบเสร็จ ระบบอ่านยอด วันที่ ร้าน และกันสลิปซ้ำ หรือจะอัดเสียงบอกก็ได้</p>
-        <div class="tags"><span>อ่านสลิปธนาคาร</span><span>ใบเสร็จ</span><span>ข้อความเสียง</span></div>
+        <p>กดไมค์พูดบอก น้องออมสินถอดเสียงแล้วจดให้ หรือส่งรูปสลิป ใบเสร็จ PDF เก็บไว้เป็นหลักฐาน แล้วพิมพ์บอกรายการในไฟล์</p>
+        <div class="tags"><span>ข้อความเสียง</span><span>รูปสลิป / ใบเสร็จ</span><span>ไฟล์ PDF</span></div>
+        <img class="m-shot" src="img/chat/chat-voice.webp" alt="" loading="lazy">
       </div>
       <div class="chap">
         <span class="num">03 / สรุป</span>
@@ -304,23 +331,8 @@
     <div class="phone-col">
       <div class="glow"></div>
       <div class="phone" id="storyPhone"><div class="screen" id="screens">
-        <div class="chatui">
-          <div class="top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
-          <div class="m me">เช้าข้าวมันไก่50 กาแฟ45 เที่ยงก๋วยเตี๋ยว60 ค่าวิน20</div>
-          <div class="m bot rc"><b>✅ จดแล้ว 4 รายการ</b>
-            <div class="r"><span>🍚 ข้าวมันไก่</span>฿50</div><div class="r"><span>☕ กาแฟ</span>฿45</div>
-            <div class="r"><span>🍜 ก๋วยเตี๋ยว</span>฿60</div><div class="r" style="border:0"><span>🛵 ค่าวิน</span>฿20</div>
-            <div style="font-size:11px;color:#6B7280;margin-top:4px">อาหาร ฿1,129 / ฿5,000</div><div class="bar"><i></i></div></div>
-          <div class="m me">เดือนนี้กาแฟไปเท่าไหร่</div>
-          <div class="m bot">เดือนนี้กาแฟ ฿585 ค่ะ ☕ น้อยกว่าเดือนก่อน 12% เก่งมาก!</div>
-        </div>
-        <div class="chatui">
-          <div class="top"><img src="img/icon-512.png" alt="">น้องออมสิน</div>
-          <div class="m me" style="padding:6px"><div class="slip">โอนเงินสำเร็จ<b>฿1,280.00</b>การไฟฟ้า · 22 ก.ย. 69</div></div>
-          <div class="m bot rc"><b>🧾 อ่านสลิปแล้ว</b><div class="r"><span>ค่าไฟ</span>฿1,280</div><div class="r" style="border:0"><span>หมวด</span>บิล/ค่าน้ำไฟ</div></div>
-          <div class="m me voice">🎙️ <span><i style="height:10px"></i><i style="height:16px;animation-delay:.1s"></i><i style="height:8px;animation-delay:.2s"></i><i style="height:14px;animation-delay:.3s"></i><i style="height:10px;animation-delay:.4s"></i><i style="height:16px;animation-delay:.5s"></i></span> 0:04</div>
-          <div class="m bot">ได้ยินว่า "ซื้อยา 180" จดหมวดสุขภาพให้แล้วค่ะ 💊</div>
-        </div>
+        <img class="top" src="img/chat/chat-record.webp" alt="การ์ดจดสำเร็จในแชท LINE">
+        <img class="top" src="img/chat/chat-voice.webp" alt="จดด้วยเสียงในแชท LINE">
         <img src="img/dash-summary.png" alt="หน้าสรุป">
         <img src="img/dash-analysis.png" alt="หน้าวิเคราะห์">
         <img src="img/dash-budget.png" alt="หน้าหมวดและงบ">
@@ -330,26 +342,341 @@
   </div>
 </div>
 
-<!-- FEATURES -->
-<section id="features">
+<!-- FEATURES: คู่มือฟีเจอร์ (สร้างจาก gen_guide.py) -->
+<section id="features" class="guide">
   <div class="wrap">
     <div class="head">
-      <span class="eyebrow rv">ฟีเจอร์</span>
-      <h2 class="rv" style="--d:.1s">ครบกว่าที่คิด<br><span class="grad">ในแชทเดียว</span></h2>
-      <p class="rv" style="--d:.2s">ตั้งแต่ค่ากาแฟแก้วแรก ไปจนถึงเป้าหมายเที่ยวญี่ปุ่น</p>
+      <span class="eyebrow rv">คู่มือฟีเจอร์</span>
+      <h2 class="rv" style="--d:.1s">ทำอะไรได้บ้าง<br><span class="grad">ครบทั้ง 26 ฟีเจอร์</span></h2>
+      <p class="rv" style="--d:.2s">วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย</p>
     </div>
-    <div class="bento">
-      <div class="cell feature w2 h2 rv"><div class="ic">📊</div><h3>แดชบอร์ดแบบแอป</h3><p>สรุป วิเคราะห์ งบ รายการ ตั้งค่า เพิ่มไว้หน้าจอโฮมได้ รองรับโหมดมืด</p><img src="img/dash-analysis-dark.png" alt="" style="width:62%;margin-left:auto;margin-right:auto"></div>
-      <div class="cell rv" style="--d:.1s"><div class="ic">👨‍👩‍👧</div><h3>จดในกลุ่ม</h3><p>สมุดกลุ่มสำหรับครอบครัว ทุกรายการระบุว่าใครจด</p></div>
-      <div class="cell rv" style="--d:.2s"><div class="ic">🧾</div><h3>หารบิล</h3><p>"หมูกระทะ 1200 หารทุกคน" แล้วสรุปว่าใครต้องจ่ายใคร</p></div>
-      <div class="cell rv"><div class="ic">💬</div><h3>ถามเรื่องเงินได้</h3><p>"ร้านไหนจ่ายบ่อยสุด" ระบบค้นรายการจริงแล้วตอบพร้อมตัวเลข</p></div>
-      <div class="cell rv" style="--d:.1s"><div class="ic">🔁</div><h3>รายการประจำ</h3><p>ค่าเช่า ค่าสมาชิก เงินเดือน จดให้อัตโนมัติ</p></div>
-      <div class="cell w2 rv"><div class="big-n grad">PDF · Excel</div><h3>รายงานพร้อมส่ง</h3><p>รายงาน A4 รายเดือนพร้อมกราฟและบทวิเคราะห์ ส่งมาในแชททุกวันที่ 1 และส่งออก Excel/CSV ได้ทุกเมื่อ</p></div>
-      <div class="cell rv" style="--d:.1s"><div class="ic">💳</div><h3>บัตรและผ่อน</h3><p>เตือนก่อนวันจ่ายบัตร 3 วัน และติดตามงวดผ่อน</p></div>
-      <div class="cell rv" style="--d:.2s"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้าน</p></div>
+    <div class="g-grid">
+      <aside class="g-nav" id="gnav"><div class="gn-cat">เริ่มต้นใช้งาน</div><a href="#f-register" data-f="register"><span>👋</span>สมัครใช้งาน</a><a href="#f-richmenu" data-f="richmenu"><span>📱</span>เมนูลัดใต้แชท</a><a href="#f-help" data-f="help"><span>📚</span>คู่มือในแชท</a><div class="gn-cat">จดบันทึก</div><a href="#f-text" data-f="text"><span>📝</span>จดด้วยข้อความ</a><a href="#f-file" data-f="file"><span>📎</span>แนบรูป สลิป หรือ PDF</a><a href="#f-voice" data-f="voice"><span>🎙️</span>จดด้วยเสียง</a><a href="#f-edit" data-f="edit"><span>✏️</span>แก้ไขและลบ</a><a href="#f-quick" data-f="quick"><span>⚡</span>จดด่วน</a><a href="#f-smart" data-f="smart"><span>🧠</span>ฉลาดขึ้นเอง</a><div class="gn-cat">ดูเงินของคุณ</div><a href="#f-wallet" data-f="wallet"><span>👛</span>กระเป๋าเงิน</a><a href="#f-summary" data-f="summary"><span>📊</span>สรุปรายรับรายจ่าย</a><a href="#f-report" data-f="report"><span>📄</span>รายงาน PDF</a><a href="#f-dashboard" data-f="dashboard"><span>📈</span>แดชบอร์ด</a><a href="#f-export" data-f="export"><span>📥</span>ส่งออก Excel / CSV</a><div class="gn-cat">วางแผนการเงิน</div><a href="#f-budget" data-f="budget"><span>🎯</span>งบประมาณและรอบงบ</a><a href="#f-goal" data-f="goal"><span>✈️</span>เป้าหมายการออม</a><a href="#f-reminder" data-f="reminder"><span>🔔</span>เตือนจด สถิติ และรายการประจำ</a><a href="#f-card" data-f="card"><span>💳</span>บัตรเครดิตและผ่อนชำระ</a><a href="#f-debt" data-f="debt"><span>🤝</span>ยืม-คืนเงิน</a><div class="gn-cat">ผู้ช่วยอัจฉริยะ</div><a href="#f-ask" data-f="ask"><span>💬</span>ถามเรื่องเงิน</a><a href="#f-coach" data-f="coach"><span>☀️</span>โค้ชการเงินรายสัปดาห์</a><div class="gn-cat">กลุ่มและธุรกิจ</div><a href="#f-groupbook" data-f="groupbook"><span>👨‍👩‍👧</span>สมุดกลุ่ม</a><a href="#f-split" data-f="split"><span>🧾</span>หารบิล</a><a href="#f-shop" data-f="shop"><span>🏪</span>โหมดร้านค้า</a><div class="gn-cat">ตั้งค่าและบัญชี</div><a href="#f-settings" data-f="settings"><span>⚙️</span>ตั้งค่า</a><a href="#f-privacy" data-f="privacy"><span>🔒</span>บัญชีและความปลอดภัย</a></aside>
+      <div class="g-main">
+<h3 class="g-cat" id="c-start">เริ่มต้นใช้งาน</h3>
+<article class="fe rv" id="f-register">
+  <div class="fe-txt">
+    <div class="fe-n">01</div>
+    <h4><span class="fe-ic">👋</span>สมัครใช้งาน</h4>
+    <p class="fe-d">เพิ่มเพื่อนแล้วทักมาได้เลย น้องออมสินจะแสดงเงื่อนไขการเก็บข้อมูลให้อ่านก่อน ถ้าไม่ยอมรับ ระบบจะไม่เก็บอะไรไว้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>เพิ่มเพื่อน N&#x27;AOMSIN ใน LINE แล้วพิมพ์ทักทาย</li><li>อ่านเงื่อนไข แล้วกด &quot;ยอมรับและสมัคร&quot;</li><li>ตอบ 3 ข้อ: ชื่อ อีเมล เบอร์โทร แล้วยืนยัน</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">สวัสดี</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-register.webp" alt="สมัครใช้งาน: การ์ดสมัครสมาชิก" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-richmenu">
+  <div class="fe-txt">
+    <div class="fe-n">02</div>
+    <h4><span class="fe-ic">📱</span>เมนูลัดใต้แชท</h4>
+    <p class="fe-d">เมนู 8 ปุ่มด้านล่างห้องแชท พาไปจด ดูสรุป วิเคราะห์ หมวด/งบ รายการ กระเป๋าเงิน ตั้งค่า และคู่มือ ได้ในแตะเดียว</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>เปิดห้องแชทน้องออมสิน</li><li>แตะปุ่มในเมนูด้านล่างที่ต้องการ</li></ol>
+    
+    
+  </div>
+  <div class="fe-shot wide"><div class="sh"><img class="on" src="img/richmenu.png" alt="เมนูลัดใต้แชท: Rich Menu" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-help">
+  <div class="fe-txt">
+    <div class="fe-n">03</div>
+    <h4><span class="fe-ic">📚</span>คู่มือในแชท</h4>
+    <p class="fe-d">พิมพ์ /help ได้การ์ดเลื่อนดู ใบแรกสรุปสถานะเงินของคุณ ใบถัดไปสอนแต่ละฟีเจอร์พร้อมปุ่มลองใช้ พิมพ์ &quot;ฟีเจอร์ใหม่&quot; ดูอีกชุด</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ /help</li><li>เลื่อนการ์ดไปทางขวาเพื่อดูแต่ละฟีเจอร์</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">/help</button><button class="cmd" title="คัดลอก">ฟีเจอร์ใหม่</button><button class="cmd" title="คัดลอก">คำสั่งทั้งหมด</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh-tabs"><button class="on" data-i="0">/help</button><button class="" data-i="1">ฟีเจอร์ใหม่</button></div><div class="sh"><img class="on" src="img/chat/chat-help.webp" alt="คู่มือในแชท: /help" loading="lazy"><img class="" src="img/chat/chat-help2.webp" alt="คู่มือในแชท: ฟีเจอร์ใหม่" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-record">จดบันทึก</h3>
+<article class="fe rv" id="f-text">
+  <div class="fe-txt">
+    <div class="fe-n">04</div>
+    <h4><span class="fe-ic">📝</span>จดด้วยข้อความ</h4>
+    <p class="fe-d">พิมพ์เหมือนแชทปกติ พิมพ์หลายรายการในข้อความเดียวได้ AI แยกรายการ เดาหมวด เลือกกระเป๋า แล้วแสดงยอดเทียบงบทันที</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ชื่อรายการตามด้วยจำนวนเงิน</li><li>ตรวจการ์ด &quot;จดสำเร็จ&quot; ที่ตอบกลับ</li><li>กดกระเป๋าด้านล่างการ์ดถ้าอยากเปลี่ยนช่องทางจ่าย</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">กินกาแฟ 80</button><button class="cmd" title="คัดลอก">เช้าข้าวมันไก่50 กาแฟ45 เที่ยงก๋วยเตี๋ยว60</button><button class="cmd" title="คัดลอก">เงินเดือนเข้า 35000</button><button class="cmd" title="คัดลอก">เมื่อวาน ค่าแท็กซี่ 120</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-record.webp" alt="จดด้วยข้อความ: จดหลายรายการในข้อความเดียว" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-file">
+  <div class="fe-txt">
+    <div class="fe-n">05</div>
+    <h4><span class="fe-ic">📎</span>แนบรูป สลิป หรือ PDF</h4>
+    <p class="fe-d">ส่งรูปสลิป ใบเสร็จ หรือไฟล์ PDF เข้าแชท น้องออมสินเก็บไฟล์ไว้เป็นหลักฐาน แล้วถามว่ามีรายการอะไรบ้าง</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>ส่งรูปหรือไฟล์ PDF เข้าแชท</li><li>พิมพ์บอกรายการและจำนวนเงินในไฟล์</li><li>ไม่ต้องการบันทึก กด &quot;ยกเลิก&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ข้าวสาร 250 ไข่ 120</button><button class="cmd" title="คัดลอก">ค่าไฟ 1,245 โอนกสิกร</button><button class="cmd" title="คัดลอก">รวมทั้งบิล 435 ของใช้ในบ้าน</button></div>
+    <p class="fe-note">ℹ️ ตอนนี้ยังไม่อ่านตัวเลขจากรูปให้อัตโนมัติ ต้องพิมพ์รายการเอง</p>
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-file.webp" alt="แนบรูป สลิป หรือ PDF: ส่งใบเสร็จแล้วพิมพ์รายการ" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-voice">
+  <div class="fe-txt">
+    <div class="fe-n">06</div>
+    <h4><span class="fe-ic">🎙️</span>จดด้วยเสียง</h4>
+    <p class="fe-d">กดไมค์แล้วพูดบอกได้เลย ระบบถอดเสียงเป็นข้อความแล้วจด พร้อมแสดงว่าได้ยินว่าอะไร ให้ตรวจได้ทันที</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>กดค้างที่ไอคอนไมค์ในช่องพิมพ์</li><li>พูดชื่อรายการ จำนวนเงิน และวิธีจ่าย</li><li>ตรวจข้อความ &quot;ได้ยินว่า&quot; บนการ์ด</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">&quot;ค่าข้าวเย็น 250 จ่ายบัตร&quot;</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-voice.webp" alt="จดด้วยเสียง: จดจากข้อความเสียง" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-edit">
+  <div class="fe-txt">
+    <div class="fe-n">07</div>
+    <h4><span class="fe-ic">✏️</span>แก้ไขและลบ</h4>
+    <p class="fe-d">ทุกรายการบนการ์ดจดสำเร็จมีปุ่ม ✏️ แก้จำนวนเงิน รายละเอียด หมวด วันที่ กระเป๋า และปุ่ม ✖️ ลบ หรือกดยกเลิกทั้งชุดก็ได้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>กด ✏️ ข้างรายการที่ต้องการแก้</li><li>เลือกสิ่งที่จะแก้ แล้วพิมพ์ค่าใหม่</li><li>หรือพิมพ์ &quot;ลบรายการล่าสุด&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ลบรายการล่าสุด</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-edit.webp" alt="แก้ไขและลบ: แก้ไขและลบรายการ" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-quick">
+  <div class="fe-txt">
+    <div class="fe-n">08</div>
+    <h4><span class="fe-ic">⚡</span>จดด่วน</h4>
+    <p class="fe-d">รายการที่จดซ้ำตั้งแต่ 3 ครั้งขึ้นไปจะกลายเป็นปุ่มด้านล่างแชท แตะครั้งเดียวบันทึกทันที ไม่ผ่าน AI</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>จดรายการเดิมให้ครบ 3 ครั้ง</li><li>ปุ่มจะขึ้นด้านล่างแชท เช่น &quot;☕ กาแฟ 65&quot;</li><li>แตะปุ่มเพื่อจดทันที</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">จดด่วน</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-quick.webp" alt="จดด่วน: ปุ่มจดด่วนและเตือนจดซ้ำ" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-smart">
+  <div class="fe-txt">
+    <div class="fe-n">09</div>
+    <h4><span class="fe-ic">🧠</span>ฉลาดขึ้นเอง</h4>
+    <p class="fe-d">จำหมวดที่คุณเคยแก้แล้วจัดให้ถูกในครั้งหน้า เตือนเมื่อจดซ้ำหรือยอดสูงผิดปกติ และจดจากข้อความ SMS หรืออีเมลธนาคารที่วางมาได้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>คัดลอกข้อความแจ้งเตือนจากธนาคาร</li><li>วางในแชทน้องออมสิน</li><li>ตรวจรายการที่จดให้</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">วาง: &quot;โอนเงิน 500.00 บ. ให้ นายเอ...&quot;</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-smart.webp" alt="ฉลาดขึ้นเอง: จดจากข้อความธนาคาร" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-see">ดูเงินของคุณ</h3>
+<article class="fe rv" id="f-wallet">
+  <div class="fe-txt">
+    <div class="fe-n">10</div>
+    <h4><span class="fe-ic">👛</span>กระเป๋าเงิน</h4>
+    <p class="fe-d">แยกเงินสด บัญชีธนาคาร บัตรเครดิต และ e-wallet รู้ว่าแต่ละใบมีเงินเท่าไหร่ บันทึกยอดขาย และโอนระหว่างกระเป๋าได้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>เพิ่มกระเป๋าพร้อมยอดตั้งต้น</li><li>จดรายการโดยบอกช่องทางจ่าย เช่น &quot;เงินสด&quot; หรือ &quot;โอนกสิกร&quot;</li><li>พิมพ์ &quot;กระเป๋าเงิน&quot; ดูยอดรวม</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">กระเป๋าเงิน</button><button class="cmd" title="คัดลอก">เพิ่มกระเป๋า KBank 25000</button><button class="cmd" title="คัดลอก">ตั้งยอด KBank 30000</button><button class="cmd" title="คัดลอก">โอนจากกสิกรเข้าทรู 500</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-wallet.webp" alt="กระเป๋าเงิน: ยอดกระเป๋าและการโอน" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-summary">
+  <div class="fe-txt">
+    <div class="fe-n">11</div>
+    <h4><span class="fe-ic">📊</span>สรุปรายรับรายจ่าย</h4>
+    <p class="fe-d">สรุปรายวัน สัปดาห์ เดือน หรือรอบงบ พร้อมแยกรายจ่ายตามหมวดเป็นเปอร์เซ็นต์ หรือถามแบบพูดปกติก็ได้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ช่วงเวลาที่อยากดู</li><li>หรือแตะ &quot;สรุป&quot; ในเมนูลัด</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">สรุปวันนี้</button><button class="cmd" title="คัดลอก">สรุปเดือนนี้</button><button class="cmd" title="คัดลอก">สรุปเดือนที่แล้ว</button><button class="cmd" title="คัดลอก">เดือนสิงหาใช้ค่าอาหารไปเท่าไหร่</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-summary.webp" alt="สรุปรายรับรายจ่าย: สรุปเดือนนี้" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-report">
+  <div class="fe-txt">
+    <div class="fe-n">12</div>
+    <h4><span class="fe-ic">📄</span>รายงาน PDF</h4>
+    <p class="fe-d">รายงาน A4 พร้อมการ์ดสรุปเทียบช่วงก่อน กราฟแยกหมวด 5 รายจ่ายสูงสุด บทวิเคราะห์จาก AI และตารางรายการทั้งหมด</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;รายงาน PDF&quot;</li><li>กด &quot;เปิดรายงาน&quot;</li><li>กด &quot;บันทึกเป็น PDF&quot; ด้านบนหน้า</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">รายงาน PDF</button><button class="cmd" title="คัดลอก">ขอรายงาน PDF ไตรมาส 3</button></div>
+    <p class="fe-note">ℹ️ ลิงก์รายงานใช้ได้ 24 ชั่วโมง</p>
+  </div>
+  <div class="fe-shot"><div class="sh-tabs"><button class="on" data-i="0">ลิงก์รายงานในแชท</button><button class="" data-i="1">หน้ารายงาน A4</button></div><div class="sh"><img class="on" src="img/chat/chat-report.webp" alt="รายงาน PDF: ลิงก์รายงานในแชท" loading="lazy"><img class="" src="img/report.webp" alt="รายงาน PDF: หน้ารายงาน A4" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-dashboard">
+  <div class="fe-txt">
+    <div class="fe-n">13</div>
+    <h4><span class="fe-ic">📈</span>แดชบอร์ด</h4>
+    <p class="fe-d">หน้าเว็บแบบแอป 5 แท็บ: สรุป วิเคราะห์ (กราฟ 6 เดือน) หมวด/งบ รายการ (ค้นหา แก้ไข เพิ่ม) และตั้งค่า เพิ่มไว้หน้าจอโฮมได้ รองรับโหมดมืด</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;แดชบอร์ด&quot; หรือแตะเมนูลัด</li><li>กด &quot;เปิด&quot;</li><li>กดแชร์ แล้วเลือก &quot;เพิ่มไปยังหน้าจอโฮม&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">แดชบอร์ด</button></div>
+    <p class="fe-note">ℹ️ ลิงก์ส่วนตัว ใช้ได้ 24 ชั่วโมง</p>
+  </div>
+  <div class="fe-shot"><div class="sh-tabs"><button class="on" data-i="0">ลิงก์ในแชท</button><button class="" data-i="1">สรุป</button><button class="" data-i="2">วิเคราะห์</button><button class="" data-i="3">หมวด/งบ</button><button class="" data-i="4">รายการ</button><button class="" data-i="5">ตั้งค่า</button></div><div class="sh"><img class="on" src="img/chat/chat-dashboard.webp" alt="แดชบอร์ด: ลิงก์ในแชท" loading="lazy"><img class="" src="img/dash-summary.webp" alt="แดชบอร์ด: สรุป" loading="lazy"><img class="" src="img/dash-analysis.webp" alt="แดชบอร์ด: วิเคราะห์" loading="lazy"><img class="" src="img/dash-budget.webp" alt="แดชบอร์ด: หมวด/งบ" loading="lazy"><img class="" src="img/dash-list.webp" alt="แดชบอร์ด: รายการ" loading="lazy"><img class="" src="img/dash-settings.webp" alt="แดชบอร์ด: ตั้งค่า" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-export">
+  <div class="fe-txt">
+    <div class="fe-n">14</div>
+    <h4><span class="fe-ic">📥</span>ส่งออก Excel / CSV</h4>
+    <p class="fe-d">ส่งออกรายการทั้งหมดเป็นไฟล์ Excel หรือ CSV เพื่อทำบัญชีหรือวิเคราะห์ต่อ สั่งจากแชทหรือกดปุ่มในแดชบอร์ดก็ได้</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;ส่งออก excel&quot; หรือ &quot;ส่งออก csv&quot;</li><li>กด &quot;ดาวน์โหลด&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ส่งออก excel</button><button class="cmd" title="คัดลอก">ส่งออก csv เดือนที่แล้ว</button></div>
+    <p class="fe-note">ℹ️ ลิงก์ดาวน์โหลดใช้ได้ 3 วัน</p>
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-export.webp" alt="ส่งออก Excel / CSV: ลิงก์ดาวน์โหลดไฟล์" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-plan">วางแผนการเงิน</h3>
+<article class="fe rv" id="f-budget">
+  <div class="fe-txt">
+    <div class="fe-n">15</div>
+    <h4><span class="fe-ic">🎯</span>งบประมาณและรอบงบ</h4>
+    <p class="fe-d">ตั้งงบรวมหรือแยกหมวด และเลือกวันเริ่มรอบงบ เช่น วันเงินเดือนออก หลังจดทุกครั้งจะเห็นยอดเทียบงบ และบอกว่าใช้ได้อีกวันละเท่าไหร่</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>ตั้งงบรวมหรืองบรายหมวด</li><li>ตั้งวันเริ่มรอบงบ</li><li>พิมพ์ &quot;งบ&quot; ดูงบคงเหลือ</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ตั้งงบ 20000</button><button class="cmd" title="คัดลอก">ตั้งงบ อาหาร 6000</button><button class="cmd" title="คัดลอก">ตั้งรอบงบ วันที่ 25</button><button class="cmd" title="คัดลอก">งบ</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-budget.webp" alt="งบประมาณและรอบงบ: งบคงเหลือ" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-goal">
+  <div class="fe-txt">
+    <div class="fe-n">16</div>
+    <h4><span class="fe-ic">✈️</span>เป้าหมายการออม</h4>
+    <p class="fe-d">ตั้งเป้าพร้อมกำหนดเวลา ดูความคืบหน้าเป็นเปอร์เซ็นต์ และรู้ว่าต้องเก็บวันละเท่าไหร่ถึงจะทัน</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>ตั้งชื่อเป้า จำนวนเงิน และกำหนดเวลา</li><li>ออมเข้าเป้าเมื่อเก็บเงินได้</li><li>พิมพ์ &quot;เป้าหมาย&quot; ดูความคืบหน้า</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ตั้งเป้า ไปญี่ปุ่น 60000 ภายใน ธ.ค.</button><button class="cmd" title="คัดลอก">ออมเข้าเป้า ญี่ปุ่น 2000</button><button class="cmd" title="คัดลอก">ถอนจากเป้า ญี่ปุ่น 500</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-goal.webp" alt="เป้าหมายการออม: ตั้งเป้าและออมเข้าเป้า" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-reminder">
+  <div class="fe-txt">
+    <div class="fe-n">17</div>
+    <h4><span class="fe-ic">🔔</span>เตือนจด สถิติ และรายการประจำ</h4>
+    <p class="fe-d">เตือน &quot;อย่าลืมจดนะ!&quot; ตามเวลาที่ตั้ง เฉพาะวันที่ยังไม่ได้จด นับวันจดต่อเนื่อง และตั้งค่าเช่า ค่าสมาชิก เงินเดือน ให้จดอัตโนมัติในแดชบอร์ด</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>ตั้งเวลาเตือน</li><li>พิมพ์ &quot;สถิติ&quot; ดูวันจดต่อเนื่อง</li><li>เพิ่มรายการประจำในแดชบอร์ด แท็บตั้งค่า</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ตั้งเวลาเตือน 20</button><button class="cmd" title="คัดลอก">เปิดเตือน</button><button class="cmd" title="คัดลอก">ปิดเตือน</button><button class="cmd" title="คัดลอก">สถิติ</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh-tabs"><button class="on" data-i="0">ตั้งเวลาเตือนและสถิติ</button><button class="" data-i="1">รายการประจำในแดชบอร์ด</button></div><div class="sh"><img class="on" src="img/chat/chat-reminder.webp" alt="เตือนจด สถิติ และรายการประจำ: ตั้งเวลาเตือนและสถิติ" loading="lazy"><img class="" src="img/dash-settings.webp" alt="เตือนจด สถิติ และรายการประจำ: รายการประจำในแดชบอร์ด" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-card">
+  <div class="fe-txt">
+    <div class="fe-n">18</div>
+    <h4><span class="fe-ic">💳</span>บัตรเครดิตและผ่อนชำระ</h4>
+    <p class="fe-d">ตั้งวันจ่ายบัตร แล้วน้องออมสินจะเตือนล่วงหน้า 3 วันพร้อมยอดค้าง ตั้งผ่อน 0% แล้วระบบจดงวดให้อัตโนมัติทุกเดือนจนครบ</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>ตั้งวันครบกำหนดจ่ายของบัตร</li><li>ตั้งผ่อนพร้อมจำนวนงวด</li><li>จดการจ่ายบัตรเมื่อชำระ</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ตั้งวันจ่ายบัตร KTC 5</button><button class="cmd" title="คัดลอก">ผ่อน iPhone 30000 10 งวด บัตร KTC</button><button class="cmd" title="คัดลอก">จ่ายบัตร KTC 5000 จากกสิกร</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-card.webp" alt="บัตรเครดิตและผ่อนชำระ: ตั้งวันจ่ายบัตรและผ่อน" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-debt">
+  <div class="fe-txt">
+    <div class="fe-n">19</div>
+    <h4><span class="fe-ic">🤝</span>ยืม-คืนเงิน</h4>
+    <p class="fe-d">จดว่าใครยืมเงินเรา หรือเรายืมใคร ดูยอดค้างทั้งหมด และกดปุ่ม 📤 ทวง เพื่อส่งข้อความเตือนแบบสุภาพให้เพื่อน</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ชื่อคนกับจำนวนเงิน</li><li>พิมพ์ &quot;ใครติดเงิน&quot; ดูยอดค้าง</li><li>กด 📤 ทวง หรือ ✅ ครบ</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">แป้งยืม 500</button><button class="cmd" title="คัดลอก">แป้งคืน 200</button><button class="cmd" title="คัดลอก">ยืมเงินบี 300</button><button class="cmd" title="คัดลอก">ใครติดเงิน</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-debt.webp" alt="ยืม-คืนเงิน: บันทึกยืม-คืน" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-ai">ผู้ช่วยอัจฉริยะ</h3>
+<article class="fe rv" id="f-ask">
+  <div class="fe-txt">
+    <div class="fe-n">20</div>
+    <h4><span class="fe-ic">💬</span>ถามเรื่องเงิน</h4>
+    <p class="fe-d">ถามแบบคุยกันได้เลย น้องออมสินค้นจากรายการจริงของคุณ แล้วตอบพร้อมตัวเลขและคำแนะนำ</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์คำถามเรื่องเงินแบบปกติ</li><li>แตะคำถามแนะนำด้านล่างเพื่อถามต่อ</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">เดือนนี้ใช้กับกาแฟไปเท่าไหร่</button><button class="cmd" title="คัดลอก">ร้านไหนจ่ายบ่อยสุด</button><button class="cmd" title="คัดลอก">สิ้นเดือนจะเหลือเท่าไหร่</button></div>
+    <p class="fe-note">ℹ️ ถ้อยคำคำตอบในภาพเป็นตัวอย่าง</p>
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-ask.webp" alt="ถามเรื่องเงิน: ถามตอบจากข้อมูลจริง" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-coach">
+  <div class="fe-txt">
+    <div class="fe-n">21</div>
+    <h4><span class="fe-ic">☀️</span>โค้ชการเงินรายสัปดาห์</h4>
+    <p class="fe-d">ทุกเช้าวันจันทร์ 08:00 ส่งสรุปสิ่งที่ทำได้ดี สิ่งที่ควรระวัง และคาดการณ์ยอดสิ้นรอบงบ</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;เปิดโค้ช&quot;</li><li>รอรับสรุปเช้าวันจันทร์</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">เปิดโค้ช</button><button class="cmd" title="คัดลอก">ปิดโค้ช</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-coach.webp" alt="โค้ชการเงินรายสัปดาห์: เปิดโค้ช" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-group">กลุ่มและธุรกิจ</h3>
+<article class="fe rv" id="f-groupbook">
+  <div class="fe-txt">
+    <div class="fe-n">22</div>
+    <h4><span class="fe-ic">👨‍👩‍👧</span>สมุดกลุ่ม</h4>
+    <p class="fe-d">เชิญน้องออมสินเข้ากลุ่ม LINE แล้วเปิดสมุดกลุ่ม ทุกคนจดร่วมกันได้ ทุกรายการมีชื่อคนจดกำกับ และแยกจากสมุดส่วนตัว</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>เชิญน้องออมสินเข้ากลุ่ม LINE</li><li>พิมพ์ &quot;เปิดสมุดกลุ่ม&quot;</li><li>สมาชิกพิมพ์รายการที่มีจำนวนเงิน</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">เปิดสมุดกลุ่ม</button><button class="cmd" title="คัดลอก">ค่าที่พัก 2,000</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-group.webp" alt="สมุดกลุ่ม: เปิดสมุดกลุ่ม" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-split">
+  <div class="fe-txt">
+    <div class="fe-n">23</div>
+    <h4><span class="fe-ic">🧾</span>หารบิล</h4>
+    <p class="fe-d">ในกลุ่ม พิมพ์รายการแล้วต่อด้วย &quot;หาร&quot; คนที่จดคือคนจ่าย แล้วสั่งสรุปดูว่าใครต้องโอนให้ใครเท่าไหร่</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์รายการตามด้วย &quot;หารทุกคน&quot; หรือระบุชื่อ</li><li>พิมพ์ &quot;สรุปหาร&quot;</li><li>โอนครบแล้วกด &quot;เคลียร์ยอด&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ค่าหมูกระทะ 1200 หารทุกคน</button><button class="cmd" title="คัดลอก">ค่าแท็กซี่ 300 หาร แป้ง บี</button><button class="cmd" title="คัดลอก">สรุปหาร</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-split.webp" alt="หารบิล: หารบิลและสรุปยอด" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-shop">
+  <div class="fe-txt">
+    <div class="fe-n">24</div>
+    <h4><span class="fe-ic">🏪</span>โหมดร้านค้า</h4>
+    <p class="fe-d">สำหรับร้านเล็กๆ บันทึกยอดขายและต้นทุน ดูกำไร อัตรากำไร จำนวนออร์เดอร์ และสินค้าขายดี</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;เปิดโหมดร้านค้า&quot;</li><li>จดยอดขายและต้นทุน</li><li>พิมพ์ &quot;สรุปร้าน&quot;</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ขายเสื้อ 3 ตัว 750</button><button class="cmd" title="คัดลอก">ซื้อผ้ามาทำเสื้อ 400</button><button class="cmd" title="คัดลอก">สรุปร้านเดือนนี้</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-shop.webp" alt="โหมดร้านค้า: สรุปร้าน" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<h3 class="g-cat" id="c-account">ตั้งค่าและบัญชี</h3>
+<article class="fe rv" id="f-settings">
+  <div class="fe-txt">
+    <div class="fe-n">25</div>
+    <h4><span class="fe-ic">⚙️</span>ตั้งค่า</h4>
+    <p class="fe-d">การ์ดเดียวรวมทุกการตั้งค่า: กระเป๋าเงิน งบ รอบงบ เวลาเตือน รายการประจำ สรุปรายวัน 21:00 และรายงาน PDF รายเดือน แตะแต่ละแถวเพื่อเปลี่ยน</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;ตั้งค่า&quot; หรือแตะเมนูลัด</li><li>แตะแถวที่ต้องการเปลี่ยน</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ตั้งค่า</button><button class="cmd" title="คัดลอก">เปิดสรุปรายวัน</button><button class="cmd" title="คัดลอก">เปิดรายงานรายเดือน</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-settings.webp" alt="ตั้งค่า: การ์ดตั้งค่า" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+<article class="fe rv" id="f-privacy">
+  <div class="fe-txt">
+    <div class="fe-n">26</div>
+    <h4><span class="fe-ic">🔒</span>บัญชีและความปลอดภัย</h4>
+    <p class="fe-d">ข้อมูลการเงินเข้ารหัสก่อนบันทึก ดูโควตา AI ที่เหลือของวัน สัปดาห์ และเดือน แก้ข้อมูลส่วนตัว หรือลบบัญชีพร้อมข้อมูลทั้งหมดได้ทุกเมื่อ</p>
+    <div class="fe-h">วิธีใช้</div>
+    <ol class="fe-steps"><li>พิมพ์ &quot;ข้อมูลของฉัน&quot; ดูหรือแก้ข้อมูล</li><li>พิมพ์ &quot;การใช้ AI&quot; ดูโควตา</li><li>พิมพ์ &quot;ลบบัญชี&quot; เพื่อลบข้อมูลทั้งหมด</li></ol>
+    <div class="fe-h">ลองพิมพ์</div><div class="fe-try"><button class="cmd" title="คัดลอก">ข้อมูลของฉัน</button><button class="cmd" title="คัดลอก">การใช้ AI</button><button class="cmd" title="คัดลอก">ลบบัญชี</button></div>
+    
+  </div>
+  <div class="fe-shot"><div class="sh"><img class="on" src="img/chat/chat-account.webp" alt="บัญชีและความปลอดภัย: โควตาการใช้ AI" loading="lazy"><button class="sh-zoom" aria-label="ดูภาพเต็ม">⤢ ดูเต็ม</button></div></div>
+</article>
+      </div>
     </div>
   </div>
 </section>
+<div class="lb" id="lb" hidden><button class="lb-x" aria-label="ปิด">✕</button><div class="lb-in"><img alt=""></div></div>
 
 <!-- RICH MENU -->
 <section style="padding-top:40px">
@@ -383,19 +710,16 @@
   <div class="wrap">
     <div class="head">
       <span class="eyebrow rv">ราคา</span>
-      <h2 class="rv" style="--d:.1s">เริ่มฟรี<br><span class="grad">อัปเกรดเมื่อพร้อม</span></h2>
+      <h2 class="rv" style="--d:.1s">ตอนนี้ใช้ได้<br><span class="grad">ฟรีทุกฟีเจอร์</span></h2>
     </div>
-    <div class="plans">
-      <div class="plan rv">
-        <h3>Free</h3><div class="price">฿0 <small>ตลอดไป</small></div>
-        <ul><li>จดด้วยข้อความ</li><li>ตั้งหมวดและงบ</li><li>สรุปรายวันและรายเดือน</li><li>แดชบอร์ดเว็บ</li></ul>
-        <a class="btn ghost" href="#add">เริ่มใช้ฟรี</a>
-      </div>
-      <div class="plan hot rv" style="--d:.1s">
-        <span class="badge">เร็วๆ นี้</span>
-        <h3>Pro</h3><div class="price">เร็วๆ นี้</div>
-        <ul><li>จดด้วยรูปสลิปและเสียง</li><li>รายการประจำอัตโนมัติ</li><li>รายงาน PDF และ Excel</li><li>สมุดกลุ่มและหารบิล</li></ul>
-        <a class="btn pri" href="#add">เพิ่มเพื่อนรอรับข่าว</a>
+    <div class="plans one">
+      <div class="plan hot rv">
+        <span class="badge">ช่วงเปิดตัว</span>
+        <h3>ทุกฟีเจอร์</h3><div class="price">฿0</div>
+        <ul><li>จดด้วยข้อความ เสียง รูป และ PDF</li><li>กระเป๋าเงิน งบ รอบงบ และเป้าหมายการออม</li><li>แดชบอร์ด รายงาน PDF และส่งออก Excel/CSV</li>
+          <li>สมุดกลุ่ม หารบิล และโหมดร้านค้า</li><li>ถามเรื่องเงินกับ AI และโค้ชรายสัปดาห์</li></ul>
+        <p class="plan-note">มีโควตาการใช้ AI ต่อวัน สัปดาห์ และเดือน พิมพ์ "การใช้ AI" เพื่อดูที่เหลือ</p>
+        <a class="btn pri" href="#add">เพิ่มเพื่อนแล้วเริ่มเลย</a>
       </div>
     </div>
   </div>
@@ -408,6 +732,7 @@
     <div class="faq rv">
       <details open><summary>N'AOMSIN คืออะไร?</summary><p>น้องออมสินคือผู้ช่วยจดรายรับรายจ่ายบน LINE แค่พิมพ์บอกเหมือนคุยกับเพื่อน ไม่ต้องเปิดแอปหรือกรอกฟอร์ม</p></details>
       <details><summary>ต้องโหลดแอปไหม?</summary><p>ไม่ต้อง ใช้ผ่าน LINE ที่มีอยู่แล้ว ส่วนแดชบอร์ดเปิดผ่านเบราว์เซอร์และเพิ่มไว้หน้าจอโฮมได้</p></details>
+      <details><summary>ส่งรูปสลิปแล้วอ่านยอดให้เองไหม?</summary><p>ตอนนี้น้องออมสินเก็บรูปหรือไฟล์ไว้เป็นหลักฐาน แล้วถามว่ามีรายการอะไรบ้าง พิมพ์บอกสั้นๆ เช่น "ค่าไฟ 1,245" ก็จดให้ทันที</p></details>
       <details><summary>จดย้อนหลังได้ไหม?</summary><p>ได้ พิมพ์วันที่ไปด้วย เช่น "เมื่อวาน ค่าไฟ 1280" หรือแก้วันที่ในแดชบอร์ด</p></details>
       <details><summary>จดผิดแก้ได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
       <details><summary>ถ้าไม่ใช้แล้ว ข้อมูลจะเป็นยังไง?</summary><p>ถ้าไม่ยอมรับเงื่อนไขตอนเริ่ม ระบบจะไม่เก็บข้อมูลใดๆ ไว้เลย</p></details>
@@ -422,7 +747,7 @@
     <img class="rv" src="img/icon-512.png" alt="">
     <h2 class="rv" style="--d:.1s">เรื่องเล่าของเงินคุณ<br><span class="grad">เริ่มจากข้อความแรก</span></h2>
     <p class="rv" style="--d:.2s">เพิ่มเพื่อนน้องออมสิน แล้วลองพิมพ์ "กาแฟ 45" ดูเลย</p>
-    <a class="btn pri rv" style="--d:.3s" href="https://line.me/R/ti/p/@943axyqp" target="_blank" rel="noopener">💬 เพิ่มเพื่อนใน LINE</a>
+    <a class="btn pri rv" style="--d:.3s" href="https://line.me/R/ti/p/@YOUR_LINE_ID" target="_blank" rel="noopener">💬 เพิ่มเพื่อนใน LINE</a>
   </div>
 </section>
 
@@ -500,10 +825,41 @@
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); frame();
 
-  // แสงตามเมาส์ในการ์ด
-  $$('.cell').forEach((c) => c.addEventListener('pointermove', (e) => {
-    const b = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - b.left) + 'px'); c.style.setProperty('--my', (e.clientY - b.top) + 'px');
+  // คู่มือฟีเจอร์: ไฮไลต์เมนูตามหัวข้อที่อ่านอยู่
+  const navLinks = $$('#gnav a'), byId = Object.fromEntries(navLinks.map((a) => [a.dataset.f, a]));
+  const spy = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const a = byId[e.target.id.slice(2)]; if (!a) return;
+    navLinks.forEach((x) => x.classList.toggle('on', x === a));
+    a.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  $$('.fe').forEach((f) => spy.observe(f));
+
+  // กดคำสั่งเพื่อคัดลอก
+  $$('.cmd').forEach((b) => b.addEventListener('click', async () => {
+    const t = b.textContent.replace(/^วาง: /, '').replace(/^"|"$/g, '');
+    try { await navigator.clipboard.writeText(t); } catch (e) { return; }
+    const old = b.textContent; b.textContent = '✓ คัดลอกแล้ว'; b.classList.add('ok');
+    setTimeout(() => { b.textContent = old; b.classList.remove('ok'); }, 1400);
   }));
+
+  // สลับภาพในแต่ละฟีเจอร์
+  $$('.sh-tabs').forEach((tabs) => tabs.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    [...tabs.children].forEach((x) => x.classList.toggle('on', x === b));
+    $$('img', tabs.nextElementSibling).forEach((img, i) => img.classList.toggle('on', i === +b.dataset.i));
+  }));
+
+  // ดูภาพเต็ม
+  const lb = $('#lb'), lbImg = $('img', lb);
+  const closeLb = () => { lb.hidden = true; document.body.style.overflow = ''; };
+  $$('.sh').forEach((sh) => sh.addEventListener('click', () => {
+    const img = $('img.on', sh); lbImg.src = img.src; lbImg.alt = img.alt;
+    lbImg.classList.toggle('wide', sh.parentElement.classList.contains('wide'));
+    lb.hidden = false; lb.scrollTop = 0; document.body.style.overflow = 'hidden';
+  }));
+  lb.addEventListener('click', (e) => { if (e.target !== lbImg) closeLb(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
 })();
 </script>
 </body>
