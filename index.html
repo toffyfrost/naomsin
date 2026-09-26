@@ -148,6 +148,7 @@
   body.busy .busybar { display:block; }
   .busybar i { position:absolute; height:100%; width:40%; background:var(--brand); border-radius:3px; animation:bb 1.1s ease-in-out infinite; }
   @keyframes bb { from { left:-40%; } to { left:100%; } }
+  .pct { font-size:12px; color:var(--muted); min-width:44px; text-align:right; margin-left:6px; }
 </style>
 </head>
 <body>
@@ -287,6 +288,7 @@ function renderSummary() {
   const s = summarize(D.txs), st = D.status, cats = D.categories.expense;
   const budget = st.total.budget, over = budget && s.expense > budget;
   const top = sorted(s.byCat);
+  const topSum = top.reduce((a, x) => a + x[1], 0);
   $('app').innerHTML = `
     <div class="card row between">
       <div class="row"><div class="avatar">${esc((D.owner.name||'?').slice(0,1))}</div>
@@ -318,7 +320,7 @@ function renderSummary() {
         </div>
       </div>
       ${top.slice(0,5).map(([c,v]) => `<div class="row" style="margin-top:8px"><span class="dot" style="background:${catColor(c,cats)}"></span>
-        <span class="grow ellipsis sub">${esc(c)}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
+        <span class="grow ellipsis sub">${esc(c)}</span><b>${money(v)}</b><span class="pct">${pctOf(v, topSum)}</span></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
     </div>
     ${D.shop ? `<div class="card"><div class="h2">🏪 ร้านค้า</div>
       <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
@@ -337,8 +339,27 @@ function renderSummary() {
     </div>`;
   if (top.length) charts.push(new Chart($('donut'), { type:'doughnut',
     data:{ labels: top.map((x)=>x[0]), datasets:[{ data: top.map((x)=>x[1]), backgroundColor: top.map((x)=>catColor(x[0],cats)), borderWidth:2, borderColor:'#fff' }] },
-    options:{ cutout:'62%', plugins:{ legend:{ display:false } } } }));
+    options:{ cutout:'58%', plugins:{ legend:{ display:false },
+      tooltip:{ callbacks:{ label:(ctx) => ' ' + ctx.label + ': ' + money(ctx.parsed) + ' (' + pctOf(ctx.parsed, topSum) + ')' } } } },
+    plugins:[donutPct] }));
 }
+
+/** เปอร์เซ็นต์แบบอ่านง่าย: 12% · 0.5% */
+function pctOf(v, total) { if (!total) return '0%'; const p = v * 100 / total; return (p >= 10 || p === 0 ? Math.round(p) : p.toFixed(1)) + '%'; }
+
+/** ปลั๊กอิน Chart.js: เขียน % ไว้กลางแต่ละชิ้นของโดนัท */
+const donutPct = { id: 'donutPct', afterDatasetsDraw(chart) {
+  const ds = chart.data.datasets[0], total = ds.data.reduce((a, b) => a + b, 0);
+  if (!total) return;
+  const ctx = chart.ctx; ctx.save();
+  ctx.font = '600 11px "Noto Sans Thai", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff';
+  chart.getDatasetMeta(0).data.forEach((arc, i) => {
+    if (ds.data[i] / total < 0.06) return;
+    const p = arc.tooltipPosition();
+    ctx.fillText(pctOf(ds.data[i], total), p.x, p.y);
+  });
+  ctx.restore();
+} };
 
 function renderAnalysis() {
   const h = D.history, s = summarize(D.txs), cats = D.categories.expense;
