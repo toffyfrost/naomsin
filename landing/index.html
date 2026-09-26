@@ -428,7 +428,7 @@
         <div class="per" id="proPer">ยกเลิกได้ทุกเมื่อ ไม่ต่ออายุอัตโนมัติ</div>
         <div class="camp" id="camp" hidden></div>
         <ul><li class="all">ทุกอย่างใน Free</li><li>จดด้วยเสียง</li><li>ถามเรื่องเงินกับ AI</li><li>รายงาน PDF + ส่งรายงานรายเดือนอัตโนมัติ</li><li>ส่งออก Excel / CSV</li><li>เป้าหมายการออม</li><li>รายการประจำ บัตรเครดิต และผ่อนชำระ</li><li>โค้ชการเงินรายสัปดาห์</li><li>โหมดร้านค้า</li><li>โควตา AI ×3</li></ul>
-        <a class="btn pri" href="#add" id="proCta">สมัคร Pro ใน LINE</a>
+        <a class="btn pri" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B9%81%E0%B8%9E%E0%B9%87%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88" target="_blank" rel="noopener" id="proCta">สมัคร Pro ใน LINE</a>
         <p class="plan-note">ชำระผ่านพร้อมเพย์ ส่งสลิปในแชท ระบบตรวจและเปิด Pro ให้อัตโนมัติ<br>🎟️ มีโค้ดพิเศษ? พิมพ์ <b>โค้ด XXXX</b> ในแชทรับ Pro ฟรีทันที</p>
       </div>
     </div>
@@ -566,7 +566,7 @@
     $('#promo').hidden = !fp;
     if (fp) $('#promoText').textContent = 'เปิดให้ทุกคนใช้ฟีเจอร์ Pro ได้ฟรี' + (fp.until ? 'ถึง ' + thD(fp.until) : '') + ' (' + fp.note + ') ไม่ต้องชำระเงิน';
     $('#proBadge').textContent = fp ? 'ฟรีช่วงนี้' : c.campaign ? 'ลด ' + c.campaign.percent + '%' : 'แนะนำ';
-    $('#proCta').textContent = fp ? 'ใช้ Pro ฟรีใน LINE' : 'สมัคร Pro ใน LINE';
+    $('#proCta').textContent = fp ? 'ใช้ Pro ฟรี / สมัครล่วงหน้าใน LINE' : 'สมัคร Pro ใน LINE';
   }
   $$('.cycle button').forEach((b) => b.addEventListener('click', () => {
     cyc = b.dataset.c; $$('.cycle button').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); }); paint();
