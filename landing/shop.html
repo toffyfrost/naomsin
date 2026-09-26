@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คู่มือโหมดร้านค้า · N'AOMSIN</title>
+<meta name="description" content="จดยอดขาย ต้นทุน กำไร สำหรับพ่อค้าแม่ค้า ตลาดนัด หน้าร้าน และออนไลน์ กับน้องออมสิน">
+<meta name="theme-color" content="#E3F0FF">
+<link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="img/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F5F9FF; --ink:#0B2545; --sub:#4A6485; --dim:#8196B0; --line:rgba(28,126,214,.14); --blue:#1C7ED6; --blue-d:#1864AB; --mint:#0CA678;
+    --mint-s:#E6FCF5; --soft:#EAF4FF; --warn:#FFF4E6; --grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%);
+    --shadow:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30); --line-green:#06C755; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:'Noto Sans Thai',sans-serif; color:var(--ink); line-height:1.75; font-size:17px;
+    background:linear-gradient(180deg,#E3F0FF 0,#F5F9FF 600px,#fff 1400px); -webkit-font-smoothing:antialiased; }
+  a { color:var(--blue); }
+  img { max-width:100%; display:block; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header { position:sticky; top:0; z-index:20; background:rgba(245,249,255,.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.04em; text-decoration:none; color:var(--ink); }
+  .logo img { width:36px; height:36px; border-radius:50%; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:999px; font-weight:700; font-size:16px; text-decoration:none; border:0; }
+  .btn.line { background:var(--line-green); color:#fff; box-shadow:0 10px 24px -10px rgba(6,199,85,.7); }
+  .btn.ghost { background:#fff; color:var(--blue); border:1px solid rgba(28,126,214,.28); }
+  .btn.sm { padding:8px 16px; font-size:14px; }
+  .hero { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:center; padding:40px 0 20px; }
+  .hero h1 { font-size:clamp(32px,5vw,50px); line-height:1.2; margin:10px 0; }
+  .hero p { color:var(--sub); font-size:18px; margin:0 0 20px; }
+  .grad { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--blue); background:var(--soft); padding:4px 12px; border-radius:999px; }
+  .tocwrap { position:sticky; top:64px; z-index:10; padding:8px 0 14px; background:linear-gradient(180deg,rgba(245,249,255,.97) 75%,rgba(245,249,255,0)); }
+  .toc { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; scroll-behavior:smooth; padding:6px;
+    background:rgba(255,255,255,.72); backdrop-filter:saturate(1.6) blur(14px); -webkit-backdrop-filter:saturate(1.6) blur(14px);
+    border:1px solid rgba(15,59,125,.08); border-radius:999px; box-shadow:0 8px 28px rgba(15,59,125,.10), inset 0 1px 0 rgba(255,255,255,.9);
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%); mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%); }
+  .toc::-webkit-scrollbar { display:none; }
+  .toc a { flex:0 0 auto; white-space:nowrap; font-size:14px; font-weight:600; text-decoration:none; color:var(--blue-d); padding:8px 16px; border-radius:999px; transition:background .25s,color .25s,box-shadow .25s; }
+  .toc a:first-child { margin-left:10px; } .toc a:last-child { margin-right:10px; }
+  .toc a:hover { background:var(--soft); }
+  .toc a.on { background:var(--grad); color:#fff; box-shadow:0 4px 14px rgba(37,99,235,.35); }
+  @media (min-width:900px) { .toc { width:max-content; max-width:100%; margin:0 auto; } .toc a { padding:8px 14px; } }
+  section { padding:26px 0; scroll-margin-top:120px; }
+  h2 { font-size:clamp(24px,3.4vw,32px); line-height:1.3; margin:0 0 6px; }
+  h3 { font-size:19px; margin:0 0 4px; }
+  .lead { color:var(--sub); margin:0 0 16px; }
+  .card { background:#fff; border-radius:22px; padding:20px 22px; box-shadow:var(--shadow); border:1px solid var(--line); margin:12px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .formula { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-weight:700; }
+  .formula span { background:var(--soft); padding:8px 14px; border-radius:14px; }
+  .formula b { color:var(--blue); font-size:20px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--blue-d); background:var(--soft); }
+  td.r, th.r { text-align:right; }
+  .step { display:grid; grid-template-columns:44px 1fr; gap:12px; margin:14px 0; }
+  .step .n { width:44px; height:44px; border-radius:14px; background:var(--grad); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:19px; }
+  .say { display:grid; grid-template-columns:90px 1fr; gap:14px; align-items:center; background:linear-gradient(135deg,var(--soft),var(--mint-s)); border-radius:22px; padding:14px 18px; }
+  .say img { width:90px; }
+  .chat { display:inline-block; background:#E9FBEF; color:#085F2E; border-radius:12px 12px 2px 12px; padding:2px 10px; font-weight:600; font-size:15px; }
+  .tag { display:inline-block; font-size:12px; font-weight:700; padding:1px 9px; border-radius:999px; background:var(--soft); color:var(--blue-d); }
+  .tag.mint { background:var(--mint-s); color:var(--mint); } .tag.warn { background:var(--warn); color:#9A4C00; }
+  .ded { padding:12px 0; border-bottom:1px dashed var(--line); display:grid; grid-template-columns:1fr auto; gap:6px 14px; }
+  .ded:last-child { border-bottom:0; }
+  .ded .cap { font-weight:800; color:var(--blue); white-space:nowrap; }
+  .ded p { margin:2px 0 0; color:var(--sub); font-size:15px; grid-column:1 / 3; }
+  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 18px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:700; }
+  .note { background:var(--warn); border-radius:16px; padding:12px 16px; font-size:15px; color:#6B3A00; }
+  .fab { position:fixed; right:16px; bottom:16px; z-index:30; }
+  footer { border-top:1px solid var(--line); margin-top:30px; padding:24px 0 90px; color:var(--dim); font-size:14px; }
+  @media (max-width:720px) { .hero, .grid, .grid3 { grid-template-columns:1fr; } .hero img { max-width:240px; margin:0 auto; } body { font-size:16px; } .say { grid-template-columns:64px 1fr; } .say img { width:64px; } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="index.html"><img src="img/brand/logo.webp" alt="">N'AOMSIN</a>
+  <a class="btn line sm" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B9%80%E0%B8%9B%E0%B8%B4%E0%B8%94%E0%B9%82%E0%B8%AB%E0%B8%A1%E0%B8%94%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B9%89%E0%B8%B2">💬 ถามน้องออมสิน</a></div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div><span class="eyebrow">คู่มือโหมดร้านค้า</span>
+      <h1>ขายของเหนื่อยแล้ว<br><span class="grad">ให้น้องออมสินจดให้</span></h1>
+      <p>สำหรับพ่อค้าแม่ค้า ตลาดนัด หน้าร้าน และร้านออนไลน์ จดยอดขาย ต้นทุน ดูกำไรรายวัน แล้วเอาไปใช้ยื่นภาษีได้ทันที โดยไม่ต้องมีสมุดบัญชี</p>
+      <a class="btn line" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B9%80%E0%B8%9B%E0%B8%B4%E0%B8%94%E0%B9%82%E0%B8%AB%E0%B8%A1%E0%B8%94%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B9%89%E0%B8%B2">🏪 เปิดโหมดร้านค้าใน LINE</a> <a class="btn ghost" href="#start">เริ่มยังไง</a></div>
+    <img src="img/mascot/slip.webp" alt="น้องออมสิน">
+  </div>
+  <div class="tocwrap"><nav class="toc"><a href="#start">เริ่มใช้</a><a href="#cash">ขายเงินสด</a><a href="#scan">ลูกค้าสแกนจ่าย</a><a href="#sms">SMS อัตโนมัติ</a><a href="#online">ขายออนไลน์</a><a href="#cost">ต้นทุน & ร้านส่ง</a><a href="#profit">ดูกำไร</a><a href="#tax">ภาษี</a><a href="#faq">ถามบ่อย</a></nav></div>
+
+  <section id="start"><h2>เริ่มใช้ใน 10 วินาที</h2><p class="lead">พิมพ์คำเดียวในแชทน้องออมสิน</p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div>พิมพ์ <span class="chat">เปิดโหมดร้านค้า</span> (ฟีเจอร์ Pro)</div></div>
+      <div class="step"><div class="n">2</div><div>ระบบเพิ่มหมวด <b>ขายของ/ธุรกิจ</b> (ยอดขาย) และ <b>ต้นทุนสินค้า</b> ให้เอง</div></div>
+      <div class="step"><div class="n">3</div><div>เลือกวิธีจดที่เหมาะกับร้านคุณด้านล่าง ใช้ผสมกันได้ทุกวิธี · ปิดเมื่อไหร่ก็ได้ด้วย <span class="chat">ปิดโหมดร้านค้า</span></div></div></div></section>
+
+  <section id="cash"><h2>💵 ลูกค้าจ่ายเงินสด</h2><p class="lead">พิมพ์เครื่องหมายบวกตามด้วยยอด เร็วที่สุด ไม่ต้องบอกว่าขายอะไร</p>
+    <div class="grid"><div class="card"><h3>ขาย 1 ออร์เดอร์</h3><p><span class="chat">+50</span></p></div>
+      <div class="card"><h3>รวบหลายออร์เดอร์ทีเดียว</h3><p><span class="chat">+50 +35 +120</span> = 3 ออร์เดอร์</p></div></div>
+    <div class="note">อยากรู้ว่าอะไรขายดี? พิมพ์แบบมีชื่อสินค้า เช่น <span class="chat">ขายส้มตำ 3 จาน 150</span> น้องออมสินจะจัดอันดับสินค้าขายดีให้</div></section>
+
+  <section id="scan"><h2>📲 ลูกค้าสแกนจ่ายหน้าร้าน</h2><p class="lead">ลูกค้าไม่ได้ส่งสลิปให้เรา ใช้หน้าจอมือถือของแม่ค้าเองได้เลย</p>
+    <div class="grid"><div class="card"><h3>แคปแชท LINE ธนาคาร</h3><p>เปิดแชทธนาคารที่มีการ์ด "เงินเข้า" แคปหน้าจอ ส่งมา 1 รูปได้หลายรายการ ส่งทีละหลายรูปก็ได้</p></div>
+      <div class="card"><h3>แคปประวัติรายการ</h3><p>ปิดร้านตอนเย็น แคปหน้า "รายการเดินบัญชี" ในแอปธนาคาร ได้ครบทั้งวันในไม่กี่รูป</p></div></div>
+    <div class="note">น้องออมสินจำเวลาและยอดของแต่ละรายการ <b>แคปซ้ำไม่บันทึกซ้ำ</b> ตรวจแล้วกดยืนยันครั้งเดียว</div></section>
+
+  <section id="sms"><h2>📩 SMS เงินเข้า → จดเองอัตโนมัติ</h2><p class="lead">ตั้งครั้งเดียว ทุกครั้งที่มี SMS เงินเข้า น้องออมสินบันทึกยอดขายและทักบอกยอดรวมวันนี้</p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div>พิมพ์ <span class="chat">เชื่อม SMS</span> รับลิงก์ส่วนตัว (ห้ามให้คนอื่น)</div></div>
+      <div class="step"><div class="n">2</div><div><b>iPhone:</b> แอป "คำสั่งลัด" → ระบบอัตโนมัติ → ข้อความ → "ข้อความมี" เงินเข้า → เรียกใช้ทันที → "รับเนื้อหาของ URL" แบบ POST ส่งช่อง <b>text</b> = ข้อความ</div></div>
+      <div class="step"><div class="n">3</div><div><b>Android:</b> แอป MacroDroid → ทริกเกอร์ "SMS ที่ได้รับ" (หรือ "การแจ้งเตือน" ของแอปธนาคาร) → HTTP Request แบบ POST ไปที่ลิงก์</div></div>
+      <div class="step"><div class="n">4</div><div>เลิกใช้: <span class="chat">ยกเลิก SMS</span> ลิงก์เดิมใช้ไม่ได้ทันที</div></div></div>
+    <div class="note">SMS เงินออกจะถูกข้าม · iPhone อ่านได้เฉพาะ SMS (อ่านแจ้งเตือนแอปธนาคารไม่ได้) ถ้าธนาคารไม่ส่ง SMS ใช้วิธีแคปหน้าจอแทน</div></section>
+
+  <section id="online"><h2>🛍️ ขายออนไลน์</h2><p class="lead">ลูกค้าส่งสลิปมาในแชทร้าน? ส่งต่อรูปสลิปนั้นให้น้องออมสิน</p>
+    <div class="say"><img src="img/mascot/guide.webp" alt=""><div>สลิปเงินเข้าจะถูกบันทึกเป็น <b>ยอดขาย</b> ทันทีโดยไม่ต้องตอบคำถาม พร้อมบอกยอดขายรวมวันนี้ ถ้าไม่ใช่ยอดขาย พิมพ์ <span class="chat">ไม่ใช่ยอดขาย</span> น้องออมสินจะลบแล้วถามใหม่ค่ะ</div></div></section>
+
+  <section id="cost"><h2>📦 ต้นทุน & ร้านส่ง</h2><p class="lead">ซื้อวัตถุดิบ ของมาขาย บรรจุภัณฑ์ นับเป็นต้นทุน ให้เห็นกำไรจริง</p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div>ส่งสลิป/ใบเสร็จตอนซื้อของเข้าร้าน แล้วกดปุ่ม <b>📦 ต้นทุนร้าน</b> ครั้งแรกครั้งเดียว</div></div>
+      <div class="step"><div class="n">2</div><div>น้องออมสินจำร้านนั้นเป็น <b>ร้านส่ง</b> ครั้งต่อไปโอนให้ร้านเดิม = ต้นทุนอัตโนมัติ (ใบเสร็จหลายรายการก็เช่นกัน)</div></div>
+      <div class="step"><div class="n">3</div><div>ดูรายชื่อ <span class="chat">ร้านส่ง</span> · ลบ <span class="chat">ลบร้านส่ง แม็คโคร</span> · บันทึกผิด <span class="chat">ไม่ใช่ต้นทุน</span></div></div>
+      <div class="step"><div class="n">4</div><div>พิมพ์เองก็ได้ <span class="chat">ซื้อหมูมาทำลูกชิ้น 800</span></div></div></div></section>
+
+  <section id="profit"><h2>📊 ดูกำไร</h2><p class="lead">ยอดขาย − ต้นทุน = กำไร พร้อมอัตรากำไร วันที่ขายดีที่สุด และสินค้าขายดี 5 อันดับ</p>
+    <div class="grid3"><div class="card"><p><span class="chat">สรุปร้านวันนี้</span></p></div><div class="card"><p><span class="chat">สรุปร้านเดือนนี้</span></p></div><div class="card"><p><span class="chat">สรุปร้านปีนี้</span></p></div></div></section>
+
+  <section id="tax"><h2>🧾 เชื่อมกับภาษีให้เอง</h2>
+    <div class="say"><img src="img/mascot/thumbsup.webp" alt=""><div>ยอดขายทั้งหมดถูกนับเป็นรายได้ประเภท <b>"ค้าขาย" (40(8))</b> หักค่าใช้จ่ายเหมา 60% โดยไม่ต้องใช้ใบเสร็จ พิมพ์ <span class="chat">สรุปภาษี</span> ดูว่าต้องยื่นหรือเสียเท่าไหร่ · <a href="tax.html#shop">อ่านภาษีสำหรับแม่ค้า</a></div></div></section>
+
+  <section id="faq"><h2>คำถามที่พบบ่อย</h2>
+    <details><summary>เงินส่วนตัวโอนเข้าบัญชีเดียวกัน จะถูกนับเป็นยอดขายไหม?</summary><p>สลิปเงินเข้าจะถูกนับเป็นยอดขายอัตโนมัติ ถ้าไม่ใช่ พิมพ์ <span class="chat">ไม่ใช่ยอดขาย</span> หรือ <span class="chat">ลบล่าสุด</span> · ถ้าโอนเข้าบัญชีตัวเอง (ชื่อผู้โอนผู้รับตรงกัน) น้องออมสินจะถามก่อน</p></details>
+    <details><summary>ใช้ในกลุ่ม LINE ได้ไหม?</summary><p>โหมดร้านค้าใช้ในแชทส่วนตัวเท่านั้นค่ะ</p></details>
+    <details><summary>น้องออมสินอ่านรูปในมือถือเองได้ไหม?</summary><p>LINE ไม่อนุญาตให้บอทเปิดอัลบั้มหรือ SMS ในเครื่อง ต้องส่งรูปมาเอง หรือใช้ระบบ SMS อัตโนมัติด้านบน</p></details>
+    <details><summary>ข้อมูลร้านปลอดภัยไหม?</summary><p>ข้อมูลถูกเข้ารหัสและเห็นได้เฉพาะเจ้าของบัญชี ลิงก์ SMS ยกเลิกได้ทุกเมื่อ</p></details></section>
+</div><a class="btn line fab" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B8%B5%E0%B9%89">💬 ถามน้องออมสินใน LINE</a>
+<footer><div class="wrap">ฟีเจอร์โหมดร้านค้าเป็นส่วนหนึ่งของแพ็กเกจ Pro<br>© N'AOMSIN · ผู้ช่วยจดรายรับรายจ่ายใน LINE · <a href="index.html">หน้าแรก</a> · <a href="features.html">ฟีเจอร์ทั้งหมด</a> · <a href="tax.html">คู่มือภาษี</a> · <a href="missions.html">คู่มือภารกิจ</a></div></footer>
+<script>(function(){var nav=document.querySelector('.toc');if(!nav||!('IntersectionObserver'in window))return;var links=[].slice.call(nav.querySelectorAll('a'));
+function on(id){links.forEach(function(a){var h=a.getAttribute('href')==='#'+id;a.classList.toggle('on',h);if(h&&nav.scrollWidth>nav.clientWidth)nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.offsetWidth/2});});}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)on(e.target.id);});},{rootMargin:'-45% 0px -50% 0px'});
+links.forEach(function(a){var el=document.querySelector(a.getAttribute('href'));if(el)io.observe(el);});})();</script>
+</body></html>
