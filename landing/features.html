@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ฟีเจอร์ทั้งหมด · N'AOMSIN</title>
 <meta name="description" content="คู่มือฟีเจอร์ทั้งหมดของน้องออมสิน พร้อมวิธีใช้และภาพหน้าจอจริง สำหรับเพื่อนใน LINE">
-<meta name="theme-color" content="#050A18">
+<meta name="theme-color" content="#E3F0FF">
 <link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png">
 <link rel="apple-touch-icon" href="img/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,6 +181,66 @@
     .g-cat, .fe { scroll-margin-top:160px; }
   }
 
+
+  /* ===================== ธีมสว่าง ฟ้า–ขาว (ทับค่าด้านบน) ===================== */
+  :root {
+    --bg:#F5F9FF; --bg2:#EAF4FF; --panel:#FFFFFF; --stroke:rgba(28,126,214,.14);
+    --ink:#0B2545; --sub:#4A6485; --dim:#8196B0;
+    --blue:#1C7ED6; --blue2:#339AF0; --sky:#1864AB; --mint:#0CA678; --line-green:#06C755;
+    --glow:0 0 0 1px rgba(28,126,214,.10),0 28px 60px -24px rgba(24,100,171,.38);
+    --card-shadow:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30);
+    --sky-grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%);
+  }
+  body { background:radial-gradient(1100px 520px at 90% -8%,rgba(77,171,247,.30),transparent 60%),linear-gradient(180deg,#E3F0FF 0,#F5F9FF 600px,#FFFFFF 100%); background-color:#F5F9FF; }
+  .grad { background:linear-gradient(100deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { color:var(--blue); }
+  .btn.ghost { background:#fff; color:var(--blue); border:1px solid rgba(28,126,214,.28); }
+  header { background:rgba(255,255,255,.88); box-shadow:0 8px 30px -18px rgba(24,100,171,.35); }
+  .me button { background:#fff; }
+  footer { background:#fff; }
+
+  /* ประตูเข้าสู่ระบบ */
+  .gate::before { background:#74C0FC; opacity:.45; }
+  .gate-card { background:linear-gradient(160deg,#FFFFFF,#F2F8FF); border-color:rgba(28,126,214,.14); box-shadow:0 40px 80px -36px rgba(24,100,171,.5); }
+  .gate-card .g-logo { box-shadow:0 0 0 6px #fff,0 20px 50px -10px rgba(232,185,106,.55); }
+  .gate-card .g-mascot { box-shadow:0 0 0 6px #fff,0 24px 50px -18px rgba(24,100,171,.55); }
+  .perks li { color:var(--ink); }
+  .step i { background:rgba(28,126,214,.16); } .step i.on { background:var(--sky-grad); }
+
+  /* คู่มือ */
+  .gn-cat:hover, .gn-g.open .gn-cat { color:var(--blue); }
+  .gn-cat em { background:#EAF4FF; color:var(--sky); }
+  .gn-g.open .gn-cat em { background:var(--sky-grad); color:#fff; }
+  .gn-items a { color:var(--sub); border-left-color:rgba(28,126,214,.16); }
+  .gn-items a:hover { color:var(--blue); }
+  .gn-items a.on { color:var(--sky); font-weight:600; border-left-color:var(--blue); background:linear-gradient(90deg,#E7F2FD,transparent); }
+  .gn-prog { background:rgba(28,126,214,.12); }
+  .g-cat { color:var(--blue); border-bottom-color:rgba(28,126,214,.16); }
+  .fe { background:#fff; border-color:rgba(28,126,214,.10); box-shadow:var(--card-shadow); }
+  .fe-n { color:var(--blue2); }
+  .fe-ic { background:linear-gradient(135deg,#E7F2FD,#D0EBFF); }
+  .fe-h { color:var(--blue); }
+  .fe-steps li::before { background:var(--sky-grad); border:0; color:#fff; }
+  .cmd { color:#087F5B; background:#EBFBEE; border-color:rgba(6,199,85,.35); }
+  .cmd:hover { background:#D3F9D8; }
+  .fe-note { color:#8A5A00; background:#FFF9DB; border-color:rgba(250,176,5,.35); }
+  .pro-tag { background:linear-gradient(135deg,#1C7ED6,#7950F2); }
+  .pro-dot { color:var(--blue); border-color:rgba(28,126,214,.35); }
+  .sh { border-color:#fff; box-shadow:0 0 0 1px rgba(28,126,214,.14),0 28px 60px -28px rgba(24,100,171,.55); }
+  .sh::after { background:linear-gradient(transparent,rgba(255,255,255,.92)); }
+  .sh-tabs button { background:#fff; color:var(--sub); border-color:rgba(28,126,214,.18); }
+  .sh-tabs button.on { background:var(--sky-grad); color:#fff; border-color:transparent; }
+  .lb { background:rgba(11,37,69,.55); }
+  .lb-x { background:#fff; color:var(--ink); }
+  @media (max-width:900px) {
+    .m-nav { background:rgba(255,255,255,.94); border-color:rgba(28,126,214,.16); box-shadow:0 14px 34px -16px rgba(24,100,171,.45); }
+    .m-ic { background:linear-gradient(135deg,#E7F2FD,#D0EBFF); }
+    .m-t small { color:var(--blue); }
+    .g-nav { background:#fff; box-shadow:0 -30px 60px rgba(11,37,69,.18); }
+    .g-nav::before { background:rgba(28,126,214,.2); }
+    .gn-x { background:#F2F8FF; }
+    .gn-bg { background:rgba(11,37,69,.35); }
+  }
 </style>
 </head>
 <body>
