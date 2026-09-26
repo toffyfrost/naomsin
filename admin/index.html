@@ -282,6 +282,7 @@
       <button data-s="payments"><span class="ic">💳</span>การชำระ<span class="badge" id="revBadge" hidden></span></button>
       <button data-s="members"><span class="ic">👥</span>สมาชิก</button>
       <button data-s="groups"><span class="ic">👨‍👩‍👧</span>กลุ่ม</button>
+      <button data-s="game"><span class="ic">🎮</span>ภารกิจ</button>
       <button data-s="features"><span class="ic">🧩</span>ฟีเจอร์</button>
     </nav>
     <div class="me"><img id="meImg" src="../landing/img/brand/avatar-64.png" alt=""><div><b id="meName">แอดมิน</b><button id="logout">ออกจากระบบ</button></div></div>
@@ -370,6 +371,23 @@
         <h3>🧾 ประวัติการชำระ <span class="sp"></span><button class="btn sm" id="payCsv">⬇ CSV</button></h3>
         <div class="scroll"><table class="tbl"><thead><tr><th>เวลา</th><th>สมาชิก</th><th>รอบ</th><th class="num">ยอด</th><th>ตรวจโดย</th><th class="hide-m">เลขอ้างอิง</th></tr></thead><tbody id="payRows"></tbody></table></div>
       </div>
+    </section>
+
+    <!-- ภารกิจและรางวัล -->
+    <section class="sec" id="s-game">
+      <div class="top"><div><h1>ภารกิจและรางวัล</h1><p>สมาชิกสะสมแต้มและการ์ดน้องออมสินจากการจด แลกรหัส Pro ส่วนตัวได้</p></div><button class="btn" data-reload>↻ รีเฟรช</button></div>
+      <div class="card"><h3>🎁 กำหนดรางวัล</h3><p class="hint">รางวัลที่เปิดใช้จะแสดงใน LINE เมื่อสมาชิกพิมพ์ “รางวัล” · ผู้ใช้แต่ละคนแลกรางวัลเดียวกันได้ 1 ครั้ง</p>
+        <input type="hidden" id="gameRewardId"><div class="fields">
+          <div><label>ชื่อรางวัล</label><input id="gameRewardTitle" maxlength="60" placeholder="เช่น โค้ด Pro 1 เดือน"></div>
+          <div><label>แต้มที่ต้องใช้</label><input id="gameRewardPoints" type="number" min="1" max="100000" value="60"></div>
+          <div><label>ประเภทรางวัล</label><select id="gameRewardKind"><option value="pro_code">โค้ด Pro ใช้เฉพาะบัญชีผู้แลก</option><option value="manual">รางวัลพิเศษ แอดมินส่งมอบ</option></select></div>
+          <div id="gameRewardDaysWrap"><label>จำนวนวัน Pro</label><input id="gameRewardDays" type="number" min="1" max="3650" value="30"></div>
+          <div id="gameRewardDetailsWrap" hidden><label>รายละเอียดรางวัล</label><input id="gameRewardDetails" maxlength="200" placeholder="เช่น ของที่ระลึก หรือสิทธิ์พิเศษ"></div>
+          <div><label>จำนวนสิทธิ์ทั้งหมด</label><input id="gameRewardStock" type="number" min="0" max="100000" value="100"></div>
+        </div><div class="row" style="margin-top:14px"><label class="row" style="gap:8px"><input id="gameRewardActive" type="checkbox" checked style="width:auto"> เปิดให้แลก</label><span class="grow"></span><button class="btn" id="gameRewardClear">ล้างฟอร์ม</button><button class="btn pri" id="gameRewardSave">บันทึกรางวัล</button></div>
+      </div>
+      <div class="card"><h3>🛍️ รางวัลทั้งหมด</h3><div class="scroll"><table class="tbl"><thead><tr><th>รางวัล</th><th>แต้ม</th><th>ประเภท</th><th>ใช้แล้ว / สิทธิ์</th><th>สถานะ</th><th></th></tr></thead><tbody id="gameRewardRows"></tbody></table></div></div>
+      <div class="card"><h3>🎟️ การแลกล่าสุด</h3><div class="scroll"><table class="tbl"><thead><tr><th>เวลา</th><th>สมาชิก</th><th>รางวัล</th><th>แต้ม</th><th>สถานะ</th><th></th></tr></thead><tbody id="gameClaimRows"></tbody></table></div></div>
     </section>
 
     <!-- สมาชิก -->
@@ -472,7 +490,7 @@ const CONFIG = {
   // Apps Script ล่มชั่วคราว (หมดเวลา/เรียกพร้อมกันเกิน/โควตา) จะตอบเป็นหน้า HTML แทน JSON
   // → คำสั่งอ่าน: ลองใหม่อัตโนมัติ 2 ครั้ง · คำสั่งแก้ข้อมูล: ไม่ลองซ้ำ (กันทำซ้ำ) แต่บอกให้ตรวจผลก่อน
   let forceFresh = false;
-  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'groups', 'billing', 'codes', 'redemptions', 'payments', 'aiUsage', 'salesMonth']);
+  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'groups', 'billing', 'codes', 'redemptions', 'payments', 'aiUsage', 'salesMonth', 'gameRewards']);
   const MAX_PARALLEL = 2; let inFlight = 0; const waiting = [];
   const slot = () => new Promise((ok) => { if (inFlight < MAX_PARALLEL) { inFlight++; ok(); } else waiting.push(ok); });
   const release = () => { const next = waiting.shift(); if (next) next(); else inFlight--; };
@@ -577,10 +595,39 @@ const CONFIG = {
 
   /* ---------- นำทาง ---------- */
   const loaded = {};
-  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers, groups: loadGroups, features: loadFeatures };
+  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers, groups: loadGroups, game: loadGame, features: loadFeatures };
   function loadFeatures() { loaded.features = true; }
   $('#s-features').addEventListener('click', (e) => { const b = e.target.closest('[data-feature-go]'); if (b) show(b.dataset.featureGo); });
   let groupRows = [];
+  let gameData = { rewards: [], claims: [] };
+  async function loadGame() { gameData = await api('gameRewards'); loaded.game = true; renderGame(); }
+  function renderGame() {
+    const byId = Object.fromEntries(gameData.rewards.map((r) => [r.id, r.title]));
+    $('#gameRewardRows').innerHTML = gameData.rewards.map((r) => '<tr><td><b>' + esc(r.title) + '</b></td><td>' + r.points + '</td><td>' + (r.kind === 'manual' ? 'ส่งมอบเอง' : 'Pro ' + r.pro_days + ' วัน') + '</td><td>' + r.claimed + ' / ' + r.stock + '</td><td><span class="chip ' + (r.active ? 'g' : 'y') + '">' + (r.active ? 'เปิด' : 'ปิด') + '</span></td><td><button class="btn sm" data-game-edit="' + esc(r.id) + '">แก้ไข</button></td></tr>').join('') || '<tr><td colspan="6" class="empty">ยังไม่มีรางวัล</td></tr>';
+    $('#gameClaimRows').innerHTML = gameData.claims.map((c) => '<tr><td>' + thDT(c.at) + '</td><td>' + esc(c.name) + '</td><td>' + esc(byId[c.rewardId] || c.rewardId) + '</td><td>' + c.points + '</td><td>' + (c.status === 'fulfilled' ? '<span class="chip g">ส่งมอบแล้ว</span>' : '<span class="chip y">รอส่งมอบ</span>') + '</td><td>' + (c.status === 'pending' && gameData.rewards.find((r) => r.id === c.rewardId)?.kind === 'manual' ? '<button class="btn sm pri" data-game-fulfill="' + esc(c.id) + '">ส่งมอบ</button>' : esc(c.code || '')) + '</td></tr>').join('') || '<tr><td colspan="6" class="empty">ยังไม่มีการแลก</td></tr>';
+  }
+  function gameKind() { const manual = $('#gameRewardKind').value === 'manual'; $('#gameRewardDaysWrap').hidden = manual; $('#gameRewardDetailsWrap').hidden = !manual; }
+  $('#gameRewardKind').addEventListener('change', gameKind);
+  function clearGameForm() { $('#gameRewardId').value = ''; $('#gameRewardTitle').value = ''; $('#gameRewardPoints').value = 60; $('#gameRewardDays').value = 30; $('#gameRewardStock').value = 100; $('#gameRewardKind').value = 'pro_code'; $('#gameRewardDetails').value = ''; $('#gameRewardActive').checked = true; gameKind(); }
+  $('#gameRewardClear').addEventListener('click', clearGameForm);
+  $('#gameRewardRows').addEventListener('click', (e) => { const b = e.target.closest('[data-game-edit]'); if (!b) return;
+    const r = gameData.rewards.find((x) => x.id === b.dataset.gameEdit); if (!r) return;
+    $('#gameRewardId').value = r.id; $('#gameRewardTitle').value = r.title; $('#gameRewardPoints').value = r.points;
+    $('#gameRewardDays').value = r.pro_days || 30; $('#gameRewardStock').value = r.stock; $('#gameRewardKind').value = r.kind || 'pro_code'; $('#gameRewardDetails').value = r.details || ''; $('#gameRewardActive').checked = r.active; gameKind();
+    $('#gameRewardTitle').focus(); scrollTo(0, 0);
+  });
+  $('#gameRewardSave').addEventListener('click', (e) => act(e.target, async () => {
+    const a = { id: $('#gameRewardId').value, title: $('#gameRewardTitle').value.trim(), points: Number($('#gameRewardPoints').value),
+      proDays: Number($('#gameRewardDays').value), kind: $('#gameRewardKind').value, details: $('#gameRewardDetails').value.trim(), stock: Number($('#gameRewardStock').value), active: $('#gameRewardActive').checked };
+    if (!a.title || !Number.isInteger(a.points) || a.points < 1 || !Number.isInteger(a.proDays) || a.proDays < 1 || !Number.isInteger(a.stock) || a.stock < 0) throw new Error('ตรวจชื่อรางวัล แต้ม จำนวนวัน Pro และจำนวนสิทธิ์');
+    gameData = await api('gameRewardSave', a); renderGame(); clearGameForm(); toast('บันทึกรางวัลแล้ว');
+  }, 'กำลังบันทึกรางวัล…'));
+  $('#gameClaimRows').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-game-fulfill]'); if (!b) return;
+    const note = await ask({ title: 'ส่งมอบรางวัล', text: 'ข้อความนี้จะส่งให้ผู้ใช้ทาง LINE', input: 'textarea', inputPlaceholder: 'วิธีรับรางวัล / รายละเอียดที่ส่งมอบ', confirmButtonText: 'ส่งมอบและแจ้งผู้ใช้', inputValidator: (v) => !v.trim() && 'กรอกข้อความก่อน' });
+    if (note == null) return;
+    act(b, async () => { gameData = await api('gameClaimFulfill', { id: b.dataset.gameFulfill, note }); renderGame(); toast('ส่งมอบรางวัลแล้ว'); }, 'กำลังแจ้งผู้ใช้…');
+  });
   async function loadGroups() {
     groupRows = await api('groups'); loaded.groups = true;
     $('#groupRows').innerHTML = groupRows.map((g) => '<tr><td><b>' + esc(g.name) + '</b><div class="mono" style="font-size:11px;color:var(--dim)">' + esc(g.id) + '</div></td><td>' + g.members + '</td><td>' + g.transactions + '</td><td><span class="chip ' + (g.active ? 'g' : 'y') + '">' + (g.active ? 'เปิด' : 'พัก') + '</span></td><td><button class="btn sm ' + (g.active ? 'bad' : 'ok') + '" data-group="' + esc(g.id) + '">' + (g.active ? 'พักสมุด' : 'เปิดสมุด') + '</button></td></tr>').join('') || '<tr><td colspan="5" class="empty">ยังไม่มีสมุดกลุ่ม</td></tr>';
@@ -835,6 +882,7 @@ const CONFIG = {
       '<div class="dsec"><h4>🤖 การใช้ AI <span class="chip" style="margin-left:auto">โควตา ×' + d.usage.mult + '</span></h4>' +
         ubar('วันนี้', d.usage.day, d.usage.limits.day) + ubar('สัปดาห์นี้', d.usage.week, d.usage.limits.week) + ubar('เดือนนี้', d.usage.month, d.usage.limits.month) +
         '<p class="hint">เดือนนี้เรียก AI ' + d.usage.month.calls + ' ครั้ง · ≈ $' + d.usage.month.cost.toFixed(3) + ' · ถ้าโควตาเต็ม ให้เพิ่ม Pro (โควตา ×3)</p></div>' +
+      '<div class="dsec"><h4>🎮 ภารกิจและผู้ช่วย</h4><div class="kv2"><span>แต้มคงเหลือ</span><b>' + (d.game?.points || 0) + '</b><span>การ์ดสะสม</span><b>' + (d.game?.stickers?.length || 0) + ' ใบ</b><span>น้ำเสียง</span><b>' + esc(d.game?.tone || 'playful') + '</b><span>เตือนเพิ่มเติม</span><b>' + (d.game?.proactive ? 'เปิด' : 'ปิด') + '</b></div></div>' +
       '<div class="dsec"><h4>📒 สมุดบัญชี</h4><div class="kv2"><span>รายการทั้งหมด</span><b>' + d.ledger.txCount.toLocaleString() + ' รายการ</b><span>กระเป๋าเงิน</span><b>' + d.ledger.wallets + ' ใบ</b>' +
         '<span>เป้าหมาย / ประจำ</span><b>' + d.ledger.goals + ' / ' + d.ledger.recurring + '</b><span>ข้อมูลภาษีเพิ่มเติม</span><b>' + (d.ledger.taxRecords || 0) + ' รายการ</b><span>รอบงบ</span><b>วันที่ ' + d.ledger.cycleDay + '</b>' +
         '<span>เตือนจด</span><b>' + (d.ledger.reminder.enabled ? 'เปิด ' + d.ledger.reminder.hour + ':00' : 'ปิด') + '</b><span>สถานะค้างในแชท</span><b>' + (d.pendingState ? '<span class="chip y">' + esc(d.pendingState) + '</span>' : 'ไม่มี') + '</b></div>' +
@@ -895,7 +943,7 @@ const CONFIG = {
     '<button class="btn" data-menu="blocked">ปลดระงับสมาชิก</button><button class="btn" data-menu="members">ระงับสมาชิก / เพิ่ม Pro</button>' +
     '<h4>💰 รายได้และสิทธิ์</h4><button class="btn" data-menu="sales">ยอดขายรายเดือน</button><button class="btn" data-menu="payments">ตรวจสลิป / ประวัติชำระเงิน</button>' +
     '<button class="btn" data-menu="billing">ราคาแพ็กเกจ / Pro ฟรี / แคมเปญ / โปรโมชั่น</button><button class="btn" data-menu="codes">สร้างและจัดการโค้ด Pro</button>' +
-    '<button class="btn" data-menu="features">สิทธิ์ฟีเจอร์ Free / Pro</button>' +
+    '<button class="btn" data-menu="features">สิทธิ์ฟีเจอร์ Free / Pro</button><button class="btn" data-menu="game">ภารกิจ / กำหนดรางวัล</button>' +
     '<h4>⚙️ ระบบ</h4><button class="btn" data-menu="ai">การใช้ AI ทั้งระบบ</button><button class="btn" data-menu="groups">จัดการสมุดกลุ่ม</button>' +
     '<button class="btn" data-menu="richmenu">อัปเดต LINE Rich Menu ให้ทุกคน</button></div><div class="row" style="justify-content:flex-end"><button class="btn" data-close>ปิด</button></div>'));
   $('#modalBox').addEventListener('click', async (e) => {
@@ -903,7 +951,7 @@ const CONFIG = {
     if (member) { closeModal(); show('members'); return openMember(member.dataset.recentMember, member); }
     const b = e.target.closest('[data-menu]'); if (!b) return;
     const action = b.dataset.menu;
-    if (['members', 'pending', 'blocked', 'payments', 'billing', 'codes', 'features', 'groups'].includes(action)) {
+    if (['members', 'pending', 'blocked', 'payments', 'billing', 'codes', 'features', 'groups', 'game'].includes(action)) {
       closeModal();
       if (['members', 'pending', 'blocked'].includes(action)) { $('#memQ').value = ''; $('#memF').value = action === 'members' ? '' : action; loaded.members = false; show('members'); }
       else { loaded[action] = false; show(action); }
@@ -953,6 +1001,8 @@ const CONFIG = {
         { at: new Date(Date.now() - 864e5).toISOString(), orderId: 'x2', name: 'บีม', cycle: 'monthly', amount: 35, ref: '016267998877ATF02', by: 'auto' }],
       groups: [{ id: 'C' + 'a'.repeat(32), name: 'ครอบครัว', active: true, members: 4, transactions: 128, openedAt: t },
         { id: 'C' + 'b'.repeat(32), name: 'ทริปเพื่อน', active: false, members: 6, transactions: 42, openedAt: t }],
+      game: { rewards: [{ id: 'sample12', title: 'โค้ด Pro 1 เดือน', points: 60, pro_days: 30, stock: 100, claimed: 2, active: true, kind: 'pro_code', details: '' }],
+        claims: [{ id: 'c1', rewardId: 'sample12', name: 'บีม', points: 60, code: 'GAME-EXAMPLE', status: 'fulfilled', at: new Date().toISOString() }] },
       members: [['มิ้นท์', 'mint 🌸', 'a', 'active', 'promo'], ['บีม', 'Beam', 'b', 'active', 'paid'], ['ฝน', 'Fon', 'c', 'active', 'paid'], ['ต้อม', 'Tom', 'd', 'pending', 'promo'], ['แป้ง', 'Pang', 'e', 'blocked', 'free'], ['SAND', 'SAND', 'f', 'registering', 'free']]
         .map(([n, l, c, s, p], i) => ({ userId: U(c), name: n, lineName: l, picture: '', status: s, role: i === 0 ? 'admin' : 'member', joinedAt: new Date(Date.now() - i * 5e8).toISOString(), lastUsed: new Date(Date.now() - i * 4e7).toISOString(),
           plan: { tier: p === 'free' ? 'free' : 'pro', source: p, until: p === 'paid' ? addD(t, 200 - i * 50) : '' }, paidUntil: p === 'paid' ? addD(t, 200 - i * 50) : '' })),
@@ -960,6 +1010,14 @@ const CONFIG = {
     const stateOf = (c) => c.status !== 'active' ? 'ปิดแล้ว' : c.expires && c.expires < t ? 'หมดอายุ' : c.used >= c.maxUses ? 'ใช้ครบแล้ว' : 'ใช้ได้';
     const sleep = (v) => new Promise((r) => setTimeout(() => r(v), 250));
     switch (action) {
+      case 'gameRewards': return sleep(M.game);
+      case 'gameRewardSave': {
+        const old = M.game.rewards.find((r) => r.id === a.id);
+        if (old) Object.assign(old, { title: a.title, points: a.points, pro_days: a.kind === 'manual' ? 0 : a.proDays, kind: a.kind, details: a.details, stock: a.stock, active: a.active });
+        else M.game.rewards.push({ id: Math.random().toString(36).slice(2, 14), title: a.title, points: a.points, pro_days: a.kind === 'manual' ? 0 : a.proDays, kind: a.kind, details: a.details, stock: a.stock, claimed: 0, active: a.active });
+        return sleep(M.game);
+      }
+      case 'gameClaimFulfill': { const c = M.game.claims.find((x) => x.id === a.id); c.status = 'fulfilled'; c.note = a.note; return sleep(M.game); }
       case 'aiUsage': return sleep({ model: 'gemini-preview', usage: { day: { calls: 12, tokens: 44000, cost: 0.02 }, week: { calls: 70, tokens: 240000, cost: 0.12 }, month: { calls: 280, tokens: 960000, cost: 0.48 } }, budgetUsd: 10, usdThb: 35 });
       case 'salesMonth': { const rows = M.payments.filter((p) => p.at.slice(0, 7) === a.month); return sleep({ month: a.month, count: rows.length, amount: rows.reduce((n, p) => n + p.amount, 0), auto: rows.filter((p) => p.by === 'auto').length, manual: rows.filter((p) => p.by !== 'auto').length, monthly: rows.filter((p) => p.cycle === 'monthly').length, yearly: rows.filter((p) => p.cycle === 'yearly').length }); }
       case 'richmenuUpdate': return sleep({ ok: true, message: 'อัปเดต Rich Menu ให้ผู้ใช้ทุกคนแล้ว (ตัวอย่าง)' });
@@ -1013,6 +1071,7 @@ const CONFIG = {
       case 'memberDetail': {
         const mm = M.members.find((x) => x.userId === a.userId);
         return new Promise((r) => setTimeout(() => r({ ...mm, email: 'user@example.com', phone: '081-234-5678', step: mm.status === 'registering' ? 'email' : '', consentAt: mm.joinedAt, daily: !!mm.daily, monthly: mm.monthly !== false,
+          game: { points: 26, stickers: ['hello','calendar'], tone: 'playful', proactive: false },
           ledger: mm.previewLedger || { txCount: 342, wallets: 3, goals: 1, recurring: 2, taxRecords: 2, reminder: { enabled: true, hour: 21 }, coach: false, shopMode: false, cycleDay: 25 },
           usage: { day: { tokens: 38000, calls: 14, cost: .02 }, week: { tokens: 120000, calls: 50, cost: .07 }, month: { tokens: 410000, calls: 160, cost: .21 }, limits: { day: 50000, week: 250000, month: 800000 }, mult: 1 },
           payments: mm.plan.source === 'paid' ? [{ at: new Date(Date.now() - 5e8).toISOString(), cycle: 'yearly', amount: 299, by: 'auto' }] : [], codes: [{ at: new Date(Date.now() - 9e8).toISOString(), code: 'NAOMSIN2026', until: addD(t, 20) }],
