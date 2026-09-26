@@ -167,7 +167,20 @@
 
   /* rich menu tilt */
   .rich-wrap { perspective:1600px; max-width:980px; margin:0 auto; }
-  .rich-wrap img { border-radius:26px; box-shadow:var(--glow); transform:rotateX(var(--rx,24deg)) scale(var(--rs,.9)); transition:transform .1s linear; }
+  .rich-wrap .rm-stage { position:relative; border-radius:26px; overflow:hidden; box-shadow:var(--glow); transform:rotateX(var(--rx,24deg)) scale(var(--rs,.9)); transition:transform .1s linear; aspect-ratio:2500/1686; background:#1C7ED6; }
+  .rm-stage img { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity .45s ease; }
+  .rm-stage img.on { opacity:1; }
+  .rm-hit { position:absolute; top:0; height:12.5%; width:50%; border:0; background:transparent; cursor:pointer; }
+  .rm-hit.l { left:0; } .rm-hit.r { right:0; }
+  .rm-tabs { display:flex; justify-content:center; gap:8px; margin:0 auto 26px; padding:6px; width:max-content; max-width:100%; border-radius:999px; background:#fff; border:1px solid rgba(28,126,214,.15); box-shadow:0 14px 30px -20px rgba(24,100,171,.6); }
+  .rm-tabs button { font:inherit; font-weight:600; font-size:15px; border:0; padding:10px 20px; border-radius:999px; background:transparent; color:#1864AB; cursor:pointer; transition:.25s; }
+  .rm-tabs button.on { color:#fff; background:linear-gradient(135deg,#1864AB,#339AF0); box-shadow:0 8px 18px -10px rgba(24,100,171,.9); }
+  .rm-pts { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; max-width:980px; margin:44px auto 0; }
+  .rm-pt { padding:22px 22px 18px; border-radius:22px; background:#fff; border:1px solid rgba(28,126,214,.10); box-shadow:0 20px 50px -34px rgba(24,100,171,.5); }
+  .rm-pt b { display:block; font-size:17px; color:#0B2545; margin-bottom:6px; }
+  .rm-pt p { margin:0; font-size:15px; color:var(--sub); line-height:1.6; }
+  @media (max-width:900px) { .rm-pts { grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px) { .rm-pts { grid-template-columns:1fr; } .rm-tabs button { padding:9px 14px; font-size:14px; } .rich-wrap .rm-stage { border-radius:16px; } }
 
   /* security */
   .sec { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
@@ -550,14 +563,32 @@
 </section>
 
 <!-- RICH MENU -->
-<section style="padding-top:40px">
+<section id="richmenu" class="rm-sec">
   <div class="wrap">
     <div class="head">
-      <span class="eyebrow rv">เมนูลัด</span>
-      <h2 class="rv" style="--d:.1s">ทุกอย่างอยู่ใต้แชท</h2>
-      <p class="rv" style="--d:.2s">กดครั้งเดียว ไปถึงทุกฟีเจอร์</p>
+      <span class="eyebrow rv">เมนูลัดโฉมใหม่</span>
+      <h2 class="rv" style="--d:.1s">2 หน้า 16 ปุ่ม<br><span class="grad">ทุกอย่างอยู่ใต้แชท</span></h2>
+      <p class="rv" style="--d:.2s">แตะแท็บด้านบนเพื่อสลับหน้า ไม่ต้องจำคำสั่ง ไม่ต้องพิมพ์</p>
     </div>
-    <div class="rich-wrap" id="rich"><img src="img/richmenu.png" alt="เมนูลัดของ N'AOMSIN ใน LINE"></div>
+    <div class="rm-tabs rv" role="tablist">
+      <button class="on" data-k="main" role="tab">⚡ ใช้งานประจำ</button>
+      <button data-k="more" role="tab">✨ ฟีเจอร์เพิ่มเติม</button>
+    </div>
+    <div class="rich-wrap" id="rich">
+      <div class="rm-stage">
+        <img class="on" data-k="main" src="img/richmenu-main.webp" alt="Rich Menu แท็บใช้งานประจำ: จดด่วน สรุปวันนี้ สรุปเดือนนี้ กระเป๋าเงิน งบ แดชบอร์ด สลิป ลบล่าสุด" width="1600" height="1079">
+        <img data-k="more" src="img/richmenu-more.webp" alt="Rich Menu แท็บฟีเจอร์เพิ่มเติม: ผ่อนชำระ เป้าหมายออม ใครติดเงิน ถามน้องออมสิน รายงาน PDF ส่งออก Excel คำสั่งทั้งหมด ตั้งค่า ฟีเจอร์ใหม่" width="1600" height="1079" loading="lazy">
+        <button class="rm-hit l" data-k="main" aria-label="แท็บใช้งานประจำ"></button><button class="rm-hit r" data-k="more" aria-label="แท็บฟีเจอร์เพิ่มเติม"></button>
+      </div>
+    </div>
+    <div class="rm-pts">
+      <div class="rm-pt rv"><b>⚡ จดด่วน ปุ่มใหญ่สุด</b><p>แตะเดียวเห็นรายการที่จดบ่อย กดซ้ำบันทึกทันที กาแฟเช้า ค่าวิน ค่าข้าว ไม่ต้องพิมพ์สักตัว</p></div>
+      <div class="rm-pt rv" style="--d:.08s"><b>🗂️ แยก 2 แท็บ ไม่รก</b><p>"ใช้งานประจำ" รวมของที่กดทุกวัน "ฟีเจอร์เพิ่มเติม" รวมเครื่องมือเฉพาะทาง สลับแท็บทันทีโดยไม่ส่งข้อความเข้าแชท</p></div>
+      <div class="rm-pt rv" style="--d:.16s"><b>📊 ดูเงินได้ในแตะเดียว</b><p>สรุปวันนี้ สรุปเดือนนี้ กระเป๋าเงิน งบ แดชบอร์ด คลังสลิป และปุ่มลบรายการล่าสุดเมื่อจดพลาด</p></div>
+      <div class="rm-pt rv" style="--d:.24s"><b>🧰 ฟีเจอร์เด็ดครบมือ</b><p>ผ่อนชำระ เป้าหมายออม ใครติดเงิน ถามน้องออมสิน รายงาน PDF ส่งออก Excel คำสั่งทั้งหมด และตั้งค่า</p></div>
+      <div class="rm-pt rv" style="--d:.32s"><b>🟢 ปุ่มเด่นสีมิ้นต์</b><p>แดชบอร์ด ถามน้องออมสิน และฟีเจอร์ใหม่ ใช้สีมิ้นต์ให้หาเจอไว ของใหม่ไม่หลุดสายตา</p></div>
+      <div class="rm-pt rv" style="--d:.4s"><b>👆 ปุ่มใหญ่ อ่านง่าย</b><p>ไอคอนชัด ตัวหนังสือใหญ่ กดง่ายแม้ใช้มือเดียว ทุกปุ่มพาไปฟีเจอร์จริง ไม่ต้องรอ AI เดา</p></div>
+    </div>
   </div>
 </section>
 
@@ -685,7 +716,7 @@
   }
   setChap(0);
 
-  const hdr = $('#hdr'), bar = $('#progress'), heroPhone = $('#heroPhone'), mascot = $('#mascot'), storyPhone = $('#storyPhone'), rich = $('#rich img');
+  const hdr = $('#hdr'), bar = $('#progress'), heroPhone = $('#heroPhone'), mascot = $('#mascot'), storyPhone = $('#storyPhone'), rich = $('#rich .rm-stage');
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   let ticking = false;
   function frame() {
@@ -754,6 +785,8 @@
   $$('.nf-copy').forEach((b) => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = '✓ คัดลอกแล้ว'; setTimeout(() => b.textContent = t, 1400); } catch (e) { /* ไม่รองรับ */ }
   }));
+  const rmSet = (k) => { $$('#richmenu [data-k]').forEach((x) => x.classList.toggle('on', x.dataset.k === k && !x.classList.contains('rm-hit'))); };
+  $$('.rm-tabs button, .rm-hit').forEach((b) => b.addEventListener('click', () => rmSet(b.dataset.k)));
 })();
 </script>
 </body>
