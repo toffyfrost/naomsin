@@ -398,7 +398,7 @@
   <div class="grid-bg"></div>
   <div class="wrap">
     <div>
-      <a class="hero-promo rv" href="#pricing"><b>🎁 ใหม่</b>ช่วงนี้ใช้ Pro ฟรี ดูรายละเอียด →</a>
+      <a class="hero-promo rv" href="#pricing"><b>💎 แพ็กเกจ</b>ดูสิทธิ์ Free / Pro และราคาล่าสุด →</a>
       <span class="eyebrow rv">ผู้ช่วยการเงินบน LINE</span>
       <h1 class="rv" style="--d:.1s">เงินทุกบาท<br><span class="grad">มีเรื่องเล่า</span></h1>
       <p class="lead rv" style="--d:.2s">น้องออมสินฟังทุกเรื่องที่คุณจ่าย แค่พิมพ์ ส่งสลิป หรือพูดบอก แล้วเปลี่ยนมันเป็นภาพการเงินที่ชัดเจน ไม่ต้องโหลดแอปเพิ่ม</p>
@@ -657,28 +657,28 @@
       <h2 class="rv" style="--d:.1s">เริ่มฟรี<br><span class="grad">อัปเกรดเมื่อพร้อม</span></h2>
       <p class="rv" style="--d:.2s">ฟีเจอร์จดบันทึกหลักใช้ฟรีตลอดไป Pro ปลดล็อกผู้ช่วยครบทุกอย่าง</p>
     </div>
-    <div class="promo rv" id="promo">
+    <div class="promo rv" id="promo" hidden>
       <img src="img/brand/avatar-64.png" alt="">
       <div><b>🎁 ช่วงนี้ใช้ Pro ฟรี!</b><span id="promoText">เปิดให้ทุกคนใช้ฟีเจอร์ Pro ได้ฟรีในช่วงทดสอบ ไม่ต้องผูกบัตร ไม่ต้องชำระเงิน</span></div>
       <a class="btn line" href="#add">รับสิทธิ์ใน LINE</a>
     </div>
     <div class="cycle rv" role="tablist" aria-label="รอบการชำระ">
       <button class="on" data-c="monthly" role="tab" aria-selected="true">รายเดือน</button>
-      <button data-c="yearly" role="tab" aria-selected="false">รายปี <em id="saveTag">ประหยัด 29%</em></button>
+      <button data-c="yearly" role="tab" aria-selected="false">รายปี <em id="saveTag">ดูความคุ้มค่า</em></button>
     </div>
     <div class="plans">
       <div class="plan rv">
         <h3>Free</h3><div class="price">฿0 <small>ตลอดไป</small></div><div class="per">สำหรับเริ่มจดทุกวัน</div>
-        <ul id="freeFeatures"><li>จดด้วยข้อความ รูป และ PDF</li><li>แก้ไข ลบ และจดด่วน</li><li>กระเป๋าเงิน งบ และรอบงบ</li><li>สรุปรายวัน/เดือน และแดชบอร์ด</li><li>เตือนจด และยืม-คืน</li><li>สมุดกลุ่มและหารบิล</li><li>โควตา AI ปกติ</li></ul>
+        <ul id="freeFeatures"><li>พิมพ์ “แพ็กเกจ” ใน LINE เพื่อดูสิทธิ์ล่าสุด</li></ul>
         <a class="btn ghost" href="#add">เริ่มใช้ฟรี</a>
       </div>
       <div class="plan hot rv" style="--d:.1s">
         <span class="badge" id="proBadge">แนะนำ</span>
         <h3>Pro 💎</h3>
-        <div class="price"><s id="proWas" hidden></s><span id="proPrice">฿35</span> <small id="proUnit">/ เดือน</small></div>
+        <div class="price"><s id="proWas" hidden></s><span id="proPrice">ดูราคาใน LINE</span> <small id="proUnit"></small></div>
         <div class="per" id="proPer">ยกเลิกได้ทุกเมื่อ ไม่ต่ออายุอัตโนมัติ</div>
         <div class="camp" id="camp" hidden></div>
-        <ul id="proFeatures"><li class="all">ทุกอย่างใน Free</li><li>จดด้วยเสียง</li><li>ถามเรื่องเงินกับ AI</li><li>รายงาน PDF + ส่งรายงานรายเดือนอัตโนมัติ</li><li>ส่งออก Excel / CSV</li><li>เป้าหมายการออม</li><li>รายการประจำ บัตรเครดิต และผ่อนชำระ</li><li>โค้ชการเงินรายสัปดาห์</li><li>โหมดร้านค้า</li><li>โควตา AI ×3</li></ul>
+        <ul id="proFeatures"><li class="all">พิมพ์ “แพ็กเกจ” ใน LINE เพื่อดูสิทธิ์ล่าสุด</li></ul>
         <a class="btn pri" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B9%81%E0%B8%9E%E0%B9%87%E0%B8%81%E0%B9%80%E0%B8%81%E0%B8%88" target="_blank" rel="noopener" id="proCta">สมัคร Pro ใน LINE</a>
         <p class="plan-note">ชำระผ่านพร้อมเพย์ ส่งสลิปในแชท ระบบตรวจและเปิด Pro ให้อัตโนมัติ<br>🎟️ มีโค้ดพิเศษ? พิมพ์ <b>โค้ด XXXX</b> ในแชทรับ Pro ฟรีทันที</p>
       </div>
@@ -800,9 +800,10 @@
   const PRICING_URL = 'https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/pricing';
   const TH_M = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   const thD = (s) => { const [y, m, d] = s.split('-').map(Number); return d + ' ' + TH_M[m - 1] + ' ' + (y + 543); };
-  let P = { monthly: { price: 35, base: 35, campaign: null }, yearly: { price: 299, base: 299, campaign: null }, yearlySaving: 121, yearlySavingPct: 29, freePro: { until: '', note: 'ช่วงทดสอบ' } };
+  let P = null;
   let cyc = 'monthly';
   function paint() {
+    if (!P) return;
     const c = P[cyc], m = P.monthly.price;
     $('#proPrice').textContent = '฿' + c.price;
     $('#proUnit').textContent = cyc === 'yearly' ? '/ ปี' : '/ เดือน';
@@ -830,7 +831,6 @@
   $$('.cycle button').forEach((b) => b.addEventListener('click', () => {
     cyc = b.dataset.c; $$('.cycle button').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); }); paint();
   }));
-  paint();
   fetch(PRICING_URL + '?v=' + Math.floor(Date.now() / 30000)).then((r) => r.ok ? r.json() : null).then((d) => { if (d && d.monthly) { P = d; paint(); } }).catch(() => {});
   $$('.nf-copy').forEach((b) => b.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = '✓ คัดลอกแล้ว'; setTimeout(() => b.textContent = t, 1400); } catch (e) { /* ไม่รองรับ */ }
