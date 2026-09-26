@@ -615,61 +615,126 @@ async function delTx(id) {
   D = await call('dashTx', 'delete', { id }, range); closeSheet(); render(); toast('🗑️ ลบแล้ว');
 }
 
-/* ---------- ภาษีเงินได้บุคคลธรรมดา ---------- */
-const TAX_KIND = { salary:'เงินเดือน 40(1)', service:'รับจ้าง/บริการ 40(2)', other:'เงินได้ประเภทอื่น (ตรวจเพิ่ม)', excluded:'ไม่รวมคำนวณภาษี' };
-const TAX_RECORD = { allowance:'ค่าลดหย่อนอื่น', other_expense:'ค่าใช้จ่ายเงินได้ประเภทอื่น', withheld:'ภาษีหัก ณ ที่จ่ายเพิ่มเติม' };
+/* ---------- ภาษีเงินได้บุคคลธรรมดา (ใช้ง่ายสำหรับทุกคน: พนักงาน ฟรีแลนซ์ พ่อค้าแม่ค้า) ---------- */
+const TAX_KIND = { salary:'💼 เงินเดือน/โบนัส · 40(1)', service:'🧑‍💻 รับจ้าง/ฟรีแลนซ์ · 40(2)', trade:'🏪 ขายของ/ค้าขาย · 40(8)', other:'📦 อื่นๆ เช่น ค่าเช่า (ตรวจเพิ่ม)', excluded:'🚫 ไม่ใช่รายได้ (เงินโอนคืน/ยืม)' };
+const TAX_KIND_HELP = { salary:'เงินที่นายจ้างจ่ายประจำ หักค่าใช้จ่ายได้ 50% (รวมกับรับจ้างไม่เกิน 100,000)', service:'ค่าจ้างงานเป็นครั้งๆ ค่าคอม ค่าบริการ หักค่าใช้จ่ายได้ 50%',
+  trade:'ขายของ ขายอาหาร ขายออนไลน์ หักค่าใช้จ่ายเหมาได้ 60% ไม่ต้องเก็บใบเสร็จ', other:'รายได้อื่นที่ต้องตรวจประเภทเพิ่ม เช่น ค่าเช่าบ้าน', excluded:'ไม่นำไปคิดภาษี เช่น เพื่อนคืนเงิน เงินยืม ย้ายเงินระหว่างบัญชี' };
+const TAX_RECORD = { allowance:'ค่าลดหย่อนอื่น (พิมพ์เอง)', other_expense:'ค่าใช้จ่ายจริงของรายได้อื่น', withheld:'ภาษีหัก ณ ที่จ่ายเพิ่มเติม' };
+const TAX_ASK = (q) => 'https://line.me/R/oaMessage/@943axyqp/?' + encodeURIComponent(q);
+const TAX_GUIDE = 'landing/tax.html';
+let taxGroup = 'family';
 async function loadTax() {
   if (D.owner.isGroup) return toast('ภาษีใช้กับสมุดส่วนตัวเท่านั้น');
   $('app').innerHTML = '<div class="loading">กำลังโหลดข้อมูลภาษี…</div>';
   try { TaxData = await call('taxLoad', taxYearSelected); render(); } catch (e) { $('app').innerHTML = '<div class="empty">โหลดข้อมูลภาษีไม่สำเร็จ</div>'; }
 }
 async function setTaxYear(y) { taxYearSelected = Number(y); TaxData = null; await loadTax(); }
+const dedOf = (id) => (TaxData.guide.deductions || []).find((d) => d.id === id);
 function renderTax() {
   if (!TaxData) { $('app').innerHTML = '<div class="loading">กำลังโหลดข้อมูลภาษี…</div>'; return; }
-  const s = TaxData.summary;
+  const s = TaxData.summary, rows = TaxData.incomeRows, sugg = rows.filter((t) => !t.tax && t.suggest).length;
+  const ded = (TaxData.records || []).filter((r) => r.kind === 'allowance');
+  const head = s.possibleRefund > 0 ? ['💰 คุณอาจได้เงินคืน', money(s.possibleRefund), 'var(--inc)'] : s.due > 0 ? ['🧾 ต้องจ่ายภาษีเพิ่ม (ประมาณ)', money(s.due), 'var(--brand)'] : ['✅ ยังไม่ต้องจ่ายภาษีเพิ่ม', money(0), 'var(--inc)'];
+  const step = (n, done, title, sub) => `<div class="row" style="gap:10px;margin-top:8px"><div class="ico" style="width:30px;height:30px;flex:0 0 30px;font-size:14px;background:${done?'var(--inc-soft)':'var(--brand-soft)'}">${done?'✓':n}</div><div class="grow"><b style="font-size:14px">${title}</b><div class="muted">${sub}</div></div></div>`;
   $('app').innerHTML = `
-    <div class="card"><div class="row between"><div class="h2" style="margin:0">🧾 ภาษีเงินได้บุคคลธรรมดา</div>
+    <div class="card"><div class="row between"><div class="h2" style="margin:0">🧾 ภาษีของฉัน</div>
       <select style="width:125px" onchange="setTaxYear(this.value)"><option value="2026" ${taxYearSelected===2026?'selected':''}>ปี 2569</option><option value="2025" ${taxYearSelected===2025?'selected':''}>ปี 2568</option></select></div>
-      <p class="muted">จัดประเภทรายรับและบันทึกข้อมูลภาษีที่ขาด แล้วตรวจประมาณการก่อนยื่นด้วยตนเอง</p>
-      <div class="grid2"><div class="mini" style="background:var(--brand-soft)"><div class="sub">ภาษีประมาณการ</div><div class="v">${money(s.estimatedTax)}</div></div>
-        <div class="mini" style="background:var(--inc-soft)"><div class="sub">${s.possibleRefund?'อาจขอคืน':'คาดว่าต้องชำระ'}</div><div class="v">${money(s.possibleRefund||s.due)}</div></div></div>
-      <div class="kv"><span>รายรับที่จัดประเภท</span><b>${money(s.taxableIncome)}</b></div>
-      <div class="kv"><span>ค่าใช้จ่าย 40(1)/(2)</span><b>${money(s.standardExpense)}</b></div>
-      <div class="kv"><span>ค่าใช้จ่ายประเภทอื่นที่กรอก</span><b>${money(s.otherExpense)}</b></div>
-      <div class="kv"><span>ค่าลดหย่อนส่วนตัว + ที่กรอก</span><b>${money(s.personalAllowance+s.otherAllowances)}</b></div>
-      <div class="kv"><span>ภาษีหัก ณ ที่จ่าย</span><b>${money(s.withheld)}</b></div>
-      <div class="muted">คำนวณแบบขั้นบันได ${money(s.method1)}${s.method2?' · วิธีที่ 2 '+money(s.method2):''}</div></div>
-    ${s.warnings.map((w) => `<div class="card" style="background:var(--brand-soft);font-size:13px">⚠️ ${esc(w)}</div>`).join('')}
-    <div class="card"><div class="h2">รายรับปี ${taxYearSelected+543} · ยังไม่จัดประเภท ${s.unreviewed} รายการ</div>
-      ${TaxData.incomeRows.map((t) => `<div class="list-item" onclick="editTaxTag('${t.id}')"><div class="grow"><b>${esc(t.description||t.category)}</b><div class="muted">${thDate(t.date)} · ${esc(TAX_KIND[t.tax?.kind]||'ยังไม่จัดประเภท')}${t.tax?.evidenceDocId?' · หลักฐาน '+esc(t.tax.evidenceDocId):''}</div></div><b>${money(t.amount)}</b></div>`).join('')||'<div class="muted">ยังไม่มีรายการรายรับในปีนี้</div>'}</div>
-    <div class="card"><div class="row between"><div class="h2" style="margin:0">ข้อมูลภาษีเพิ่มเติม</div><button class="btn sm" onclick="editTaxRecord('')">+ เพิ่ม</button></div>
-      <p class="muted">ค่าลดหย่อน ค่าใช้จ่ายเงินได้ประเภทอื่น หรือภาษีหัก ณ ที่จ่ายที่ไม่ได้ผูกกับรายการรายรับ</p>
-      ${TaxData.records.map((r) => `<div class="list-item" onclick="editTaxRecord('${r.id}')"><div class="grow"><b>${esc(r.label)}</b><div class="muted">${esc(TAX_RECORD[r.kind])}${r.evidenceDocId?' · หลักฐาน '+esc(r.evidenceDocId):''}</div></div><b>${money(r.amount)}</b></div>`).join('')||'<div class="muted">ยังไม่มีข้อมูลเพิ่มเติม</div>'}</div>
-    <div class="card"><div class="h2">เตรียมยื่น</div><p class="muted">ดาวน์โหลดสรุปพร้อมรายการที่จัดประเภทและจุดที่ต้องตรวจ แล้วนำตัวเลขไปตรวจในระบบกรมสรรพากร</p>
-      <button class="btn" onclick="exportTax()">⬇️ ดาวน์โหลดข้อมูลเตรียมยื่น CSV</button>
-      <a class="btn ghost" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="${TaxData.filingUrl}" target="_blank" rel="noopener">เปิด e-Filing กรมสรรพากร ↗</a></div>`;
+      <div class="sub" style="margin-top:10px">${head[0]}</div><div class="big" style="color:${head[2]}">${head[1]}</div>
+      <div class="muted">ภาษีทั้งปีประมาณ ${money(s.estimatedTax)} · ถูกหัก ณ ที่จ่ายไว้แล้ว ${money(s.withheld)}</div>
+      ${step(1, !s.unreviewed && rows.length, 'บอกว่ารายรับแต่ละอย่างคืออะไร', s.unreviewed ? 'เหลือ ' + s.unreviewed + ' รายการ' : 'เรียบร้อย')}
+      ${step(2, ded.length > 0, 'ข้อมูลภาษีเพิ่มเติม (ค่าลดหย่อน)', ded.length ? 'ใส่แล้ว ' + ded.length + ' รายการ · ลดได้ ' + money(s.otherAllowances) : 'ยังไม่ได้ใส่ · ช่วยลดภาษีได้')}
+      ${step(3, false, 'ยื่นภาษีด้วยตัวเองที่ e-Filing', 'ดาวน์โหลดสรุปแล้วกรอกตามได้เลย')}</div>
+    <div class="card" style="background:linear-gradient(135deg,var(--brand-soft),var(--inc-soft))"><div class="row" style="align-items:flex-start;gap:12px">
+      <img src="landing/img/mascot/guide.webp" alt="" style="width:64px;flex:0 0 64px"><div class="grow"><b>น้องออมสินแนะนำ</b>
+      ${(TaxData.tips||[]).map((t) => `<div style="font-size:13.5px;margin-top:6px">• ${esc(t)}</div>`).join('')}
+      <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><a class="btn ghost sm" style="text-decoration:none" href="${TAX_GUIDE}" target="_blank" rel="noopener">📖 คู่มือภาษีเข้าใจง่าย</a>
+        <a class="btn ghost sm" style="text-decoration:none" href="${TAX_ASK('สรุปภาษี')}">💬 ถามน้องออมสินใน LINE</a></div></div></div></div>
+    <div class="card"><div class="row between"><div class="h2" style="margin:0">① รายรับของคุณ</div>${sugg?`<button class="btn sm" onclick="taxAuto()">🐷 ช่วยจัดให้ (${sugg})</button>`:''}</div>
+      <p class="muted">แตะรายการเพื่อเลือกว่าเป็นเงินได้แบบไหน ${sugg?'· หรือกด "ช่วยจัดให้" น้องออมสินดูจากหมวดที่จดไว้':''}</p>
+      ${rows.map((t) => `<div class="list-item" onclick="editTaxTag('${t.id}')"><div class="grow"><b>${esc(t.description||t.category)}</b>
+        <div class="muted">${thDate(t.date)} · ${t.tax ? esc(TAX_KIND[t.tax.kind]||t.tax.kind) : t.suggest ? '<span style="color:var(--brand)">น่าจะเป็น ' + esc(TAX_KIND[t.suggest]) + '</span>' : '<span style="color:var(--danger)">ยังไม่ได้เลือก</span>'}${t.tax?.withheld?' · หัก ณ ที่จ่าย '+money(t.tax.withheld):''}</div></div><b>${money(t.amount)}</b></div>`).join('')||'<div class="muted">ยังไม่มีรายรับในปีนี้ · จดรายรับในแชท เช่น "เงินเดือนเข้า 25000" หรือ "ขายของได้ 1500"</div>'}</div>
+    <div class="card"><div class="row between"><div class="h2" style="margin:0">② ข้อมูลภาษีเพิ่มเติม</div><button class="btn sm" onclick="taxPicker()">+ เพิ่มค่าลดหย่อน</button></div>
+      <p class="muted">สิ่งที่ช่วยลดภาษี เช่น ประกันสังคม ประกัน ลูก พ่อแม่ SSF บริจาค · น้องออมสินคิดเพดานให้เอง</p>
+      <div class="kv"><span>ลดหย่อนส่วนตัว (ได้ทุกคนอัตโนมัติ)</span><b>${money(s.personalAllowance)}</b></div>
+      ${(s.deductions||[]).map((x) => { const r = ded.find((y) => y.deductionId === x.deductionId); return `<div class="list-item" onclick="taxDedForm('${x.deductionId}')"><div class="grow"><b>${esc(x.name)}</b>
+        <div class="muted">${x.paid?'จ่าย '+money(x.paid)+' · ':''}${x.note?esc(x.note)+' · ':''}แตะเพื่อแก้</div></div><b class="pos">−${money(x.allowed)}</b></div>`; }).join('')}
+      ${ded.filter((r) => !r.deductionId).map((r) => `<div class="list-item" onclick="editTaxRecord('${r.id}')"><div class="grow"><b>${esc(r.label)}</b><div class="muted">พิมพ์ชื่อเอง · ยังไม่ได้ตรวจเพดาน</div></div><b>${money(r.amount)}</b></div>`).join('')}
+      ${!ded.length?'<button class="btn ghost" style="margin-top:8px" onclick="taxPicker()">📋 ดูว่าลดหย่อนอะไรได้บ้าง</button>':''}
+      <details style="margin-top:10px"><summary class="muted" style="cursor:pointer">ข้อมูลขั้นสูง (ภาษีหัก ณ ที่จ่ายอื่น · ค่าใช้จ่ายจริงของรายได้อื่น)</summary>
+        ${(TaxData.records||[]).filter((r) => r.kind !== 'allowance').map((r) => `<div class="list-item" onclick="editTaxRecord('${r.id}')"><div class="grow"><b>${esc(r.label)}</b><div class="muted">${esc(TAX_RECORD[r.kind])}</div></div><b>${money(r.amount)}</b></div>`).join('')}
+        <button class="btn plain sm" style="margin-top:8px" onclick="editTaxRecord('')">+ เพิ่มข้อมูลขั้นสูง</button></details></div>
+    <div class="card"><div class="h2">③ ยื่นภาษี</div>
+      <p class="muted">${s.salary && !(s.service+s.trade+s.other) ? 'มีแต่เงินเดือน → ใช้แบบ ภ.ง.ด.91' : 'มีรายได้อื่นนอกจากเงินเดือน → ใช้แบบ ภ.ง.ด.90'} · ยื่นได้ ม.ค.–มี.ค. ${taxYearSelected+544}${s.trade||s.other?' · ขายของ/รายได้อื่นยื่นครึ่งปี ภ.ง.ด.94 ภายในกันยายนด้วย':''}</p>
+      <button class="btn" onclick="exportTax()">⬇️ ดาวน์โหลดสรุปเตรียมยื่น</button>
+      <a class="btn ghost" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="${TaxData.filingUrl}" target="_blank" rel="noopener">เปิด e-Filing กรมสรรพากร ↗</a>
+      <a class="btn plain" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="${TAX_GUIDE}#file" target="_blank" rel="noopener">📝 ดูวิธียื่นทีละขั้น</a></div>
+    <details class="card"><summary class="h2" style="cursor:pointer;margin:0">ดูตัวเลขละเอียด</summary>
+      <div class="kv"><span>รายได้เงินเดือน 40(1)</span><b>${money(s.salary)}</b></div><div class="kv"><span>รับจ้าง/ฟรีแลนซ์ 40(2)</span><b>${money(s.service)}</b></div>
+      <div class="kv"><span>ขายของ/ค้าขาย 40(8)</span><b>${money(s.trade)}</b></div><div class="kv"><span>รายได้อื่น</span><b>${money(s.other)}</b></div>
+      <div class="kv"><span>หักค่าใช้จ่ายเหมา 50%</span><b>−${money(s.standardExpense)}</b></div><div class="kv"><span>หักค่าใช้จ่ายขายของ 60%</span><b>−${money(s.tradeExpense)}</b></div>
+      <div class="kv"><span>หักค่าใช้จ่ายรายได้อื่น</span><b>−${money(s.otherExpense)}</b></div><div class="kv"><span>หักลดหย่อนทั้งหมด</span><b>−${money(s.personalAllowance+s.otherAllowances)}</b></div>
+      <div class="kv"><span>เงินได้สุทธิ</span><b>${money(s.netIncome)}</b></div><div class="kv"><span>ภาษีขั้นบันได${s.method2?' / วิธีที่ 2':''}</span><b>${money(s.method1)}${s.method2?' / '+money(s.method2):''}</b></div>
+      ${s.warnings.map((w) => `<div class="muted" style="margin-top:6px">⚠️ ${esc(w)}</div>`).join('')}</details>`;
 }
+async function taxAuto() { TaxData = await call('taxAutoTag', taxYearSelected); render(); toast('🐷 จัดประเภทให้แล้ว ตรวจอีกครั้งได้เลยค่ะ'); }
 function editTaxTag(id) {
   const t = TaxData.incomeRows.find((x) => x.id === id); if (!t) return;
-  openSheet(`<div class="h2">จัดประเภทรายรับ · ${esc(t.description||t.category)}</div><div class="muted">${thDate(t.date)} · ${money(t.amount)}</div>
-    <label>ประเภทเงินได้</label><select id="taxKind"><option value="">เลือกประเภท</option>${Object.entries(TAX_KIND).map(([k,v])=>`<option value="${k}" ${t.tax?.kind===k?'selected':''}>${v}</option>`).join('')}</select>
-    <label>ภาษีหัก ณ ที่จ่าย (บาท)</label><input id="taxWithheld" type="number" min="0" step="0.01" value="${t.tax?.withheld||0}">
-    <label>รหัสเอกสารหลักฐาน (ถ้ามี)</label><input id="taxEvidence" value="${esc(t.tax?.evidenceDocId||'')}" placeholder="เช่น d1234567"><div class="muted">พิมพ์ “เก็บหลักฐานภาษี” ในแชท LINE แล้วส่งรูปหรือ PDF เพื่อรับรหัสเอกสาร</div>
+  const cur = t.tax?.kind || t.suggest || '';
+  openSheet(`<div class="h2">รายรับนี้คืออะไร?</div><div class="muted">${esc(t.description||t.category)} · ${thDate(t.date)} · ${money(t.amount)}</div>
+    ${Object.entries(TAX_KIND).map(([k,v]) => `<label class="list-item" style="cursor:pointer;display:flex;gap:10px;margin:0"><input type="radio" name="taxKind" value="${k}" ${cur===k?'checked':''} style="width:auto">
+      <div class="grow"><b style="font-size:14px">${v}</b>${t.suggest===k&&!t.tax?' <span class="pill" style="background:var(--brand)">แนะนำ</span>':''}<div class="muted">${TAX_KIND_HELP[k]}</div></div></label>`).join('')}
+    <label>ถูกหักภาษี ณ ที่จ่ายไว้ (บาท) · ดูในหนังสือรับรองหรือสลิปเงินเดือน</label><input id="taxWithheld" type="number" min="0" step="0.01" value="${t.tax?.withheld||0}">
+    <label>รหัสเอกสารหลักฐาน (ไม่บังคับ)</label><input id="taxEvidence" value="${esc(t.tax?.evidenceDocId||'')}" placeholder="เช่น d1234567"><div class="muted">พิมพ์ “เก็บหลักฐานภาษี” ในแชท LINE แล้วส่งรูปเพื่อรับรหัส</div>
     <button class="btn" style="margin-top:16px" onclick="saveTaxTag('${id}')">บันทึก</button>`);
 }
 async function saveTaxTag(id) {
-  const kind = $('taxKind').value, withheld = Number($('taxWithheld').value), evidenceDocId = $('taxEvidence').value.trim();
-  if (!kind) return toast('กรุณาเลือกประเภทเงินได้');
+  const kind = (document.querySelector('input[name=taxKind]:checked') || {}).value, withheld = Number($('taxWithheld').value), evidenceDocId = $('taxEvidence').value.trim();
+  if (!kind) return toast('เลือกว่ารายรับนี้คืออะไร');
   if (!Number.isFinite(withheld) || withheld < 0) return toast('ภาษีหัก ณ ที่จ่ายไม่ถูกต้อง');
   TaxData = await call('taxTag', id, { kind, withheld, evidenceDocId }, taxYearSelected); closeSheet(); render();
 }
+/** เมนู "ข้อมูลภาษีเพิ่มเติม": เลือกกลุ่ม → เลือกรายการ → กรอก */
+function taxPicker(g) {
+  if (g) taxGroup = g;
+  const G = TaxData.guide.groups, list = TaxData.guide.deductions.filter((d) => d.group === taxGroup);
+  const have = new Set((TaxData.records||[]).map((r) => r.deductionId).filter(Boolean));
+  openSheet(`<div class="row between"><div class="h2" style="margin:0">📋 ข้อมูลภาษีเพิ่มเติม</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
+    <div class="muted">เลือกสิ่งที่คุณมี น้องออมสินจะคิดให้ว่าลดได้เท่าไหร่</div>
+    <div class="chips" style="margin:12px 0">${G.map((x) => `<span class="chip ${x.id===taxGroup?'on':''}" onclick="taxPicker('${x.id}')">${x.icon} ${x.title}</span>`).join('')}</div>
+    ${list.map((d) => `<div class="list-item" onclick="taxDedForm('${d.id}')"><div class="grow"><b>${esc(d.name)} ${have.has(d.id)?'<span class="pill" style="background:var(--inc)">ใส่แล้ว</span>':''}</b>
+      <div class="muted">${esc(d.simple)}</div></div><b style="color:var(--brand);white-space:nowrap">${d.per?money(d.per)+'/คน':d.max?'≤ '+money(d.max):'10%'}</b></div>`).join('')}`);
+}
+function taxDedForm(id) {
+  const d = dedOf(id); if (!d) return;
+  const r = (TaxData.records||[]).find((x) => x.deductionId === id) || {};
+  const input = d.input === 'yes' ? '<div class="muted" style="margin-top:10px">กดบันทึกเพื่อใช้สิทธิ์นี้</div>'
+    : d.input === 'children' ? `<label>มีลูกทั้งหมดกี่คน</label><input id="dCount" type="number" min="1" max="20" value="${r.count||1}">
+      <label>ในนั้นเป็นลูกคนที่ 2 ขึ้นไปที่เกิดตั้งแต่ปี 2561 กี่คน</label><input id="dCount2" type="number" min="0" max="20" value="${r.count2||0}">`
+    : d.input === 'count' ? `<label>จำนวนคน</label><input id="dCount" type="number" min="1" max="20" value="${r.count||1}">`
+    : `<label>${id==='home_build'?'ค่าก่อสร้างทั้งหมด (บาท)':'จ่ายไปทั้งปี (บาท)'}</label><input id="dAmount" type="number" min="0" step="0.01" value="${r.amount||''}" placeholder="เช่น 9000">`;
+  openSheet(`<div class="h2">${esc(d.name)}</div><div class="muted">${esc(d.simple)}</div>${d.tip?`<div class="muted" style="margin-top:6px">💡 ${esc(d.tip)}</div>`:''}
+    ${input}<label>รหัสเอกสารหลักฐาน (ไม่บังคับ)</label><input id="dEvidence" value="${esc(r.evidenceDocId||'')}" placeholder="เช่น d1234567">
+    <button class="btn" style="margin-top:16px" onclick="taxDedSave('${id}')">บันทึก</button>
+    ${r.id?`<button class="btn plain" style="margin-top:8px" onclick="deleteTaxRecord('${r.id}')">ลบรายการนี้</button>`:''}
+    <button class="btn plain" style="margin-top:8px" onclick="taxPicker()">← เลือกรายการอื่น</button>`);
+}
+async function taxDedSave(id) {
+  const d = dedOf(id), r = (TaxData.records||[]).find((x) => x.deductionId === id) || {};
+  const p = { id: r.id || '', kind:'allowance', deductionId:id, evidenceDocId:$('dEvidence').value.trim() };
+  if (d.input === 'amount') { p.amount = Number($('dAmount').value); if (!(p.amount > 0)) return toast('ใส่จำนวนเงินที่จ่าย'); }
+  if (d.input === 'count' || d.input === 'children') { p.count = Number($('dCount').value); if (!(p.count >= 1)) return toast('ใส่จำนวนคน'); }
+  if (d.input === 'children') p.count2 = Number($('dCount2').value) || 0;
+  TaxData = await call('taxRecord', taxYearSelected, p); closeSheet(); render();
+  const x = (TaxData.summary.deductions||[]).find((y) => y.deductionId === id);
+  toast('✅ ' + d.short + ' ลดได้ ' + money(x ? x.allowed : 0));
+}
 function editTaxRecord(id) {
-  const r = TaxData.records.find((x) => x.id === id) || { kind:'allowance', label:'', amount:'', evidenceDocId:'' };
-  openSheet(`<div class="h2">${id?'แก้ไข':'เพิ่ม'}ข้อมูลภาษี</div><label>ประเภท</label><select id="taxRecKind">${Object.entries(TAX_RECORD).map(([k,v])=>`<option value="${k}" ${r.kind===k?'selected':''}>${v}</option>`).join('')}</select>
-    <label>ชื่อรายการ</label><input id="taxRecLabel" value="${esc(r.label)}" placeholder="เช่น ประกันสังคม หรือค่าลดหย่อนบุตร">
+  const r = TaxData.records.find((x) => x.id === id) || { kind:'withheld', label:'', amount:'', evidenceDocId:'' };
+  openSheet(`<div class="h2">${id?'แก้ไข':'เพิ่ม'}ข้อมูลขั้นสูง</div><label>ประเภท</label><select id="taxRecKind">${Object.entries(TAX_RECORD).map(([k,v])=>`<option value="${k}" ${r.kind===k?'selected':''}>${v}</option>`).join('')}</select>
+    <label>ชื่อรายการ</label><input id="taxRecLabel" value="${esc(r.label)}" placeholder="เช่น หัก ณ ที่จ่ายจากงานฟรีแลนซ์">
     <label>จำนวนเงิน (บาท)</label><input id="taxRecAmount" type="number" min="0" step="0.01" value="${r.amount}">
     <label>รหัสเอกสารหลักฐาน (ถ้ามี)</label><input id="taxRecEvidence" value="${esc(r.evidenceDocId)}" placeholder="เช่น d1234567">
-    <div class="muted">ตรวจเงื่อนไขและเพดานค่าลดหย่อนกับกรมสรรพากรก่อนยื่น</div>
+    <div class="muted">ค่าลดหย่อนทั่วไป แนะนำให้เลือกจาก "+ เพิ่มค่าลดหย่อน" ระบบจะคิดเพดานให้</div>
     <button class="btn" style="margin-top:16px" onclick="saveTaxRecord('${id}')">บันทึก</button>
     ${id?`<button class="btn plain" style="margin-top:8px" onclick="deleteTaxRecord('${id}')">ลบรายการนี้</button>`:''}`);
 }
@@ -684,7 +749,7 @@ async function deleteTaxRecord(id) {
 }
 async function exportTax() {
   const url = await call('taxExport', taxYearSelected);
-  openSheet(`<div class="h2">✅ สร้างข้อมูลเตรียมยื่นแล้ว</div><p class="muted">ไฟล์ CSV ใช้ตรวจรายการและนำข้อมูลไปกรอกแบบด้วยตนเอง ไม่ใช่การยื่นแบบอัตโนมัติ · ลิงก์ใช้ได้ 3 วัน</p>
+  openSheet(`<div class="h2">✅ สร้างสรุปเตรียมยื่นแล้ว</div><p class="muted">ไฟล์จะเปิดในเบราว์เซอร์หลัก ใช้ดูตัวเลขแล้วกรอกใน e-Filing ด้วยตนเอง (ระบบไม่ได้ยื่นแทน) · ลิงก์ใช้ได้ 3 วัน</p>
     <a class="btn" style="display:block;text-align:center;text-decoration:none" href="${esc(url)}" target="_blank" rel="noopener">⬇️ ดาวน์โหลด</a>`);
 }
 
