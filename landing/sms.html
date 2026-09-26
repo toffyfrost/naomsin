@@ -83,30 +83,49 @@
 <header><div class="wrap"><a class="logo" href="index.html"><img src="img/brand/logo.webp" alt="">N'AOMSIN</a>
   <a class="btn line sm" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B8%B5%E0%B9%89">💬 ถามน้องออมสิน</a></div></header>
 
-<div class="wrap" style="max-width:560px">
-  <div style="text-align:center;padding:18px 0 6px"><img src="img/mascot/slip.webp" alt="" style="width:120px;margin:0 auto">
-    <h1 style="font-size:28px;margin:8px 0 4px">ให้น้องออมสินจดเงินโอน</h1>
-    <p class="lead" style="margin:0"><b>ทำครั้งเดียวจบ</b> ต่อไปลูกค้าโอนมา ระบบจดยอดขายให้เองทุกครั้ง</p></div>
+<style>
+  .sx { max-width:520px; margin:0 auto; }
+  .sx .steps { background:#fff; border-radius:22px; padding:8px 18px; box-shadow:0 10px 30px rgba(15,59,125,.08); }
+  .sx .st { display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px solid #EEF2F7; }
+  .sx .st:last-child { border-bottom:0; }
+  .sx .no { flex:0 0 30px; height:30px; border-radius:50%; background:var(--grad); color:#fff; font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .sx .tx { flex:1; min-width:0; font-size:16px; line-height:1.55; color:var(--ink); }
+  .sx .tx b { font-weight:700; }
+  .sx .hint { display:block; font-size:13.5px; color:#6B7280; margin-top:4px; }
+  .sx .act { display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:10px 18px; border-radius:999px; font-size:15px; font-weight:700; text-decoration:none; white-space:nowrap; border:0; cursor:pointer; font-family:inherit; }
+  .sx .act.pri { background:#06C755; color:#fff; box-shadow:0 6px 16px rgba(6,199,85,.28); }
+  .sx .act.sec { background:#EEF5FF; color:var(--blue-d); }
+  .sx video { width:100%; border-radius:18px; display:block; background:#EAF3FF; }
+  .sx .ext { background:#FFF7E6; border:1px solid #FFE1A8; border-radius:16px; padding:14px 16px; font-size:15px; margin:14px 0; display:none; }
+</style>
+<div class="wrap sx">
+  <div style="text-align:center;padding:14px 0 4px"><img src="img/mascot/slip.webp" alt="" style="width:96px;margin:0 auto">
+    <h1 style="font-size:26px;margin:6px 0 4px">ให้น้องออมสินจดเงินโอน</h1>
+    <p class="lead" style="margin:0 0 14px;font-size:15.5px"><b>ทำครั้งเดียวจบ</b> ต่อไปลูกค้าโอนมา ระบบจดยอดขายให้เอง</p></div>
+  <div id="ext" class="ext">⚠️ เบราว์เซอร์ใน LINE ดาวน์โหลดไฟล์ไม่ได้ <a id="extLink" href="#" style="font-weight:700">แตะที่นี่เพื่อเปิดใน Chrome / Safari</a></div>
   <div id="bad" class="note" style="display:none">ลิงก์ไม่ครบ กรุณากดปุ่มจากแชทน้องออมสินอีกครั้งค่ะ</div>
 
   <div id="ios" style="display:none">
-    <div class="card" style="padding:10px"><video src="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.mp4" controls playsinline muted autoplay loop preload="metadata" style="width:100%;border-radius:14px;display:block"></video>
-      <p class="lead" style="text-align:center;margin:8px 0 0;font-size:14px">🎬 ดูวิดีโอ 25 วินาที แล้วทำตามได้เลย</p></div>
-    <div class="card">
-      <div class="step"><div class="n">1</div><div><button class="btn line cp">📋 คัดลอกรหัสร้าน</button></div></div>
-      <div class="step"><div class="n">2</div><div><a class="btn ghost" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.shortcut">➕ ติดตั้งตัวช่วยจด</a><br><span class="lead" style="font-size:15px">กด "เพิ่มคำสั่งลัด" แล้ววางรหัสร้าน</span></div></div>
-      <div class="step"><div class="n">3</div><div>เปิดแอป <b>คำสั่งลัด</b> → <b>ระบบอัตโนมัติ</b> → <b>＋</b> → <b>ข้อความ</b></div></div>
-      <div class="step"><div class="n">4</div><div>"ข้อความมี" พิมพ์ <b>เงินเข้า</b> → เลือก <b>เรียกใช้ทันที</b> → เลือก <b>น้องออมสินจดเงินเข้า</b> → เสร็จ</div></div></div></div>
+    <video src="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.mp4" controls playsinline muted autoplay loop preload="metadata"></video>
+    <p class="lead" style="text-align:center;margin:8px 0 14px;font-size:13.5px">🎬 วิดีโอ 25 วินาที ดูแล้วทำตามได้เลย</p>
+    <div class="steps">
+      <div class="st"><div class="no">1</div><div class="tx"><b>คัดลอกรหัสร้าน</b><br><button class="act pri cp">📋 คัดลอก</button></div></div>
+      <div class="st"><div class="no">2</div><div class="tx"><b>ติดตั้งตัวช่วยจด</b><span class="hint">กด "เพิ่มคำสั่งลัด" แล้ววางรหัสร้าน</span><a class="act sec" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.shortcut">➕ ติดตั้ง</a></div></div>
+      <div class="st"><div class="no">3</div><div class="tx">เปิดแอป <b>คำสั่งลัด</b> → <b>ระบบอัตโนมัติ</b> → <b>＋</b> → <b>ข้อความ</b></div></div>
+      <div class="st"><div class="no">4</div><div class="tx">"ข้อความมี" พิมพ์ <b>เงินเข้า</b> → <b>เรียกใช้ทันที</b> → เลือก <b>น้องออมสินจดเงินเข้า</b></div></div></div></div>
 
-  <div id="android" style="display:none"><div class="card">
-    <div class="step"><div class="n">1</div><div><a class="btn line" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/app.apk">⬇️ ติดตั้งแอป "ออมสินรับเงิน"</a><br><span class="lead" style="font-size:15px">ถ้ามือถือถาม ให้กด "อนุญาต" / "ติดตั้งต่อ"</span></div></div>
-    <div class="step"><div class="n">2</div><div><a class="btn ghost" id="bind" href="#">🔗 ผูกกับร้านของฉัน</a></div></div>
-    <div class="step"><div class="n">3</div><div>แอปจะขอสิทธิ์ ให้กด <b>อนุญาต</b> · เสร็จแล้ว ปิดแอปได้เลย</div></div></div></div>
+  <div id="android" style="display:none"><div class="steps">
+    <div class="st"><div class="no">1</div><div class="tx"><b>ติดตั้งแอป "ออมสินรับเงิน"</b><span class="hint">ถ้ามือถือถาม ให้กด "อนุญาต" หรือ "ติดตั้งต่อ"</span><a class="act pri" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/app.apk">⬇️ ติดตั้งแอป</a></div></div>
+    <div class="st"><div class="no">2</div><div class="tx"><b>ผูกกับร้านของคุณ</b><span class="hint">แตะหลังติดตั้งเสร็จ</span><a class="act sec" id="bind" href="#">🔗 ผูกร้าน</a></div></div>
+    <div class="st"><div class="no">3</div><div class="tx">แอปขอสิทธิ์ ให้กด <b>อนุญาต</b> เสร็จแล้วปิดแอปได้เลย</div></div></div></div>
 
-  <div class="say" style="margin-top:14px"><img src="img/mascot/guide.webp" alt=""><div>ลองให้ใครโอนเข้ามา 1 บาท น้องออมสินจะทักใน LINE ว่า <b>"เชื่อม SMS สำเร็จ"</b> · ปิดโหมดร้านค้าเมื่อไหร่ ระบบหยุดจดทันที เปิดใหม่ก็ทำงานต่อเอง</div></div>
+  <div class="say" style="margin-top:16px"><img src="img/mascot/guide.webp" alt=""><div style="font-size:15px">ลองให้ใครโอนมา 1 บาท น้องออมสินจะทักใน LINE ว่า <b>"เชื่อม SMS สำเร็จ"</b></div></div>
 </div>
 <script>(function(){var t=(location.hash.match(/t=([a-z0-9]+)/i)||[])[1];if(!t){document.getElementById('bad').style.display='block';return;}
 var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(/Mac/.test(ua)&&'ontouchend'in document);
+if(/ Line\//i.test(ua)){var u=location.origin+location.pathname+'?openExternalBrowser=1'+location.hash;
+  if(!/openExternalBrowser=1/.test(location.search)){location.replace(u);}
+  document.getElementById('extLink').href=u;document.getElementById('ext').style.display='block';}
 document.getElementById(ios?'ios':'android').style.display='block';
 document.getElementById('bind').href='naomsin://bind?t='+t;
 [].forEach.call(document.querySelectorAll('.cp'),function(b){b.onclick=function(){navigator.clipboard.writeText(t).then(function(){b.textContent='✅ คัดลอกแล้ว';});};});})();</script><a class="btn line fab" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B8%B5%E0%B9%89">💬 ถามน้องออมสินใน LINE</a>
