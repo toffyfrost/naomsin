@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>หลังบ้าน · N'AOMSIN</title>
-<meta name="theme-color" content="#050A18">
+<meta name="theme-color" content="#E6F1FF">
 <link rel="icon" type="image/png" href="../landing/img/brand/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -185,6 +185,84 @@
     .g2 { grid-template-columns:1fr; }
     .review { grid-template-columns:1fr; } .review .acts { justify-content:flex-start; }
     .hide-m { display:none; }
+  }
+
+  /* ===================== ธีมสว่าง ฟ้า–ขาว (ทับค่าด้านบน) ===================== */
+  :root { --bg:#F3F8FF; --bg2:#EAF4FF; --panel:#F2F8FF; --panel2:#E7F2FD; --stroke:rgba(28,126,214,.14);
+          --ink:#0B2545; --sub:#4A6485; --dim:#8196B0; --blue:#1C7ED6; --blue2:#339AF0; --sky:#1864AB; --mint:#0CA678; --green:#06C755;
+          --amber:#D9480F; --red:#E03131;
+          --card-shadow:0 1px 2px rgba(11,37,69,.05),0 14px 36px -22px rgba(24,100,171,.32);
+          --sky-grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%); }
+  body { background:radial-gradient(1000px 520px at 100% -10%,rgba(77,171,247,.28),transparent 60%),linear-gradient(180deg,#E6F1FF 0,#F3F8FF 480px); background-color:#F3F8FF; }
+  body::before { background:#74C0FC; opacity:.25; }
+  a { color:var(--blue); }
+  input, select, textarea { background:#fff; border-color:rgba(28,126,214,.2); color:var(--ink); }
+  input::placeholder, textarea::placeholder { color:#A3B4C8; }
+  select option { background:#fff; color:var(--ink); }
+  .btn { background:#fff; border-color:rgba(28,126,214,.22); color:var(--ink); box-shadow:0 1px 2px rgba(11,37,69,.06); }
+  .btn:hover { border-color:var(--blue); }
+  .btn.pri { background:var(--sky-grad); color:#fff; box-shadow:0 10px 22px -12px rgba(24,100,171,.7); }
+  .btn.ok { background:#EBFBEE; border-color:rgba(12,166,120,.35); color:#087F5B; }
+  .btn.bad { background:#FFF5F5; border-color:rgba(224,49,49,.3); color:#C92A2A; }
+  .btn.busy::after { border-color:rgba(28,126,214,.25); border-top-color:var(--blue); }
+  .btn.pri.busy::after { border-color:rgba(255,255,255,.4); border-top-color:#fff; }
+
+  /* แถบข้าง: ขาว + เมนูที่เลือกไล่สีฟ้า */
+  aside { background:rgba(255,255,255,.9); border-right-color:rgba(28,126,214,.12); box-shadow:8px 0 30px -24px rgba(24,100,171,.4); }
+  nav button { color:var(--sub); }
+  nav button:hover { color:var(--blue); background:#F2F8FF; }
+  nav button.on { color:#fff; background:var(--sky-grad); box-shadow:0 10px 22px -12px rgba(24,100,171,.7); }
+  nav .badge { color:#fff; background:var(--red); }
+  .me { background:#F2F8FF; }
+  .top h1 { background:linear-gradient(100deg,#0B2545 0%,#1864AB 60%,#1C7ED6 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* การ์ด / ตัวเลข */
+  .card { background:#fff; border-color:rgba(28,126,214,.10); box-shadow:var(--card-shadow); }
+  .kpi { background:#fff; border-color:rgba(28,126,214,.10); box-shadow:var(--card-shadow); }
+  .kpi.hl { background:var(--sky-grad); border:0; color:#fff; box-shadow:0 18px 36px -18px rgba(24,100,171,.7); }
+  .kpi.hl small, .kpi.hl em { color:rgba(255,255,255,.85); }
+  .kpi.warn { background:linear-gradient(135deg,#FFF4E6,#FFE8CC); border-color:rgba(253,126,20,.35); }
+  .bars i { background:linear-gradient(180deg,#74C0FC,#1C7ED6); }
+  .seg { background:#F2F8FF; } .seg button.on { background:var(--sky-grad); }
+  .chip { background:#EEF3F9; color:var(--sub); }
+  .chip.g { background:#E6FCF5; color:#087F5B; } .chip.b { background:#E7F2FD; color:#1864AB; }
+  .chip.y { background:#FFF4E6; color:#D9480F; } .chip.r { background:#FFF5F5; color:#C92A2A; }
+  .tbl th { color:var(--dim); border-bottom-color:rgba(28,126,214,.14); }
+  .tbl td { border-bottom-color:rgba(28,126,214,.07); }
+  .tbl tr:hover td { background:#F7FBFF; }
+  .prog { background:#E7F2FD; } .prog i { background:var(--sky-grad); }
+  .who img, .who .av { background:#E7F2FD; color:var(--blue); }
+  .result { background:#EBFBEE; border-color:rgba(12,166,120,.3); }
+  .review { background:#FFF9F0; border-color:rgba(253,126,20,.28); }
+  .switch span { background:#DDE7F2; border-color:rgba(28,126,214,.15); }
+
+  /* ลิ้นชัก / หน้าต่าง / แจ้งเตือน */
+  .drawer { background:#F7FBFF; border-left-color:rgba(28,126,214,.14); box-shadow:-30px 0 60px -30px rgba(11,37,69,.35); }
+  .dr-head { background:linear-gradient(135deg,#E7F2FD,#fff); border-bottom-color:rgba(28,126,214,.14); }
+  .dr-head img, .dr-head .av { background:#E7F2FD; color:var(--blue); box-shadow:0 0 0 3px #fff; }
+  .dr-x { background:#fff; }
+  .dsec { background:#fff; border-color:rgba(28,126,214,.10); box-shadow:var(--card-shadow); }
+  .dsec.danger { background:#FFF8F8; border-color:rgba(224,49,49,.22); }
+  .skel { background:linear-gradient(90deg,#EEF4FB,#E0ECF8,#EEF4FB); background-size:200% 100%; }
+  .drawer-bg, .modal, .swal2-container.swal2-backdrop-show { background:rgba(11,37,69,.35); }
+  .modal .box { background:#fff; border-color:rgba(28,126,214,.14); box-shadow:0 40px 80px -30px rgba(11,37,69,.45); }
+  .cmdref code { background:#E7F2FD; color:#1864AB; }
+  .cmdref td { border-bottom-color:rgba(28,126,214,.08); }
+  .tst { background:#fff; border-color:rgba(28,126,214,.14); color:var(--ink); box-shadow:0 18px 40px -16px rgba(11,37,69,.35); }
+  .tst.loading .ti { border-color:rgba(28,126,214,.2); border-top-color:var(--blue); }
+  .tst.error .ti { color:#fff; }
+  .swal2-popup.nx { background:#fff; color:var(--ink); border-color:rgba(28,126,214,.14); }
+  .swal2-popup.nx .swal2-input, .swal2-popup.nx .swal2-textarea { background:#F7FBFF; color:var(--ink); border-color:rgba(28,126,214,.25); }
+  .swal2-popup.nx .swal2-confirm { background:var(--sky-grad); }
+  .swal2-popup.nx .swal2-cancel { background:#EEF3F9; color:var(--ink); }
+  .swal2-popup.nx .swal2-validation-message { background:#FFF5F5; }
+
+  /* ประตูเข้าสู่ระบบ */
+  .gate .box { background:linear-gradient(160deg,#fff,#F2F8FF); border-color:rgba(28,126,214,.14); box-shadow:0 40px 80px -36px rgba(24,100,171,.5); }
+  .gate code { background:#E7F2FD; color:#1864AB; }
+  @media (max-width:760px) {
+    aside { background:rgba(255,255,255,.96); border-top-color:rgba(28,126,214,.14); box-shadow:0 -10px 30px -18px rgba(11,37,69,.3); }
+    nav button.on { box-shadow:none; }
   }
 </style>
 </head>
