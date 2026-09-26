@@ -339,6 +339,28 @@
     .nf.rev .nf-txt { order:0; }
     .nf-shots img { max-height:440px; }
   }
+
+  /* มาสคอต */
+  .hero .mascot { isolation:isolate; aspect-ratio:auto; overflow:visible; border-radius:0; box-shadow:none; max-width:430px; background:none; }
+  .hero .mascot::before { content:""; position:absolute; left:50%; top:52%; width:118%; aspect-ratio:1; transform:translate(-50%,-50%); border-radius:50%; z-index:-1;
+                          background:radial-gradient(circle at 35% 30%,#FFFFFF 0%,#D0EBFF 45%,#74C0FC 100%); box-shadow:0 40px 90px -40px rgba(24,100,171,.7); }
+  .hero .mascot img { position:relative; width:100%; height:auto; object-fit:contain; filter:drop-shadow(0 24px 30px rgba(24,100,171,.28)); animation:float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform:translateY(-10px); } }
+  .hero-phone .phone { right:-44px; bottom:-40px; width:150px; }
+  .nf-mascot { position:absolute; z-index:2; width:150px; bottom:-6px; right:calc(50% - 96px); filter:drop-shadow(0 16px 20px rgba(24,100,171,.3)); pointer-events:none; }
+  .nf.rev .nf-mascot { right:auto; left:calc(50% - 96px); }
+  .nf.rev .nf-mascot { transform:scaleX(1); }
+  .more { position:relative; }
+  .more-mascot { width:120px; margin:0 auto 10px; filter:drop-shadow(0 14px 18px rgba(24,100,171,.3)); }
+  .final-hero { position:relative; width:max-content; margin:0 auto 30px; display:flex; align-items:flex-end; gap:6px; }
+  .final-hero .final-mascot { width:170px; height:auto; border-radius:0; box-shadow:none; margin:0; filter:drop-shadow(0 20px 26px rgba(24,100,171,.35)); }
+  .final-hero .final-logo { width:120px; height:120px; margin:0 0 18px; }
+  @media (max-width:900px) {
+    .nf-mascot { width:96px; bottom:auto; top:18px; right:14px; left:auto !important; }
+    .nf h3 { padding-right:70px; }
+    .hero .mascot { max-width:320px; }
+  }
+  @media (prefers-reduced-motion:reduce) { .hero .mascot img { animation:none; } }
 </style>
 <script>document.documentElement.classList.add('js'); /* ถ้า JS ไม่ทำงาน เนื้อหาจะแสดงตามปกติ ไม่ถูกซ่อน */</script>
 </head>
@@ -348,7 +370,7 @@
 <header id="hdr">
   <div class="wrap">
     <a class="logo" href="#top"><img src="img/brand/avatar-64.png" alt="">N'AOMSIN</a>
-    <nav class="menu"><a href="#new">ใหม่ ✨</a><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="features.html">คู่มือ</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
+    <nav class="menu"><a href="#new">ไฮไลต์ ✨</a><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="features.html">คู่มือ</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
     <a class="btn pri" href="#add">เพิ่มเพื่อน</a>
   </div>
 </header>
@@ -372,7 +394,7 @@
       </div>
     </div>
     <div class="hero-phone rv" style="--d:.2s">
-      <div class="mascot" id="mascot"><img src="img/brand/mascot.webp" alt="น้องออมสิน มาสคอตของ N'AOMSIN ถือกระปุกออมสิน" width="1024" height="1024"></div>
+      <div class="mascot" id="mascot"><img src="img/mascot/hello.webp" alt="น้องออมสินโบกมือทักทาย พร้อมมือถือที่เปิดแชท LINE" width="560" height="760"></div>
       <div class="phone" id="heroPhone"><div class="screen"><img class="on" src="img/dash-summary.png" alt="หน้าสรุปของแดชบอร์ด N'AOMSIN"></div></div>
       <div class="chip a">🔥 จดต่อเนื่อง 27 วัน<small>ทำได้ดีมาก!</small></div>
       <div class="chip b">🎯 เหลืองบ ฿10,107<small>อีก 10 วันถึงรอบใหม่</small></div>
@@ -455,12 +477,13 @@
 <section id="new" class="newf">
   <div class="wrap">
     <div class="head">
-      <span class="eyebrow rv">ใหม่ล่าสุด ✨</span>
-      <h2 class="rv" style="--d:.1s">อัปเดตใหม่<br><span class="grad">ที่อยากให้ลอง</span></h2>
-      <p class="rv" style="--d:.2s">ฟีเจอร์ล่าสุดของน้องออมสิน ภาพจากหน้าจอบอทจริง</p>
+      <span class="eyebrow rv">ไฮไลต์ ✨</span>
+      <h2 class="rv" style="--d:.1s">ตัวช่วยเด็ด<br><span class="grad">ที่อยากให้ลอง</span></h2>
+      <p class="rv" style="--d:.2s">เรื่องเงินที่วุ่นที่สุด ให้น้องออมสินช่วย ภาพจากหน้าจอบอทจริง</p>
     </div>
 
     <div class="nf rv">
+      <img class="nf-mascot" src="img/mascot/slip.webp" alt="" loading="lazy">
       <div class="nf-txt">
         <span class="nf-badge">🧾 อ่านสลิปอัตโนมัติ</span>
         <h3>ส่งสลิปมา<br><span class="grad">ที่เหลือน้องออมสินจัดให้</span></h3>
@@ -472,25 +495,29 @@
     </div>
 
     <div class="nf rev rv">
+      <img class="nf-mascot" src="img/mascot/split.webp" alt="" loading="lazy">
       <div class="nf-txt">
-        <span class="nf-badge">💎 แพ็กเกจ Pro</span>
-        <h3>จ่ายผ่านพร้อมเพย์<br><span class="grad">เปิด Pro ให้อัตโนมัติ</span></h3>
-        <p>เดือนละ ฿35 หรือปีละ ฿299 (ประหยัด ฿121) สแกน QR ที่ใส่ยอดไว้ให้แล้ว ส่งสลิปในแชท ระบบตรวจกับธนาคารและเปิด Pro ภายในไม่กี่วินาที ไม่ต้องรอแอดมิน</p>
-        <ul><li>ไม่ตัดเงินอัตโนมัติ</li><li>เตือนก่อนหมดอายุ 3 วัน</li><li>โควตา AI 3 เท่า</li></ul>
-        <a class="btn ghost" href="#pricing">ดูราคา →</a>
+        <span class="nf-badge">🧾 หารบิลในกลุ่ม</span>
+        <h3>หมูกระทะกับแก๊งเพื่อน<br><span class="grad">หารจบในแชทเดียว</span></h3>
+        <p>พิมพ์ "ค่าหมูกระทะ 1200 หารทุกคน" ในกลุ่ม LINE คนจดคือคนจ่าย น้องออมสินหารให้เท่ากัน สรุปว่าใครต้องโอนให้ใครเท่าไหร่ โอนครบแล้วกดเคลียร์ยอดได้เลย</p>
+        <ul><li>หารทุกคน หรือเลือกคน</li><li>สรุปใครติดใคร</li><li>ทุกรายการมีชื่อคนจด</li></ul>
+        <div class="nf-code"><code>ค่าหมูกระทะ 1200 หารทุกคน</code><button class="btn pri nf-copy" data-copy="ค่าหมูกระทะ 1200 หารทุกคน">คัดลอก</button></div>
+        <a class="btn ghost" href="features.html#f-split">ดูวิธีใช้ →</a>
       </div>
-      <div class="nf-shots"><img src="img/chat/chat-pay.webp" alt="ชำระพร้อมเพย์และเปิด Pro อัตโนมัติ" loading="lazy"><img src="img/chat/chat-upgrade.webp" alt="การ์ดแพ็กเกจ Pro" loading="lazy"></div>
+      <div class="nf-shots"><img src="img/chat/chat-split.webp" alt="หารบิลหมูกระทะในกลุ่ม LINE และสรุปใครต้องโอนให้ใคร" loading="lazy"><img src="img/chat/chat-group.webp" alt="เปิดสมุดกลุ่ม" loading="lazy"></div>
     </div>
 
     <div class="nf rv">
+      <img class="nf-mascot" src="img/mascot/calendar.webp" alt="" loading="lazy">
       <div class="nf-txt">
-        <span class="nf-badge">🎟️ โค้ดพิเศษ</span>
-        <h3>มีโค้ด?<br><span class="grad">พิมพ์ในแชท รับ Pro ฟรี</span></h3>
-        <p>ได้โค้ดจากแคมเปญ เพจ หรือเพื่อน พิมพ์ "โค้ด" ตามด้วยโค้ดในแชท LINE รับ Pro ฟรีตามจำนวนวันทันที ถ้ามี Pro อยู่แล้วจะต่อจากวันหมดเดิม</p>
-        <div class="nf-code"><code>โค้ด NEWPRO</code><button class="btn pri nf-copy" data-copy="โค้ด NEWPRO">คัดลอก</button></div>
-        <a class="btn ghost" href="features.html#f-code">ดูวิธีใช้ →</a>
+        <span class="nf-badge">💳 ผ่อนของ & บัตรเครดิต</span>
+        <h3>ผ่อน 0% กี่งวดก็ไม่ลืม<br><span class="grad">จดงวดให้เองทุกเดือน</span></h3>
+        <p>บอกแค่ "ผ่อน iPhone 30000 10 งวด บัตร KTC" น้องออมสินจดงวดแรกให้ทันที แล้วจดงวดถัดไปอัตโนมัติทุกเดือนจนครบ ตั้งวันจ่ายบัตรไว้ จะเตือนล่วงหน้า 3 วันพร้อมยอดค้าง</p>
+        <ul><li>นับงวดให้ 2/10, 3/10 …</li><li>เตือนก่อนวันจ่ายบัตร</li><li>ยอดค้างบัตรอัปเดตเอง</li></ul>
+        <div class="nf-code"><code>ผ่อน iPhone 30000 10 งวด บัตร KTC</code><button class="btn pri nf-copy" data-copy="ผ่อน iPhone 30000 10 งวด บัตร KTC">คัดลอก</button></div>
+        <a class="btn ghost" href="features.html#f-card">ดูวิธีใช้ →</a>
       </div>
-      <div class="nf-shots one"><img src="img/chat/chat-code.webp" alt="ใช้โค้ดรับ Pro ฟรี" loading="lazy"></div>
+      <div class="nf-shots one"><img src="img/chat/chat-installment.webp" alt="ตั้งผ่อน จดงวดอัตโนมัติ และเตือนวันจ่ายบัตร" loading="lazy"></div>
     </div>
   </div>
 </section>
@@ -514,6 +541,7 @@
       <div class="cell rv" style="--d:.2s"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้าน</p></div>
     </div>
     <div class="more rv">
+      <img class="more-mascot" src="img/mascot/thumbsup.webp" alt="" loading="lazy">
       <p>ยังมีอีกเยอะ รวม 29 ฟีเจอร์ พร้อมวิธีใช้ทีละขั้นและภาพหน้าจอจริง</p>
       <a class="btn pri" href="features.html">ดูฟีเจอร์ทั้งหมด →</a>
       <small>เข้าสู่ระบบด้วย LINE และเพิ่มเพื่อนน้องออมสินก่อนดู</small>
@@ -607,7 +635,7 @@
 <section class="final" id="add">
   <div class="aurora"><i></i><i></i></div>
   <div class="wrap" style="position:relative">
-    <img class="rv" src="img/brand/logo.webp" alt="โลโก้ N'AOMSIN ตัวช่วยออมเงินและบันทึกรายจ่าย" width="512" height="512">
+    <div class="final-hero rv"><img class="final-mascot" src="img/mascot/celebrate.webp" alt="น้องออมสินกระโดดดีใจ" loading="lazy"><img class="final-logo" src="img/brand/logo.webp" alt="โลโก้ N'AOMSIN ตัวช่วยออมเงินและบันทึกรายจ่าย" width="512" height="512"></div>
     <h2 class="rv" style="--d:.1s">เรื่องเล่าของเงินคุณ<br><span class="grad">เริ่มจากข้อความแรก</span></h2>
     <p class="rv" style="--d:.2s">เพิ่มเพื่อนน้องออมสิน แล้วลองพิมพ์ "กาแฟ 45" ดูเลย</p>
     <a class="btn pri rv" style="--d:.3s" href="https://line.me/R/ti/p/@943axyqp" target="_blank" rel="noopener">💬 เพิ่มเพื่อนใน LINE</a>

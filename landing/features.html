@@ -243,6 +243,11 @@
   }
   .new-tag { margin-left:8px; font-family:var(--head); font-size:11px; font-weight:700; letter-spacing:.1em; color:#fff; padding:3px 10px; border-radius:999px; background:linear-gradient(135deg,#F76707,#FAB005); }
   .new-dot { margin-left:auto; font-style:normal; font-size:9.5px; font-weight:700; letter-spacing:.08em; color:#E8590C; border:1px solid rgba(232,89,12,.4); padding:0 6px; border-radius:999px; }
+
+  /* มาสคอต */
+  .gate-card .g-mascot { width:auto; height:190px; object-fit:contain; border-radius:0; margin-top:-150px; box-shadow:none !important; filter:drop-shadow(0 18px 22px rgba(24,100,171,.35)); }
+  .head.has-mascot { position:relative; }
+  .head-mascot { width:150px; margin:0 auto -6px; filter:drop-shadow(0 16px 20px rgba(24,100,171,.3)); }
 </style>
 </head>
 <body>
@@ -262,7 +267,8 @@
 <!-- FEATURES: คู่มือฟีเจอร์ (สร้างจาก gen_guide.py) -->
 <section id="features" class="guide" style="padding-top:120px">
   <div class="wrap">
-    <div class="head">
+    <div class="head has-mascot">
+      <img class="head-mascot" src="img/mascot/guide.webp" alt="น้องออมสินถือคู่มือ">
       <span class="eyebrow">คู่มือฟีเจอร์</span>
       <h2>ทำอะไรได้บ้าง<br><span class="grad">ครบทั้ง 29 ฟีเจอร์</span></h2>
       <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย ฟีเจอร์ที่มีป้าย <span class="pro-tag" style="margin:0">PRO</span> ต้องใช้แพ็กเกจ Pro (ช่วงนี้ใช้ฟรี)</p>
@@ -650,7 +656,7 @@ const CONFIG = {
   const card = $('#gateCard');
   const addFriendUrl = 'https://line.me/R/ti/p/' + encodeURIComponent(CONFIG.oaBasicId);
   const icon = '<img class="g-logo" src="img/brand/logo.webp" alt="N\'AOMSIN">';
-  const mascot = '<img class="g-mascot" src="img/brand/mascot.webp" alt="น้องออมสิน">';
+  const mascot = '<img class="g-mascot" src="img/mascot/hello.webp" alt="น้องออมสินโบกมือชวนเพิ่มเพื่อน">';
   const steps = (n) => '<div class="step">' + [1, 2].map((i) => '<i class="' + (i <= n ? 'on' : '') + '"></i>').join('') + '</div>';
 
   function gate(state, err) {
