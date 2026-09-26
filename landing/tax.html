@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คู่มือภาษีเข้าใจง่าย · N'AOMSIN</title>
+<meta name="description" content="ภาษีเงินได้บุคคลธรรมดาแบบเข้าใจง่าย ค่าลดหย่อน 28 รายการ ภาษีพ่อค้าแม่ค้า และวิธียื่นทีละขั้น กับน้องออมสิน">
+<meta name="theme-color" content="#E3F0FF">
+<link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="img/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F5F9FF; --ink:#0B2545; --sub:#4A6485; --dim:#8196B0; --line:rgba(28,126,214,.14); --blue:#1C7ED6; --blue-d:#1864AB; --mint:#0CA678;
+    --mint-s:#E6FCF5; --soft:#EAF4FF; --warn:#FFF4E6; --grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%);
+    --shadow:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30); --line-green:#06C755; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:'Noto Sans Thai',sans-serif; color:var(--ink); line-height:1.75; font-size:17px;
+    background:linear-gradient(180deg,#E3F0FF 0,#F5F9FF 600px,#fff 1400px); -webkit-font-smoothing:antialiased; }
+  a { color:var(--blue); }
+  img { max-width:100%; display:block; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header { position:sticky; top:0; z-index:20; background:rgba(245,249,255,.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.04em; text-decoration:none; color:var(--ink); }
+  .logo img { width:36px; height:36px; border-radius:50%; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:999px; font-weight:700; font-size:16px; text-decoration:none; border:0; }
+  .btn.line { background:var(--line-green); color:#fff; box-shadow:0 10px 24px -10px rgba(6,199,85,.7); }
+  .btn.ghost { background:#fff; color:var(--blue); border:1px solid rgba(28,126,214,.28); }
+  .btn.sm { padding:8px 16px; font-size:14px; }
+  .hero { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:center; padding:40px 0 20px; }
+  .hero h1 { font-size:clamp(32px,5vw,50px); line-height:1.2; margin:10px 0; }
+  .hero p { color:var(--sub); font-size:18px; margin:0 0 20px; }
+  .grad { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--blue); background:var(--soft); padding:4px 12px; border-radius:999px; }
+  .toc { display:flex; gap:8px; overflow-x:auto; padding:6px 0 14px; position:sticky; top:64px; z-index:10; background:linear-gradient(180deg,rgba(245,249,255,.96) 70%,rgba(245,249,255,0)); }
+  .toc a { white-space:nowrap; font-size:14px; font-weight:600; text-decoration:none; color:var(--blue-d); background:#fff; border:1px solid var(--line); padding:6px 14px; border-radius:999px; }
+  section { padding:26px 0; scroll-margin-top:120px; }
+  h2 { font-size:clamp(24px,3.4vw,32px); line-height:1.3; margin:0 0 6px; }
+  h3 { font-size:19px; margin:0 0 4px; }
+  .lead { color:var(--sub); margin:0 0 16px; }
+  .card { background:#fff; border-radius:22px; padding:20px 22px; box-shadow:var(--shadow); border:1px solid var(--line); margin:12px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .formula { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-weight:700; }
+  .formula span { background:var(--soft); padding:8px 14px; border-radius:14px; }
+  .formula b { color:var(--blue); font-size:20px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--blue-d); background:var(--soft); }
+  td.r, th.r { text-align:right; }
+  .step { display:grid; grid-template-columns:44px 1fr; gap:12px; margin:14px 0; }
+  .step .n { width:44px; height:44px; border-radius:14px; background:var(--grad); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:19px; }
+  .say { display:grid; grid-template-columns:90px 1fr; gap:14px; align-items:center; background:linear-gradient(135deg,var(--soft),var(--mint-s)); border-radius:22px; padding:14px 18px; }
+  .say img { width:90px; }
+  .chat { display:inline-block; background:#E9FBEF; color:#085F2E; border-radius:12px 12px 2px 12px; padding:2px 10px; font-weight:600; font-size:15px; }
+  .tag { display:inline-block; font-size:12px; font-weight:700; padding:1px 9px; border-radius:999px; background:var(--soft); color:var(--blue-d); }
+  .tag.mint { background:var(--mint-s); color:var(--mint); } .tag.warn { background:var(--warn); color:#9A4C00; }
+  .ded { padding:12px 0; border-bottom:1px dashed var(--line); display:grid; grid-template-columns:1fr auto; gap:6px 14px; }
+  .ded:last-child { border-bottom:0; }
+  .ded .cap { font-weight:800; color:var(--blue); white-space:nowrap; }
+  .ded p { margin:2px 0 0; color:var(--sub); font-size:15px; grid-column:1 / 3; }
+  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 18px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:700; }
+  .note { background:var(--warn); border-radius:16px; padding:12px 16px; font-size:15px; color:#6B3A00; }
+  .fab { position:fixed; right:16px; bottom:16px; z-index:30; }
+  footer { border-top:1px solid var(--line); margin-top:30px; padding:24px 0 90px; color:var(--dim); font-size:14px; }
+  @media (max-width:720px) { .hero, .grid, .grid3 { grid-template-columns:1fr; } .hero img { max-width:240px; margin:0 auto; } body { font-size:16px; } .say { grid-template-columns:64px 1fr; } .say img { width:64px; } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="index.html"><img src="img/brand/logo.webp" alt="">N'AOMSIN</a>
+  <a class="btn line sm" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A0%E0%B8%B2%E0%B8%A9%E0%B8%B5">💬 ถามน้องออมสิน</a></div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div><span class="eyebrow">คู่มือภาษีฉบับเข้าใจง่าย</span>
+      <h1>ภาษีไม่ยาก<br><span class="grad">ถ้ามีน้องออมสินช่วย</span></h1>
+      <p>ไม่ต้องรู้เรื่องภาษีมาก่อน ไม่ว่าจะเป็นพนักงาน ฟรีแลนซ์ หรือพ่อค้าแม่ค้าในตลาด แค่จดรายรับในแชท น้องออมสินช่วยคิด ช่วยเตือน และบอกทีละขั้นว่าต้องทำอะไร</p>
+      <a class="btn line" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A0%E0%B8%B2%E0%B8%A9%E0%B8%B5">💬 ดูภาษีของฉันใน LINE</a> <a class="btn ghost" href="#howto">ใช้งานยังไง</a></div>
+    <img src="img/mascot/guide.webp" alt="น้องออมสิน">
+  </div>
+  <nav class="toc"><a href="#simple">ภาษีคิดยังไง</a><a href="#must">ต้องยื่นไหม</a><a href="#income">รายได้ของฉันแบบไหน</a><a href="#shop">🏪 พ่อค้าแม่ค้า</a><a href="#deduct">ค่าลดหย่อน</a><a href="#howto">ใช้กับน้องออมสิน</a><a href="#file">วิธียื่น</a><a href="#faq">ถามบ่อย</a></nav>
+
+  <section id="simple"><h2>ภาษีคิดยังไง (แบบ 1 นาที)</h2><p class="lead">ภาษีไม่ได้คิดจากรายได้ทั้งหมด แต่คิดจาก "เงินที่เหลือ" หลังหักสิ่งที่กฎหมายให้หัก</p>
+    <div class="card"><div class="formula"><span>รายได้ทั้งปี</span><b>−</b><span>ค่าใช้จ่าย</span><b>−</b><span>ค่าลดหย่อน</span><b>=</b><span style="background:var(--mint-s);color:var(--mint)">เงินได้สุทธิ</span></div>
+      <p style="margin:14px 0 6px">แล้วเอาเงินได้สุทธิไปคิดตามขั้นบันได <b>150,000 บาทแรกไม่เสียภาษีเลย</b></p>
+      <table><tr><th>เงินได้สุทธิ</th><th class="r">อัตรา</th></tr>
+        <tr><td>0 – 150,000</td><td class="r">ยกเว้น</td></tr><tr><td>150,001 – 300,000</td><td class="r">5%</td></tr><tr><td>300,001 – 500,000</td><td class="r">10%</td></tr>
+        <tr><td>500,001 – 750,000</td><td class="r">15%</td></tr><tr><td>750,001 – 1,000,000</td><td class="r">20%</td></tr><tr><td>1,000,001 – 2,000,000</td><td class="r">25%</td></tr>
+        <tr><td>2,000,001 – 5,000,000</td><td class="r">30%</td></tr><tr><td>มากกว่า 5,000,000</td><td class="r">35%</td></tr></table></div>
+    <div class="say"><img src="img/mascot/thumbsup.webp" alt=""><div>ทุกคนได้ <b>ลดหย่อนส่วนตัว 60,000 บาท</b> อัตโนมัติ น้องออมสินใส่ให้แล้ว ส่วนค่าลดหย่อนอื่นๆ (ประกันสังคม ประกัน ลูก พ่อแม่) บอกน้องออมสินเพิ่มได้ ยิ่งใส่ครบ ยิ่งเสียภาษีน้อยลงค่ะ</div></div></section>
+
+  <section id="must"><h2>ต้องยื่นภาษีไหม?</h2><p class="lead">ถ้ารายได้ทั้งปีเกินตัวเลขนี้ ต้องยื่นแบบ (แม้สุดท้ายจะไม่ต้องจ่ายภาษีก็ตาม)</p>
+    <div class="grid"><div class="card"><h3>💼 มีแต่เงินเดือน</h3><p>โสด: เกิน <b>120,000</b> บาท/ปี<br>มีคู่สมรส: เกิน <b>220,000</b> บาท/ปี<br><span class="tag">แบบ ภ.ง.ด.91</span></p></div>
+      <div class="card"><h3>🏪 มีรายได้อื่น (ขายของ ฟรีแลนซ์)</h3><p>โสด: เกิน <b>60,000</b> บาท/ปี<br>มีคู่สมรส: เกิน <b>120,000</b> บาท/ปี<br><span class="tag">แบบ ภ.ง.ด.90</span></p></div></div>
+    <div class="note">💡 ถูกหักภาษี ณ ที่จ่ายไว้ (เช่น ค่าจ้างฟรีแลนซ์ถูกหัก 3%) แต่รายได้ไม่ถึงเกณฑ์เสียภาษี → <b>ยื่นแบบเพื่อขอเงินคืนได้</b> น้องออมสินจะบอกว่าคุณอาจได้คืนเท่าไหร่</div></section>
+
+  <section id="income"><h2>รายได้ของฉันเป็นแบบไหน?</h2><p class="lead">แต่ละแบบหักค่าใช้จ่ายไม่เท่ากัน น้องออมสินช่วยจัดให้จากหมวดที่คุณจด (พิมพ์ <span class="chat">จัดประเภทรายรับ</span>)</p>
+    <div class="grid">
+      <div class="card"><h3>💼 เงินเดือน / โบนัส</h3><span class="tag">40(1)</span><p>เงินที่นายจ้างจ่ายประจำ หักค่าใช้จ่ายเหมา 50% (รวมกับรับจ้างไม่เกิน 100,000 บาท)</p></div>
+      <div class="card"><h3>🧑‍💻 รับจ้าง / ฟรีแลนซ์</h3><span class="tag">40(2)</span><p>ค่าจ้างงานเป็นครั้ง ค่าคอมมิชชั่น หักเหมา 50% (รวมกับเงินเดือนไม่เกิน 100,000 บาท)</p></div>
+      <div class="card"><h3>🏪 ขายของ / ค้าขาย</h3><span class="tag mint">40(8)</span><p>ขายอาหาร ขายของตลาด ขายออนไลน์ <b>หักค่าใช้จ่ายเหมา 60%</b> ไม่ต้องเก็บใบเสร็จ</p></div>
+      <div class="card"><h3>🚫 ไม่ใช่รายได้</h3><span class="tag">ไม่นำมาคิด</span><p>เพื่อนคืนเงิน เงินยืม ย้ายเงินระหว่างบัญชีตัวเอง ไม่ต้องเอามาคิดภาษี</p></div></div></section>
+
+  <section id="shop"><h2>🏪 พ่อค้าแม่ค้า อ่านตรงนี้</h2><p class="lead">ขายของหักค่าใช้จ่ายได้ถึง 60% โดยไม่ต้องมีใบเสร็จ แม่ค้าส่วนใหญ่จึงเสียภาษีน้อยกว่าที่คิด</p>
+    <div class="grid">
+      <div class="card"><h3>ตัวอย่าง 1: ขายส้มตำ เดือนละ 30,000</h3>
+        <table><tr><td>ยอดขายทั้งปี</td><td class="r">360,000</td></tr><tr><td>หักค่าใช้จ่ายเหมา 60%</td><td class="r">−216,000</td></tr>
+          <tr><td>หักลดหย่อนส่วนตัว</td><td class="r">−60,000</td></tr><tr><th>เงินได้สุทธิ</th><th class="r">84,000</th></tr>
+          <tr><th>ภาษีที่ต้องจ่าย</th><th class="r" style="color:var(--mint)">0 บาท 🎉</th></tr></table>
+        <p class="lead" style="margin-top:8px;font-size:15px">ยอดขายเกิน 60,000 บาท ต้องยื่นแบบ แต่ไม่ต้องจ่ายภาษี</p></div>
+      <div class="card"><h3>ตัวอย่าง 2: ร้านขายของ เดือนละ 100,000</h3>
+        <table><tr><td>ยอดขายทั้งปี</td><td class="r">1,200,000</td></tr><tr><td>หักค่าใช้จ่ายเหมา 60%</td><td class="r">−720,000</td></tr>
+          <tr><td>หักลดหย่อนส่วนตัว</td><td class="r">−60,000</td></tr><tr><th>เงินได้สุทธิ</th><th class="r">420,000</th></tr>
+          <tr><th>ภาษีขั้นบันได</th><th class="r">19,500</th></tr></table>
+        <p class="lead" style="margin-top:8px;font-size:15px">ยังต้องเทียบ "วิธีที่ 2" (0.5% ของยอดขาย = 6,000) แล้วจ่ายตัวที่มากกว่า น้องออมสินเทียบให้อัตโนมัติ</p></div></div>
+    <div class="card"><h3>✅ สิ่งที่พ่อค้าแม่ค้าควรทำ</h3>
+      <div class="step"><div class="n">1</div><div><b>จดยอดขายทุกวัน</b> พิมพ์ในแชท เช่น <span class="chat">ขายส้มตำได้ 1,200</span> หรือเปิด <span class="chat">เปิดโหมดร้านค้า</span> ดูกำไรด้วย</div></div>
+      <div class="step"><div class="n">2</div><div><b>ยื่นครึ่งปี (ภ.ง.ด.94)</b> รายได้ ม.ค.–มิ.ย. ยื่นภายใน 30 ก.ย. แล้วยื่นเต็มปี (ภ.ง.ด.90) ช่วง ม.ค.–มี.ค. ปีถัดไป</div></div>
+      <div class="step"><div class="n">3</div><div><b>ลดหย่อนเพิ่มได้</b> เช่น ออมกับ กอช. (ไม่เกิน 30,000) ประกันสังคมมาตรา 40 ประกันชีวิต/สุขภาพ</div></div>
+      <a class="btn line" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%A0%E0%B8%B2%E0%B8%A9%E0%B8%B5%E0%B9%81%E0%B8%A1%E0%B9%88%E0%B8%84%E0%B9%89%E0%B8%B2">💬 ถามน้องออมสินเรื่องภาษีร้านค้า</a></div></section>
+
+  <section id="deduct"><h2>ค่าลดหย่อน ลดอะไรได้บ้าง</h2><p class="lead">ในแอปเรียกว่า <b>"ข้อมูลภาษีเพิ่มเติม"</b> เลือกข้อที่คุณมี แล้วบอกจำนวนเงิน น้องออมสินคิดเพดานให้เอง (ตามเอกสารกรมสรรพากร)</p>
+    <details open><summary>👨‍👩‍👧 ครอบครัว <span class="tag">5 รายการ</span></summary><div class="ded"><b>คู่สมรสไม่มีรายได้</b><span class="cap">สูงสุด ฿60,000</span>
+          <p>แต่งงานจดทะเบียน และคู่สมรสไม่มีรายได้เลยทั้งปี ลดหย่อนได้ 60,000 บาท</p></div><div class="ded"><b>บุตร</b><span class="cap">฿30,000/คน</span>
+          <p>ลูก (ชอบด้วยกฎหมายหรือบุญธรรม) คนละ 30,000 บาท · ลูกคนที่ 2 ขึ้นไปที่เกิดตั้งแต่ปี 2561 คนละ 60,000 บาท</p></div><div class="ded"><b>ค่าฝากครรภ์และคลอดบุตร</b><span class="cap">สูงสุด ฿60,000</span>
+          <p>ค่าฝากครรภ์และค่าคลอดตามที่จ่ายจริง ไม่เกิน 60,000 บาทต่อการตั้งครรภ์</p></div><div class="ded"><b>เลี้ยงดูพ่อแม่อายุ 60 ปีขึ้นไป</b><span class="cap">฿30,000/คน</span>
+          <p>พ่อแม่อายุ 60+ ที่มีรายได้ทั้งปีไม่เกิน 30,000 บาท คนละ 30,000 บาท (รวมพ่อแม่ของคู่สมรสที่ไม่มีรายได้ได้ สูงสุด 4 คน)</p></div><div class="ded"><b>ดูแลคนพิการหรือทุพพลภาพ</b><span class="cap">฿60,000/คน</span>
+          <p>ดูแลคนพิการหรือทุพพลภาพ (ต้องมีบัตรคนพิการ) คนละ 60,000 บาท</p></div></details><details open><summary>🛡️ ประกัน &amp; ประกันสังคม <span class="tag">6 รายการ</span></summary><div class="ded"><b>เบี้ยประกันชีวิต</b><span class="cap">สูงสุด ฿100,000</span>
+          <p>ประกันชีวิตกรมธรรม์ 10 ปีขึ้นไป ตามที่จ่ายจริง ไม่เกิน 100,000 บาท (รวมกับประกันสุขภาพต้องไม่เกิน 100,000)</p></div><div class="ded"><b>ประกันชีวิตคู่สมรสไม่มีรายได้</b><span class="cap">สูงสุด ฿10,000</span>
+          <p>เบี้ยประกันชีวิตของคู่สมรสที่ไม่มีรายได้ ไม่เกิน 10,000 บาท</p></div><div class="ded"><b>เบี้ยประกันสุขภาพตัวเอง</b><span class="cap">สูงสุด ฿25,000</span>
+          <p>ประกันสุขภาพของตัวเอง ไม่เกิน 25,000 บาท (รวมกับประกันชีวิตต้องไม่เกิน 100,000)</p></div><div class="ded"><b>ประกันสุขภาพพ่อแม่</b><span class="cap">สูงสุด ฿15,000</span>
+          <p>ประกันสุขภาพพ่อแม่ของเราและคู่สมรส (พ่อแม่มีรายได้ไม่เกิน 30,000 บาท) ไม่เกิน 15,000 บาท</p></div><div class="ded"><b>เงินสมทบประกันสังคม</b><span class="cap">สูงสุด ฿9,000</span>
+          <p>เงินที่ถูกหักเข้าประกันสังคม (ดูในสลิปเงินเดือน) ไม่เกิน 9,000 บาท · มนุษย์เงินเดือนเกือบทุกคนใช้ได้ · 💡 พนักงานบริษัทมักจ่ายเดือนละ 750 บาท = 9,000 บาทต่อปี</p></div><div class="ded"><b>ประกันชีวิตแบบบำนาญ</b><span class="cap">สูงสุด ฿200,000</span>
+          <p>ประกันบำนาญ ไม่เกิน 15% ของเงินได้ และไม่เกิน 200,000 บาท (นับรวมกลุ่มเกษียณไม่เกิน 500,000)</p></div></details><details ><summary>🐷 ออมเงิน &amp; ลงทุน <span class="tag">7 รายการ</span></summary><div class="ded"><b>กองทุนสำรองเลี้ยงชีพ (PVD)</b><span class="cap">สูงสุด ฿10,000</span>
+          <p>เงินสะสมเข้ากองทุนสำรองเลี้ยงชีพ ลดหย่อนได้ไม่เกิน 10,000 บาท (ส่วนเกินได้รับยกเว้น นับรวมกลุ่มเกษียณ)</p></div><div class="ded"><b>กองทุน RMF</b><span class="cap">สูงสุด ฿500,000</span>
+          <p>ซื้อ RMF ไม่เกิน 30% ของเงินได้ ถือ 5 ปีขึ้นไป (นับรวมกลุ่มเกษียณไม่เกิน 500,000)</p></div><div class="ded"><b>กองทุน SSF</b><span class="cap">สูงสุด ฿200,000</span>
+          <p>ซื้อ SSF ไม่เกิน 30% ของเงินได้ และไม่เกิน 200,000 บาท (นับรวมกลุ่มเกษียณไม่เกิน 500,000)</p></div><div class="ded"><b>กองทุน Thai ESG</b><span class="cap">สูงสุด ฿300,000</span>
+          <p>ซื้อ Thai ESG ไม่เกิน 30% ของเงินได้ และไม่เกิน 300,000 บาท ถือต่อเนื่อง 5 ปี</p></div><div class="ded"><b>กบข.</b><span class="cap">สูงสุด ฿500,000</span>
+          <p>เงินสะสม กบข. ของข้าราชการ ไม่เกิน 500,000 บาท (นับรวมกลุ่มเกษียณ)</p></div><div class="ded"><b>กองทุนสงเคราะห์ครูโรงเรียนเอกชน</b><span class="cap">สูงสุด ฿500,000</span>
+          <p>เงินสะสมกองทุนสงเคราะห์ครูโรงเรียนเอกชน ไม่เกิน 500,000 บาท (นับรวมกลุ่มเกษียณ)</p></div><div class="ded"><b>กองทุนการออมแห่งชาติ (กอช.)</b><span class="cap">สูงสุด ฿30,000</span>
+          <p>เงินออม กอช. (เหมาะกับแม่ค้า อาชีพอิสระ) ไม่เกิน 30,000 บาท · 💡 พ่อค้าแม่ค้าที่ไม่มีประกันสังคมสมัคร กอช. ได้ ออมเองแล้วลดหย่อนได้ด้วย</p></div></details><details ><summary>🏠 บ้าน <span class="tag">2 รายการ</span></summary><div class="ded"><b>ดอกเบี้ยผ่อนบ้าน</b><span class="cap">สูงสุด ฿100,000</span>
+          <p>ดอกเบี้ยเงินกู้ซื้อ/สร้างบ้าน (ไม่ใช่เงินต้น) ดูในหนังสือรับรองจากธนาคาร ไม่เกิน 100,000 บาท</p></div><div class="ded"><b>ค่าสร้างบ้านใหม่</b><span class="cap">สูงสุด ฿100,000</span>
+          <p>จ้างผู้รับเหมาที่จด VAT สร้างบ้าน ลดหย่อน 10,000 บาทต่อทุกค่าก่อสร้าง 1 ล้านบาท ไม่เกิน 100,000 (ใส่ค่าก่อสร้างทั้งหมด) · ตรวจช่วงเวลามาตรการก่อนใช้</p></div></details><details ><summary>💝 บริจาค <span class="tag">3 รายการ</span></summary><div class="ded"><b>เงินบริจาคทั่วไป</b><span class="cap">ไม่เกิน 10%</span>
+          <p>บริจาคให้มูลนิธิ/วัด/องค์กรที่ได้รับอนุมัติ ตามที่จ่ายจริง รวมกันไม่เกิน 10% ของเงินได้หลังหักค่าใช้จ่ายและลดหย่อน</p></div><div class="ded"><b>บริจาคการศึกษา/กีฬา/โรงพยาบาลรัฐ (e-Donation)</b><span class="cap">ไม่เกิน 10%</span>
+          <p>บริจาคผ่านระบบ e-Donation เพื่อการศึกษา กีฬา โรงพยาบาลรัฐ หักได้ 2 เท่า (รวมไม่เกิน 10% ของเงินได้หลังหักค่าใช้จ่ายและลดหย่อน)</p></div><div class="ded"><b>บริจาคพรรคการเมือง</b><span class="cap">สูงสุด ฿10,000</span>
+          <p>บริจาคให้พรรคการเมือง ไม่เกิน 10,000 บาท</p></div></details><details ><summary>✨ อื่นๆ &amp; มาตรการรัฐ <span class="tag">5 รายการ</span></summary><div class="ded"><b>ลงทุนในวิสาหกิจเพื่อสังคม</b><span class="cap">สูงสุด ฿100,000</span>
+          <p>ลงทุนตั้งหรือเพิ่มทุนวิสาหกิจเพื่อสังคมที่จดทะเบียน ไม่เกิน 100,000 บาท</p></div><div class="ded"><b>Easy E-Receipt (ปี 2567) <span class="tag warn">เฉพาะปี 2567</span></b><span class="cap">สูงสุด ฿50,000</span>
+          <p>ซื้อสินค้า/บริการที่มีใบกำกับภาษีอิเล็กทรอนิกส์ 1 ม.ค.–15 ก.พ. 2567 ไม่เกิน 50,000 บาท</p></div><div class="ded"><b>เที่ยวเมืองรอง (ปี 2567) <span class="tag warn">เฉพาะปี 2567</span></b><span class="cap">สูงสุด ฿15,000</span>
+          <p>ค่าเที่ยวเมืองรอง 1 พ.ค.–30 พ.ย. 2567 ไม่เกิน 15,000 บาท</p></div><div class="ded"><b>ซ่อมบ้านจากน้ำท่วม (ปี 2567) <span class="tag warn">เฉพาะปี 2567</span></b><span class="cap">สูงสุด ฿100,000</span>
+          <p>ค่าซ่อมบ้านจากน้ำท่วม 16 ส.ค.–31 ธ.ค. 2567 ไม่เกิน 100,000 บาท</p></div><div class="ded"><b>ซ่อมรถจากน้ำท่วม (ปี 2567) <span class="tag warn">เฉพาะปี 2567</span></b><span class="cap">สูงสุด ฿30,000</span>
+          <p>ค่าซ่อมรถจากน้ำท่วม 16 ส.ค.–31 ธ.ค. 2567 ไม่เกิน 30,000 บาท</p></div></details>
+    <div class="note">กลุ่มเกษียณ (กองทุนสำรองเลี้ยงชีพ RMF SSF ประกันบำนาญ กบข. กอช.) รวมกันไม่เกิน 500,000 บาท · ประกันชีวิต+ประกันสุขภาพตัวเอง รวมไม่เกิน 100,000 บาท · น้องออมสินคิดให้แล้ว</div>
+    <p style="margin-top:14px">บันทึกในแชทได้ทันที เช่น <span class="chat">ลดหย่อน ประกันสังคม 9000</span> <span class="chat">ลดหย่อน ลูก 2 คน</span> <span class="chat">ลดหย่อน คู่สมรส</span> <span class="chat">ลดหย่อน ประกันสุขภาพ 18000</span></p></section>
+
+  <section id="howto"><h2>ใช้กับน้องออมสินยังไง</h2><p class="lead">ทำตามนี้ ครั้งแรกใช้เวลาไม่ถึง 10 นาที</p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div><b>จดรายรับในแชทตามปกติ</b><br><span class="chat">เงินเดือนเข้า 25000</span> <span class="chat">ได้ค่าจ้างออกแบบ 5000 หัก 3%</span> <span class="chat">ขายของได้ 1500</span></div></div>
+      <div class="step"><div class="n">2</div><div><b>ให้น้องออมสินจัดประเภท</b> พิมพ์ <span class="chat">จัดประเภทรายรับ</span> ตัวไหนไม่แน่ใจ แตะเลือกเองในหน้าภาษี</div></div>
+      <div class="step"><div class="n">3</div><div><b>ใส่ข้อมูลภาษีเพิ่มเติม</b> พิมพ์ <span class="chat">ข้อมูลภาษีเพิ่มเติม</span> เลือกค่าลดหย่อนที่มี หรือพิมพ์ <span class="chat">ลดหย่อน ประกันสังคม 9000</span></div></div>
+      <div class="step"><div class="n">4</div><div><b>ดูผล</b> พิมพ์ <span class="chat">สรุปภาษี</span> รู้ทันทีว่าต้องจ่ายเพิ่มหรือได้เงินคืน พร้อมคำแนะนำ</div></div>
+      <div class="step"><div class="n">5</div><div><b>เก็บหลักฐาน</b> พิมพ์ <span class="chat">เก็บหลักฐานภาษี</span> แล้วส่งรูปหนังสือรับรองหัก ณ ที่จ่าย/ใบเสร็จประกัน เก็บเป็นไฟล์ส่วนตัว</div></div>
+      <a class="btn line" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%82%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%B9%E0%B8%A5%E0%B8%A0%E0%B8%B2%E0%B8%A9%E0%B8%B5%E0%B9%80%E0%B8%9E%E0%B8%B4%E0%B9%88%E0%B8%A1%E0%B9%80%E0%B8%95%E0%B8%B4%E0%B8%A1">💬 เริ่มใส่ข้อมูลภาษีใน LINE</a></div></section>
+
+  <section id="file"><h2>วิธียื่นภาษีออนไลน์ (e-Filing)</h2><p class="lead">ยื่นเองได้ที่เว็บกรมสรรพากร ใช้ตัวเลขจาก "สรุปเตรียมยื่น" ของน้องออมสิน</p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div>ในหน้าภาษีของแดชบอร์ด กด <b>"ดาวน์โหลดสรุปเตรียมยื่น"</b> (ไฟล์จะเปิดในเบราว์เซอร์หลัก)</div></div>
+      <div class="step"><div class="n">2</div><div>เข้า <a href="https://efiling.rd.go.th/" target="_blank" rel="noopener">efiling.rd.go.th</a> ล็อกอินด้วยเลขบัตรประชาชน หรือแอป ThaID</div></div>
+      <div class="step"><div class="n">3</div><div>เลือกแบบ <b>ภ.ง.ด.91</b> (มีแต่เงินเดือน) หรือ <b>ภ.ง.ด.90</b> (มีรายได้อื่น)</div></div>
+      <div class="step"><div class="n">4</div><div>กรอกรายได้แต่ละประเภท ภาษีหัก ณ ที่จ่าย และค่าลดหย่อน ตามสรุป แล้วตรวจยอดภาษีให้ตรงกับน้องออมสิน</div></div>
+      <div class="step"><div class="n">5</div><div>กดยื่นแบบ ถ้าต้องจ่ายเพิ่มชำระออนไลน์ได้ (ผ่อน 3 งวดได้ถ้ายอดตั้งแต่ 3,000 บาท) ถ้าได้คืนรอเงินโอนเข้าพร้อมเพย์ที่ผูกเลขบัตร</div></div>
+      <p class="lead" style="font-size:15px">📅 ยื่นปีภาษีนี้ได้ ม.ค.–มี.ค. ของปีถัดไป (ยื่นออนไลน์มักขยายถึงต้นเมษายน) · น้องออมสินเตรียมข้อมูลให้ แต่ไม่ได้ยื่นแทนคุณ</p></div></section>
+
+  <section id="faq"><h2>คำถามที่พบบ่อย</h2>
+    <details><summary>ไม่รู้เรื่องภาษีเลย ใช้ได้ไหม?</summary><p>ได้เลยค่ะ แค่จดรายรับในแชทตามปกติ แล้วพิมพ์ "สรุปภาษี" น้องออมสินจะบอกทีละขั้นว่าต้องทำอะไรต่อ หรือพิมพ์ถามได้ทุกเรื่อง เช่น "ประกันสุขภาพลดหย่อนได้เท่าไหร่"</p></details>
+    <details><summary>น้องออมสินยื่นภาษีให้ได้ไหม?</summary><p>ยังไม่ได้ค่ะ น้องออมสินช่วยคำนวณ เตรียมตัวเลข และสรุปให้ คุณนำไปกรอกและกดยื่นเองที่ e-Filing ของกรมสรรพากร</p></details>
+    <details><summary>ตัวเลขแม่นแค่ไหน?</summary><p>เป็นการประมาณจากข้อมูลที่คุณบันทึก ตามหลักเกณฑ์กรมสรรพากร ถ้าจดรายรับครบและใส่ค่าลดหย่อนถูก ตัวเลขจะใกล้เคียงของจริง ควรตรวจอีกครั้งในระบบ e-Filing ก่อนกดยื่น</p></details>
+    <details><summary>ข้อมูลภาษีของฉันปลอดภัยไหม?</summary><p>ข้อมูลทั้งหมดเข้ารหัสก่อนเก็บ ใช้ได้เฉพาะสมุดส่วนตัว ไม่แสดงในสมุดกลุ่ม และไฟล์หลักฐานเก็บแบบส่วนตัว เปิดผ่านลิงก์ชั่วคราวเท่านั้น</p></details>
+    <details><summary>ขายของออนไลน์/ในตลาด ต้องจดทะเบียนอะไรไหม?</summary><p>ภาษีเงินได้ยื่นในชื่อตัวเองได้เลย ถ้ายอดขายเกิน 1.8 ล้านบาทต่อปี ต้องจดทะเบียนภาษีมูลค่าเพิ่ม (VAT) ควรปรึกษากรมสรรพากรหรือนักบัญชีเพิ่มเติม</p></details></section>
+
+  <p class="lead" style="font-size:14px">อ้างอิง: <a href="https://www.rd.go.th/26218.html" target="_blank" rel="noopener">กรมสรรพากร: การคำนวณภาษี</a> · <a href="https://www.rd.go.th/59668.html" target="_blank" rel="noopener">โครงสร้างอัตราภาษี</a> · เอกสาร "ผู้มีเงินได้มีสิทธิหักลดหย่อนอะไรได้บ้าง?" · หลักเกณฑ์อาจเปลี่ยนทุกปี ตรวจสอบกับกรมสรรพากรก่อนยื่น</p>
+</div><a class="btn line fab" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%96%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%A0%E0%B8%B2%E0%B8%A9%E0%B8%B5">💬 ถามน้องออมสินใน LINE</a>
+<footer><div class="wrap">คู่มือนี้ช่วยให้เข้าใจภาพรวม ไม่ใช่คำแนะนำทางภาษีเฉพาะบุคคล<br>© N'AOMSIN · ผู้ช่วยจดรายรับรายจ่ายใน LINE · <a href="index.html">หน้าแรก</a> · <a href="features.html">ฟีเจอร์ทั้งหมด</a> · <a href="tax.html">คู่มือภาษี</a> · <a href="missions.html">คู่มือภารกิจ</a></div></footer>
+</body></html>
