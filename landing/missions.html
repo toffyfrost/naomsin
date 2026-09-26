@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>คู่มือภารกิจ · N'AOMSIN</title>
+<meta name="description" content="สะสมแต้ม การ์ดน้องออมสิน เกมทายหมวด แลกรางวัล และตั้งค่าผู้ช่วยส่วนตัว">
+<meta name="theme-color" content="#E3F0FF">
+<link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="img/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F5F9FF; --ink:#0B2545; --sub:#4A6485; --dim:#8196B0; --line:rgba(28,126,214,.14); --blue:#1C7ED6; --blue-d:#1864AB; --mint:#0CA678;
+    --mint-s:#E6FCF5; --soft:#EAF4FF; --warn:#FFF4E6; --grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%);
+    --shadow:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30); --line-green:#06C755; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:'Noto Sans Thai',sans-serif; color:var(--ink); line-height:1.75; font-size:17px;
+    background:linear-gradient(180deg,#E3F0FF 0,#F5F9FF 600px,#fff 1400px); -webkit-font-smoothing:antialiased; }
+  a { color:var(--blue); }
+  img { max-width:100%; display:block; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header { position:sticky; top:0; z-index:20; background:rgba(245,249,255,.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.04em; text-decoration:none; color:var(--ink); }
+  .logo img { width:36px; height:36px; border-radius:50%; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:999px; font-weight:700; font-size:16px; text-decoration:none; border:0; }
+  .btn.line { background:var(--line-green); color:#fff; box-shadow:0 10px 24px -10px rgba(6,199,85,.7); }
+  .btn.ghost { background:#fff; color:var(--blue); border:1px solid rgba(28,126,214,.28); }
+  .btn.sm { padding:8px 16px; font-size:14px; }
+  .hero { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:center; padding:40px 0 20px; }
+  .hero h1 { font-size:clamp(32px,5vw,50px); line-height:1.2; margin:10px 0; }
+  .hero p { color:var(--sub); font-size:18px; margin:0 0 20px; }
+  .grad { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--blue); background:var(--soft); padding:4px 12px; border-radius:999px; }
+  .toc { display:flex; gap:8px; overflow-x:auto; padding:6px 0 14px; position:sticky; top:64px; z-index:10; background:linear-gradient(180deg,rgba(245,249,255,.96) 70%,rgba(245,249,255,0)); }
+  .toc a { white-space:nowrap; font-size:14px; font-weight:600; text-decoration:none; color:var(--blue-d); background:#fff; border:1px solid var(--line); padding:6px 14px; border-radius:999px; }
+  section { padding:26px 0; scroll-margin-top:120px; }
+  h2 { font-size:clamp(24px,3.4vw,32px); line-height:1.3; margin:0 0 6px; }
+  h3 { font-size:19px; margin:0 0 4px; }
+  .lead { color:var(--sub); margin:0 0 16px; }
+  .card { background:#fff; border-radius:22px; padding:20px 22px; box-shadow:var(--shadow); border:1px solid var(--line); margin:12px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .formula { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-weight:700; }
+  .formula span { background:var(--soft); padding:8px 14px; border-radius:14px; }
+  .formula b { color:var(--blue); font-size:20px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--blue-d); background:var(--soft); }
+  td.r, th.r { text-align:right; }
+  .step { display:grid; grid-template-columns:44px 1fr; gap:12px; margin:14px 0; }
+  .step .n { width:44px; height:44px; border-radius:14px; background:var(--grad); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:19px; }
+  .say { display:grid; grid-template-columns:90px 1fr; gap:14px; align-items:center; background:linear-gradient(135deg,var(--soft),var(--mint-s)); border-radius:22px; padding:14px 18px; }
+  .say img { width:90px; }
+  .chat { display:inline-block; background:#E9FBEF; color:#085F2E; border-radius:12px 12px 2px 12px; padding:2px 10px; font-weight:600; font-size:15px; }
+  .tag { display:inline-block; font-size:12px; font-weight:700; padding:1px 9px; border-radius:999px; background:var(--soft); color:var(--blue-d); }
+  .tag.mint { background:var(--mint-s); color:var(--mint); } .tag.warn { background:var(--warn); color:#9A4C00; }
+  .ded { padding:12px 0; border-bottom:1px dashed var(--line); display:grid; grid-template-columns:1fr auto; gap:6px 14px; }
+  .ded:last-child { border-bottom:0; }
+  .ded .cap { font-weight:800; color:var(--blue); white-space:nowrap; }
+  .ded p { margin:2px 0 0; color:var(--sub); font-size:15px; grid-column:1 / 3; }
+  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 18px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:700; }
+  .note { background:var(--warn); border-radius:16px; padding:12px 16px; font-size:15px; color:#6B3A00; }
+  .fab { position:fixed; right:16px; bottom:16px; z-index:30; }
+  footer { border-top:1px solid var(--line); margin-top:30px; padding:24px 0 90px; color:var(--dim); font-size:14px; }
+  @media (max-width:720px) { .hero, .grid, .grid3 { grid-template-columns:1fr; } .hero img { max-width:240px; margin:0 auto; } body { font-size:16px; } .say { grid-template-columns:64px 1fr; } .say img { width:64px; } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="index.html"><img src="img/brand/logo.webp" alt="">N'AOMSIN</a>
+  <a class="btn line sm" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%A0%E0%B8%B2%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88">💬 ถามน้องออมสิน</a></div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div><span class="eyebrow">คู่มือภารกิจ</span>
+      <h1>จดเงินให้สนุก<br><span class="grad">สะสมแต้ม แลกรางวัล</span></h1>
+      <p>ทุกครั้งที่จดรายรับรายจ่าย ออมเงินครบเป้า หรือเล่นเกมทายหมวด คุณจะได้แต้มและการ์ดสะสมน้องออมสิน แล้วนำแต้มไปแลกรางวัลได้</p>
+      <a class="btn line" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%A0%E0%B8%B2%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88">🎮 ดูภารกิจของฉันใน LINE</a> <a class="btn ghost" href="#points">ได้แต้มยังไง</a></div>
+    <img src="img/mascot/celebrate.webp" alt="น้องออมสิน">
+  </div>
+  <nav class="toc"><a href="#points">ได้แต้มยังไง</a><a href="#cards">การ์ดสะสม</a><a href="#game">เกมทายหมวด</a><a href="#rewards">แลกรางวัล</a><a href="#assistant">ผู้ช่วยส่วนตัว</a><a href="#faq">ถามบ่อย</a></nav>
+  <section id="points"><h2>ได้แต้มยังไง</h2><p class="lead">ทำตามปกติก็ได้แต้มแล้ว ไม่ต้องทำอะไรพิเศษ</p>
+    <div class="card"><table><tr><th>ภารกิจ</th><th class="r">แต้ม</th><th>ได้บ่อยแค่ไหน</th></tr>
+      <tr><td>📒 จดรายการวันนี้</td><td class="r"><b>+3</b></td><td>วันละ 1 ครั้ง</td></tr>
+      <tr><td>🗓️ จดครบ 5 วันในสัปดาห์</td><td class="r"><b>+8</b></td><td>สัปดาห์ละ 1 ครั้ง</td></tr>
+      <tr><td>🔥 จดต่อเนื่อง 7 วัน</td><td class="r"><b>+10</b></td><td>ครั้งแรกครั้งเดียว</td></tr>
+      <tr><td>🎯 ออมครบเป้าหมาย</td><td class="r"><b>+5</b></td><td>เดือนละ 1 ครั้ง</td></tr>
+      <tr><td>🔎 ทายหมวดรายจ่ายถูก</td><td class="r"><b>+4</b></td><td>สัปดาห์ละ 1 ครั้ง</td></tr></table>
+      <p class="lead" style="margin:10px 0 0;font-size:15px">พิมพ์ <span class="chat">ภารกิจ</span> ในแชทเพื่อดูแต้มคงเหลือและแต้มสะสมทั้งหมด · แก้ไขรายการย้อนหลังไม่ได้แต้มเพิ่ม</p></div></section>
+  <section id="cards"><h2>การ์ดสะสมน้องออมสิน</h2><p class="lead">ทำภารกิจครั้งแรกได้การ์ด 1 ใบ สะสมครบ 5 ใบ · พิมพ์ <span class="chat">การ์ด</span></p><div class="grid3"><div class="card" style="text-align:center"><img src="img/mascot/hello.webp" alt="" style="width:110px;margin:0 auto"><h3>เริ่มต้นจด</h3><p class="lead" style="margin:0;font-size:15px">จดรายการวันแรก</p></div><div class="card" style="text-align:center"><img src="img/mascot/calendar.webp" alt="" style="width:110px;margin:0 auto"><h3>นักจดประจำ</h3><p class="lead" style="margin:0;font-size:15px">จด 5 วันในสัปดาห์</p></div><div class="card" style="text-align:center"><img src="img/mascot/celebrate.webp" alt="" style="width:110px;margin:0 auto"><h3>ไฟต่อเนื่อง</h3><p class="lead" style="margin:0;font-size:15px">จดต่อเนื่อง 7 วัน</p></div><div class="card" style="text-align:center"><img src="img/mascot/thumbsup.webp" alt="" style="width:110px;margin:0 auto"><h3>พิชิตเป้า</h3><p class="lead" style="margin:0;font-size:15px">ออมครบเป้าหมาย</p></div><div class="card" style="text-align:center"><img src="img/mascot/guide.webp" alt="" style="width:110px;margin:0 auto"><h3>นักสืบรายจ่าย</h3><p class="lead" style="margin:0;font-size:15px">ทายหมวดรายจ่ายถูก</p></div></div></section>
+  <section id="game"><h2>🔎 เกมทายหมวดรายจ่าย</h2>
+    <div class="say"><img src="img/mascot/guide.webp" alt=""><div>พิมพ์ <span class="chat">เล่นเกมทายหมวด</span> น้องออมสินจะให้ทายว่า 7 วันที่ผ่านมา คุณใช้เงินกับหมวดไหนมากที่สุด (3 ตัวเลือก) ทายถูกได้ +4 แต้ม เล่นได้สัปดาห์ละครั้ง เป็นวิธีง่ายๆ ให้รู้ตัวว่าเงินไปไหนค่ะ</div></div></section>
+  <section id="rewards"><h2>🎁 แลกรางวัล</h2><p class="lead">พิมพ์ <span class="chat">รางวัล</span> เพื่อดูรางวัลที่เปิดให้แลกตอนนี้</p>
+    <div class="grid"><div class="card"><h3>💎 โค้ด Pro</h3><p>แลกแต้มเป็นโค้ดใช้ Pro ฟรีตามจำนวนวัน ระบบออกโค้ดให้ทันทีและผูกกับบัญชีคุณ</p></div>
+      <div class="card"><h3>🎀 ของรางวัลพิเศษ</h3><p>ของที่ระลึกหรือสิทธิ์จากพาร์ตเนอร์ แอดมินจะติดต่อส่งมอบให้ ดูสถานะได้ในแชท</p></div></div>
+    <div class="note">รางวัลมีจำนวนจำกัด แต่ละรางวัลแลกได้คนละ 1 ครั้ง แต้มจะถูกหักเมื่อแลกสำเร็จเท่านั้น</div></section>
+  <section id="assistant"><h2>🐷 ผู้ช่วยส่วนตัว</h2><p class="lead">ให้น้องออมสินช่วยดูแลเงินแบบที่คุณชอบ · พิมพ์ <span class="chat">ตั้งค่าผู้ช่วย</span></p>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div><b>เลือกน้ำเสียง</b> <span class="chat">ตั้งโหมดอ่อนโยน</span> <span class="chat">ตั้งโหมดขี้เล่น</span> <span class="chat">ตั้งโหมดเข้มงวด</span></div></div>
+      <div class="step"><div class="n">2</div><div><b>ให้น้องออมสินทักก่อน</b> <span class="chat">เปิดผู้ช่วย</span> เตือนเมื่องบใกล้หมดหรือเกินงบ (ปิดได้ด้วย <span class="chat">ปิดผู้ช่วย</span>)</div></div>
+      <div class="step"><div class="n">3</div><div><b>เตือนเมื่อเงินเหลือน้อย</b> <span class="chat">เตือนเงินต่ำกว่า 1000</span></div></div>
+      <div class="step"><div class="n">4</div><div><b>เวลาห้ามรบกวน</b> <span class="chat">พักแจ้งเตือน 22-8</span> (ไม่ทักช่วง 22:00–08:00)</div></div></div></section>
+  <section id="faq"><h2>คำถามที่พบบ่อย</h2>
+    <details><summary>แต้มหมดอายุไหม?</summary><p>ไม่หมดอายุค่ะ สะสมไว้แลกรางวัลเมื่อไหร่ก็ได้</p></details>
+    <details><summary>จดในกลุ่ม LINE ได้แต้มไหม?</summary><p>ภารกิจนับจากสมุดส่วนตัวของคุณค่ะ</p></details>
+    <details><summary>ทำไมจดแล้วไม่ได้แต้ม?</summary><p>ภารกิจ "จดรายการวันนี้" ได้วันละครั้ง และต้องเป็นรายการของวันนี้ รายการที่แก้ไขย้อนหลังจะไม่ได้แต้มเพิ่ม</p></details></section>
+</div><a class="btn line fab" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%A0%E0%B8%B2%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88">💬 ถามน้องออมสินใน LINE</a>
+<footer><div class="wrap">กติกาและรางวัลอาจเปลี่ยนแปลงตามที่แอดมินประกาศในแชท<br>© N'AOMSIN · ผู้ช่วยจดรายรับรายจ่ายใน LINE · <a href="index.html">หน้าแรก</a> · <a href="features.html">ฟีเจอร์ทั้งหมด</a> · <a href="tax.html">คู่มือภาษี</a> · <a href="missions.html">คู่มือภารกิจ</a></div></footer>
+</body></html>
