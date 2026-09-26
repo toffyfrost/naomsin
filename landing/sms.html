@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เชื่อม SMS · N'AOMSIN</title>
+<meta name="description" content="ให้น้องออมสินจดเงินโอนเข้าร้านอัตโนมัติ">
+<meta name="theme-color" content="#E3F0FF">
+<link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png">
+<link rel="apple-touch-icon" href="img/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F5F9FF; --ink:#0B2545; --sub:#4A6485; --dim:#8196B0; --line:rgba(28,126,214,.14); --blue:#1C7ED6; --blue-d:#1864AB; --mint:#0CA678;
+    --mint-s:#E6FCF5; --soft:#EAF4FF; --warn:#FFF4E6; --grad:linear-gradient(135deg,#1864AB 0%,#1C7ED6 45%,#4DABF7 100%);
+    --shadow:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30); --line-green:#06C755; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:'Noto Sans Thai',sans-serif; color:var(--ink); line-height:1.75; font-size:17px;
+    background:linear-gradient(180deg,#E3F0FF 0,#F5F9FF 600px,#fff 1400px); -webkit-font-smoothing:antialiased; }
+  a { color:var(--blue); }
+  img { max-width:100%; display:block; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header { position:sticky; top:0; z-index:20; background:rgba(245,249,255,.88); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .logo { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.04em; text-decoration:none; color:var(--ink); }
+  .logo img { width:36px; height:36px; border-radius:50%; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:999px; font-weight:700; font-size:16px; text-decoration:none; border:0; }
+  .btn.line { background:var(--line-green); color:#fff; box-shadow:0 10px 24px -10px rgba(6,199,85,.7); }
+  .btn.ghost { background:#fff; color:var(--blue); border:1px solid rgba(28,126,214,.28); }
+  .btn.sm { padding:8px 16px; font-size:14px; }
+  .hero { display:grid; grid-template-columns:1.3fr 1fr; gap:20px; align-items:center; padding:40px 0 20px; }
+  .hero h1 { font-size:clamp(32px,5vw,50px); line-height:1.2; margin:10px 0; }
+  .hero p { color:var(--sub); font-size:18px; margin:0 0 20px; }
+  .grad { background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .eyebrow { display:inline-block; font-size:13px; font-weight:700; letter-spacing:.12em; color:var(--blue); background:var(--soft); padding:4px 12px; border-radius:999px; }
+  .tocwrap { position:sticky; top:64px; z-index:10; padding:8px 0 14px; background:linear-gradient(180deg,rgba(245,249,255,.97) 75%,rgba(245,249,255,0)); }
+  .toc { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; scroll-behavior:smooth; padding:6px;
+    background:rgba(255,255,255,.72); backdrop-filter:saturate(1.6) blur(14px); -webkit-backdrop-filter:saturate(1.6) blur(14px);
+    border:1px solid rgba(15,59,125,.08); border-radius:999px; box-shadow:0 8px 28px rgba(15,59,125,.10), inset 0 1px 0 rgba(255,255,255,.9);
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%); mask-image:linear-gradient(90deg,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%); }
+  .toc::-webkit-scrollbar { display:none; }
+  .toc a { flex:0 0 auto; white-space:nowrap; font-size:14px; font-weight:600; text-decoration:none; color:var(--blue-d); padding:8px 16px; border-radius:999px; transition:background .25s,color .25s,box-shadow .25s; }
+  .toc a:first-child { margin-left:10px; } .toc a:last-child { margin-right:10px; }
+  .toc a:hover { background:var(--soft); }
+  .toc a.on { background:var(--grad); color:#fff; box-shadow:0 4px 14px rgba(37,99,235,.35); }
+  @media (min-width:900px) { .toc { width:max-content; max-width:100%; margin:0 auto; } .toc a { padding:8px 14px; } }
+  section { padding:26px 0; scroll-margin-top:120px; }
+  h2 { font-size:clamp(24px,3.4vw,32px); line-height:1.3; margin:0 0 6px; }
+  h3 { font-size:19px; margin:0 0 4px; }
+  .lead { color:var(--sub); margin:0 0 16px; }
+  .card { background:#fff; border-radius:22px; padding:20px 22px; box-shadow:var(--shadow); border:1px solid var(--line); margin:12px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .formula { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-weight:700; }
+  .formula span { background:var(--soft); padding:8px 14px; border-radius:14px; }
+  .formula b { color:var(--blue); font-size:20px; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--blue-d); background:var(--soft); }
+  td.r, th.r { text-align:right; }
+  .step { display:grid; grid-template-columns:44px 1fr; gap:12px; margin:14px 0; }
+  .step .n { width:44px; height:44px; border-radius:14px; background:var(--grad); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:19px; }
+  .say { display:grid; grid-template-columns:90px 1fr; gap:14px; align-items:center; background:linear-gradient(135deg,var(--soft),var(--mint-s)); border-radius:22px; padding:14px 18px; }
+  .say img { width:90px; }
+  .chat { display:inline-block; background:#E9FBEF; color:#085F2E; border-radius:12px 12px 2px 12px; padding:2px 10px; font-weight:600; font-size:15px; }
+  .tag { display:inline-block; font-size:12px; font-weight:700; padding:1px 9px; border-radius:999px; background:var(--soft); color:var(--blue-d); }
+  .tag.mint { background:var(--mint-s); color:var(--mint); } .tag.warn { background:var(--warn); color:#9A4C00; }
+  .ded { padding:12px 0; border-bottom:1px dashed var(--line); display:grid; grid-template-columns:1fr auto; gap:6px 14px; }
+  .ded:last-child { border-bottom:0; }
+  .ded .cap { font-weight:800; color:var(--blue); white-space:nowrap; }
+  .ded p { margin:2px 0 0; color:var(--sub); font-size:15px; grid-column:1 / 3; }
+  details { background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px 18px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:700; }
+  .note { background:var(--warn); border-radius:16px; padding:12px 16px; font-size:15px; color:#6B3A00; }
+  .fab { position:fixed; right:16px; bottom:16px; z-index:30; }
+  footer { border-top:1px solid var(--line); margin-top:30px; padding:24px 0 90px; color:var(--dim); font-size:14px; }
+  @media (max-width:720px) { .hero, .grid, .grid3 { grid-template-columns:1fr; } .hero img { max-width:240px; margin:0 auto; } body { font-size:16px; } .say { grid-template-columns:64px 1fr; } .say img { width:64px; } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="logo" href="index.html"><img src="img/brand/logo.webp" alt="">N'AOMSIN</a>
+  <a class="btn line sm" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B8%B5%E0%B9%89">💬 ถามน้องออมสิน</a></div></header>
+
+<div class="wrap" style="max-width:560px">
+  <div style="text-align:center;padding:18px 0 6px"><img src="img/mascot/slip.webp" alt="" style="width:120px;margin:0 auto">
+    <h1 style="font-size:28px;margin:8px 0 4px">ให้น้องออมสินจดเงินโอน</h1>
+    <p class="lead" style="margin:0"><b>ทำครั้งเดียวจบ</b> ต่อไปลูกค้าโอนมา ระบบจดยอดขายให้เองทุกครั้ง</p></div>
+  <div id="bad" class="note" style="display:none">ลิงก์ไม่ครบ กรุณากดปุ่มจากแชทน้องออมสินอีกครั้งค่ะ</div>
+
+  <div id="ios" style="display:none">
+    <div class="card" style="padding:10px"><video src="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.mp4" controls playsinline muted autoplay loop preload="metadata" style="width:100%;border-radius:14px;display:block"></video>
+      <p class="lead" style="text-align:center;margin:8px 0 0;font-size:14px">🎬 ดูวิดีโอ 25 วินาที แล้วทำตามได้เลย</p></div>
+    <div class="card">
+      <div class="step"><div class="n">1</div><div><button class="btn line cp">📋 คัดลอกรหัสร้าน</button></div></div>
+      <div class="step"><div class="n">2</div><div><a class="btn ghost" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/ios.shortcut">➕ ติดตั้งตัวช่วยจด</a><br><span class="lead" style="font-size:15px">กด "เพิ่มคำสั่งลัด" แล้ววางรหัสร้าน</span></div></div>
+      <div class="step"><div class="n">3</div><div>เปิดแอป <b>คำสั่งลัด</b> → <b>ระบบอัตโนมัติ</b> → <b>＋</b> → <b>ข้อความ</b></div></div>
+      <div class="step"><div class="n">4</div><div>"ข้อความมี" พิมพ์ <b>เงินเข้า</b> → เลือก <b>เรียกใช้ทันที</b> → เลือก <b>น้องออมสินจดเงินเข้า</b> → เสร็จ</div></div></div></div>
+
+  <div id="android" style="display:none"><div class="card">
+    <div class="step"><div class="n">1</div><div><a class="btn line" href="https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/dl/app.apk">⬇️ ติดตั้งแอป "ออมสินรับเงิน"</a><br><span class="lead" style="font-size:15px">ถ้ามือถือถาม ให้กด "อนุญาต" / "ติดตั้งต่อ"</span></div></div>
+    <div class="step"><div class="n">2</div><div><a class="btn ghost" id="bind" href="#">🔗 ผูกกับร้านของฉัน</a></div></div>
+    <div class="step"><div class="n">3</div><div>แอปจะขอสิทธิ์ ให้กด <b>อนุญาต</b> · เสร็จแล้ว ปิดแอปได้เลย</div></div></div></div>
+
+  <div class="say" style="margin-top:14px"><img src="img/mascot/guide.webp" alt=""><div>ลองให้ใครโอนเข้ามา 1 บาท น้องออมสินจะทักใน LINE ว่า <b>"เชื่อม SMS สำเร็จ"</b> · ปิดโหมดร้านค้าเมื่อไหร่ ระบบหยุดจดทันที เปิดใหม่ก็ทำงานต่อเอง</div></div>
+</div>
+<script>(function(){var t=(location.hash.match(/t=([a-z0-9]+)/i)||[])[1];if(!t){document.getElementById('bad').style.display='block';return;}
+var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(/Mac/.test(ua)&&'ontouchend'in document);
+document.getElementById(ios?'ios':'android').style.display='block';
+document.getElementById('bind').href='naomsin://bind?t='+t;
+[].forEach.call(document.querySelectorAll('.cp'),function(b){b.onclick=function(){navigator.clipboard.writeText(t).then(function(){b.textContent='✅ คัดลอกแล้ว';});};});})();</script><a class="btn line fab" href="https://line.me/R/oaMessage/@943axyqp/?%E0%B8%AA%E0%B8%A3%E0%B8%B8%E0%B8%9B%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%A7%E0%B8%B1%E0%B8%99%E0%B8%99%E0%B8%B5%E0%B9%89">💬 ถามน้องออมสินใน LINE</a>
+<footer><div class="wrap">รหัสร้านเป็นความลับ อย่าส่งให้คนอื่น<br>© N'AOMSIN · ผู้ช่วยจดรายรับรายจ่ายใน LINE · <a href="index.html">หน้าแรก</a> · <a href="features.html">ฟีเจอร์ทั้งหมด</a> · <a href="tax.html">คู่มือภาษี</a> · <a href="missions.html">คู่มือภารกิจ</a></div></footer>
+<script>(function(){var nav=document.querySelector('.toc');if(!nav||!('IntersectionObserver'in window))return;var links=[].slice.call(nav.querySelectorAll('a'));
+function on(id){links.forEach(function(a){var h=a.getAttribute('href')==='#'+id;a.classList.toggle('on',h);if(h&&nav.scrollWidth>nav.clientWidth)nav.scrollTo({left:a.offsetLeft-nav.clientWidth/2+a.offsetWidth/2});});}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)on(e.target.id);});},{rootMargin:'-45% 0px -50% 0px'});
+links.forEach(function(a){var el=document.querySelector(a.getAttribute('href'));if(el)io.observe(el);});})();</script>
+</body></html>
