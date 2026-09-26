@@ -80,7 +80,8 @@
   .hero { background:linear-gradient(135deg,var(--brand),#5AB0F0); color:#fff; }
   .hero .muted, .hero .sub { color:#DDEEFD; }
   .stack { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:10px 0 4px; background:var(--track); }
-  .avatar { width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
+  .avatar { width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; overflow:hidden; flex:0 0 44px; }
+  .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
   .badge { background:#FFF4E5; color:#B45309; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:600; }
   .empty { text-align:center; color:var(--muted); padding:28px 0; font-size:14px; }
   .del { color:var(--danger); background:none; border:0; font:inherit; font-size:13px; cursor:pointer; }
@@ -298,7 +299,7 @@ function renderSummary() {
   const topSum = top.reduce((a, x) => a + x[1], 0);
   $('app').innerHTML = `
     <div class="card row between">
-      <div class="row"><div class="avatar">${esc((D.owner.name||'?').slice(0,1))}</div>
+      <div class="row"><div class="avatar">${/^https:\/\//.test(D.owner.picture||'') ? `<img src="${esc(D.owner.picture)}" alt="" referrerpolicy="no-referrer" onerror="this.replaceWith(document.createTextNode('${esc((D.owner.name||'?').slice(0,1)).replace(/'/g,'')}'))">` : esc((D.owner.name||'?').slice(0,1))}</div>
         <div><div style="font-weight:700;font-size:18px">${esc(D.owner.name)}</div><div class="muted">${D.owner.isGroup?'สมุดกลุ่ม':'สมุดส่วนตัว'}</div></div></div>
       <span class="row" style="gap:4px;align-items:flex-end"><img class="me-mascot" src="mascot/${s.income - s.expense >= 0 ? 'thumbsup' : 'slip'}.webp" alt=""><span class="badge">🔥 ${D.streak} วัน</span></span>
     </div>
