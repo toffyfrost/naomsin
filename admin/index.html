@@ -306,6 +306,7 @@
 <script>
 // ===== ตั้งค่า =====
 const CONFIG = {
+  // Apps Script: Web App URL (…/exec) · Supabase: https://<project-ref>.supabase.co/functions/v1/naomsin/api
   apiUrl: 'https://script.google.com/macros/s/AKfycbyNkInSKmjtAbmQdh-kN34Zm-Y9PZF4Dp_KN5jzOTpWPV3hC9tN7oHl9YGeRb3k3S2Rlw/exec', // Web App URL ของ Apps Script
   liffId: '2011746996-UCr3gHUc',                                         // LIFF app หน้า admin (scope: openid, profile)
 };
@@ -368,10 +369,52 @@ const CONFIG = {
   const copy = async (t) => { try { await navigator.clipboard.writeText(t); toast('คัดลอกแล้ว'); } catch { toast('คัดลอกไม่ได้', true); } };
 
   /* ---------- API ---------- */
+  // Apps Script ล่มชั่วคราว (หมดเวลา/เรียกพร้อมกันเกิน/โควตา) จะตอบเป็นหน้า HTML แทน JSON
+  // → คำสั่งอ่าน: ลองใหม่อัตโนมัติ 2 ครั้ง · คำสั่งแก้ข้อมูล: ไม่ลองซ้ำ (กันทำซ้ำ) แต่บอกให้ตรวจผลก่อน
+  let forceFresh = false;
+  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'billing', 'codes', 'redemptions', 'payments']);
+  const MAX_PARALLEL = 2; let inFlight = 0; const waiting = [];
+  const slot = () => new Promise((ok) => { if (inFlight < MAX_PARALLEL) { inFlight++; ok(); } else waiting.push(ok); });
+  const release = () => { const next = waiting.shift(); if (next) next(); else inFlight--; };
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  function googleError(html, status) {
+    const t = (html.match(/<title>([^<]*)<\/title>/i) || [])[1] || '';
+    const body = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+    if (/simultaneous|พร้อมกัน/i.test(body)) return 'เรียกเซิร์ฟเวอร์พร้อมกันมากเกินไป';
+    if (/execution time|timed out|หมดเวลา/i.test(body)) return 'เซิร์ฟเวอร์ทำงานนานเกินเวลาที่ Google กำหนด';
+    if (/too many times|quota|โควตา/i.test(body)) return 'ใช้โควตา Google Apps Script เกินชั่วคราว';
+    if (status === 404 || /not found|ไม่พบ/i.test(t + body)) return 'ไม่พบ Web App (ตรวจ URL / Deploy เวอร์ชันล่าสุด)';
+    return 'เซิร์ฟเวอร์ Google ขัดข้องชั่วคราว' + (status ? ' (HTTP ' + status + ')' : '');
+  }
+  async function callOnce(action, args) {
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 60000);
+    try {
+      const res = await fetch(CONFIG.apiUrl, { method: 'POST', signal: ctl.signal, body: JSON.stringify({ adminApi: action, idToken, args: args || {} }) });
+      const text = await res.text();
+      try { return JSON.parse(text); } catch { const e = new Error(googleError(text, res.status)); e.transient = true; throw e; }
+    } catch (e) {
+      if (e.name === 'AbortError') { e = new Error('เซิร์ฟเวอร์ไม่ตอบภายใน 60 วินาที'); e.transient = true; }
+      else if (e instanceof TypeError) { e = new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ (เช็คอินเทอร์เน็ต)'); e.transient = true; }
+      throw e;
+    } finally { clearTimeout(timer); }
+  }
   async function api(action, args) {
     if (PREVIEW) return mockApi(action, args || {});
-    const res = await fetch(CONFIG.apiUrl, { method: 'POST', body: JSON.stringify({ adminApi: action, idToken, args: args || {} }) });
-    const j = await res.json();
+    const read = READ_ACTIONS.has(action);
+    if (read && forceFresh) args = Object.assign({}, args, { fresh: true }); // กดรีเฟรช → ข้ามแคชฝั่งเซิร์ฟเวอร์
+    let j;
+    await slot();
+    try {
+      for (let attempt = 0; ; attempt++) {
+        try { j = await callOnce(action, args); break; }
+        catch (e) {
+          if (!e.transient) throw e;
+          if (!read) throw new Error(e.message + ' — ตรวจดูว่ารายการนี้สำเร็จหรือยังก่อนกดซ้ำ');
+          if (attempt >= 2) throw new Error(e.message + ' ลองใหม่อีกครั้งในอีกสักครู่');
+          await sleep(attempt ? 2500 : 900);
+        }
+      }
+    } finally { release(); }
     if (!j.ok) {
       if (/^AUTH/.test(j.error)) { gate('login', 'เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่'); throw new Error(j.error); }
       if (/^DENIED/.test(j.error)) { gate('denied', j.error); throw new Error(j.error); }
@@ -442,7 +485,7 @@ const CONFIG = {
     if (!loaded[s]) act(null, loaders[s]);
   }
   $$('#nav button').forEach((b) => b.addEventListener('click', () => show(b.dataset.s)));
-  document.addEventListener('click', (e) => { const b = e.target.closest('[data-reload]'); if (b) act(b, async () => { await loaders[b.closest('.sec').id.slice(2)](); toast('อัปเดตข้อมูลแล้ว'); }, 'กำลังโหลดข้อมูลล่าสุด…'); });
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-reload]'); if (b) act(b, async () => { forceFresh = true; try { await loaders[b.closest('.sec').id.slice(2)](); } finally { forceFresh = false; } toast('อัปเดตข้อมูลแล้ว'); }, 'กำลังโหลดข้อมูลล่าสุด…'); });
 
   /* ---------- ภาพรวม ---------- */
   async function loadOverview() {
