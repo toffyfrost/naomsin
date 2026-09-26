@@ -369,8 +369,12 @@
   .final-hero .final-mascot { width:170px; height:auto; border-radius:0; box-shadow:none; margin:0; filter:drop-shadow(0 20px 26px rgba(24,100,171,.35)); }
   .final-hero .final-logo { width:120px; height:120px; margin:0 0 18px; }
   @media (max-width:900px) {
-    .nf-mascot { width:96px; bottom:auto; top:18px; right:14px; left:auto !important; }
-    .nf h3 { padding-right:70px; }
+    .nf-mascot { position:relative; order:-1; width:92px; top:auto; bottom:auto; right:auto; left:auto !important; margin:-6px 0 -22px auto; }
+    .nf > * { min-width:0; }
+    .nf-code { width:100%; flex-wrap:wrap; }
+    .nf-code code { white-space:normal; word-break:break-word; font-size:15px; flex:1 1 160px; }
+    .nf-shots { gap:10px; }
+    .nf-shots img { width:48%; border-width:4px; border-radius:18px; }
     .hero .mascot { max-width:320px; }
   }
   @media (prefers-reduced-motion:reduce) { .hero .mascot img { animation:none; } }
