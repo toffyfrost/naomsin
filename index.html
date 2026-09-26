@@ -134,6 +134,20 @@
     .lp-qr { display:none; } .lp-cta .lp-line { width:100%; }
   }
   @media (max-width: 360px) { .lp-logo span { display:none; } }
+  /* ตัวกรองวันที่: 2 ช่องแบ่งพื้นที่เท่ากัน ไม่ล้นขอบบนมือถือ */
+  .daterange { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:8px; }
+  input[type=date] { min-width:0; max-width:100%; -webkit-appearance:none; appearance:none; text-align:left; }
+  input[type=date]::-webkit-date-and-time-value { text-align:left; }
+  /* สถานะกำลังทำงาน: ปุ่มที่กดถูกล็อก + หมุน + แถบโหลด กันกดซ้ำ */
+  .spin { width:16px; height:16px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; display:inline-block; animation:sp .7s linear infinite; vertical-align:-3px; margin-right:6px; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  .is-busy { opacity:.75; cursor:progress !important; pointer-events:none; }
+  body.busy button, body.busy .chip, body.busy .list-item, body.busy nav button, body.busy input, body.busy select { pointer-events:none; }
+  body.busy .btn:not(.is-busy) { opacity:.55; }
+  .busybar { position:fixed; top:0; left:0; right:0; height:3px; z-index:10001; overflow:hidden; display:none; }
+  body.busy .busybar { display:block; }
+  .busybar i { position:absolute; height:100%; width:40%; background:var(--brand); border-radius:3px; animation:bb 1.1s ease-in-out infinite; }
+  @keyframes bb { from { left:-40%; } to { left:100%; } }
 </style>
 </head>
 <body>
@@ -144,6 +158,7 @@
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
+<div class="busybar"><i></i></div>
 
 <script>
 // ข้อมูลเริ่มต้นมาจากลิงก์ที่บอทส่งให้: ?t=<token>&tab=<แท็บ>&api=<URL Apps Script Web App>
@@ -176,18 +191,41 @@ const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'
 const catColor = (c, list) => PALETTE[Math.max(0, list.indexOf(c)) % PALETTE.length];
 const wallet = (id) => (D.settings.wallets.find((w) => w.id === id) || null);
 
-function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2600); }
+/** ข้อความแจ้งด้านบน · sticky = ค้างไว้จนกว่าจะมีข้อความใหม่ (ใช้ตอนรอ) */
+function toast(msg, sticky) {
+  const t = $('toast'); t.innerHTML = (sticky ? '<span class="spin"></span>' : '') + esc(msg); t.style.display = 'block';
+  clearTimeout(t._h); if (!sticky) t._h = setTimeout(() => t.style.display = 'none', 2600);
+}
 
-/** เรียก API บน Apps Script (POST แบบ text/plain = ไม่ต้อง preflight CORS) */
+/* ---------- สถานะกำลังทำงาน: ปุ่มที่กดถูกล็อก + หมุน + แถบโหลด ป้องกันกดซ้ำ ---------- */
+let lastBtn = null, busy = false;
+document.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) lastBtn = b; }, true);
+function setBusy(on, btn) {
+  busy = on; document.body.classList.toggle('busy', on);
+  if (!btn || !btn.isConnected) return;
+  if (on) { btn._html = btn.innerHTML; btn.disabled = true; btn.classList.add('is-busy');
+    btn.innerHTML = '<span class="spin"></span>' + (btn.classList.contains('sm') || btn.offsetWidth < 110 ? 'รอสักครู่…' : 'กำลังดำเนินการ…'); }
+  else { btn.disabled = false; btn.classList.remove('is-busy'); if (btn._html != null) btn.innerHTML = btn._html; }
+}
+
+/** เรียก API บน Supabase · ทุกการกระทำ (บันทึก/ลบ/ส่งออก/เปลี่ยนช่วงวันที่) ล็อกปุ่มและขึ้น "กำลังดำเนินการ" จนเสร็จ */
 async function call(fn, ...args) {
+  const first = fn === 'dashLoad' && !D; // โหลดครั้งแรกมีหน้า "กำลังโหลด" อยู่แล้ว
+  if (!first && busy) { toast('⏳ กำลังดำเนินการรายการก่อนหน้า กรุณารอสักครู่'); throw new Error('busy'); }
+  const btn = first ? null : lastBtn;
+  if (!first) { setBusy(true, btn); toast(fn === 'dashExport' ? 'กำลังสร้างไฟล์ กรุณารอสักครู่…' : fn === 'dashLoad' ? 'กำลังโหลดข้อมูล…' : 'กำลังดำเนินการ กรุณารอสักครู่…', true); }
   try {
     const res = await fetch(BOOT.api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api: fn, t: BOOT.token, args }) });
     const j = await res.json();
     if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
+    if (!first) toast('✅ เรียบร้อย'); // ถ้าฟังก์ชันที่เรียกมีข้อความของตัวเอง จะขึ้นทับทันที
     return j.data;
   } catch (e) {
-    toast('⚠️ ' + (e.message || e));
+    toast('⚠️ ' + (e.message === 'Failed to fetch' ? 'เชื่อมต่อไม่ได้ ลองใหม่อีกครั้งนะคะ' : (e.message || e)));
     throw e;
+  } finally {
+    lastBtn = null;
+    if (!first) setBusy(false, btn);
   }
 }
 function fatal(msg) {
@@ -385,7 +423,7 @@ function renderList() {
   txs.forEach((t) => (byDay[t.date] = byDay[t.date] || []).push(t));
   $('app').innerHTML = `
     <div class="card">
-      <div class="row"><input type="date" id="ls" value="${range.start}"><span class="muted">–</span><input type="date" id="le" value="${range.end}"></div>
+      <div class="daterange"><input type="date" id="ls" value="${range.start}"><span class="muted">–</span><input type="date" id="le" value="${range.end}"></div>
       <div class="row" style="margin-top:10px">
         <div class="chips grow">${[['all','ทั้งหมด'],['expense','รายจ่าย'],['income','รายรับ'],['transfer','โอน']].map(([k,l]) =>
           `<span class="chip ${ui.listType===k?'on':''}" onclick="ui.listType='${k}';render()">${l}</span>`).join('')}</div>
