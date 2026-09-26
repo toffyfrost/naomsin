@@ -178,8 +178,9 @@
     .app { grid-template-columns:1fr; }
     aside { position:fixed; top:auto; bottom:0; left:0; right:0; height:auto; z-index:40; padding:6px 8px calc(6px + env(safe-area-inset-bottom)); border-right:0; border-top:1px solid var(--stroke); background:rgba(5,10,24,.94); }
     .brand, .me { display:none; }
-    nav { display:flex; justify-content:space-around; }
-    nav button { flex-direction:column; gap:0; font-size:11px; padding:6px 4px; margin:0; text-align:center; position:relative; }
+    nav { display:flex; justify-content:flex-start; overflow-x:auto; scrollbar-width:none; }
+    nav::-webkit-scrollbar { display:none; }
+    nav button { flex:0 0 66px; flex-direction:column; gap:0; font-size:11px; padding:6px 4px; margin:0; text-align:center; position:relative; }
     nav .ic { font-size:18px; } nav .badge { position:absolute; top:2px; right:6px; }
     main { padding:20px 16px 100px; }
     .g2 { grid-template-columns:1fr; }
@@ -380,7 +381,7 @@
       <div class="grid g2">
         <div class="card"><h3>👥 จัดการสมาชิกและการใช้งาน</h3><p class="hint">เปิด/ระงับบัญชี แพ็กเกจ การแจ้งเตือน โค้ช โหมดร้านค้า และส่งลิงก์แดชบอร์ดหรือหน้าภาษีจากหน้าสมาชิก</p><button class="btn pri" data-feature-go="members">เปิดหน้าสมาชิก</button></div>
         <div class="card"><h3>💎 แพ็กเกจและรายได้</h3><p class="hint">ตั้ง Pro ฟรี แคมเปญ โค้ด โปรโมชั่น และตรวจสลิปที่รออนุมัติ</p><div class="row"><button class="btn" data-feature-go="billing">แคมเปญ</button><button class="btn" data-feature-go="codes">โค้ด</button><button class="btn" data-feature-go="payments">สลิป</button></div></div>
-        <div class="card"><h3>👨‍👩‍👧 สมุดกลุ่มและกระเป๋า</h3><p class="hint">สมาชิกเปิดสมุดกลุ่มด้วย “เปิดสมุดกลุ่ม” ใน LINE ส่วนกระเป๋าหลายใบจัดการในแดชบอร์ดของเจ้าของสมุด</p><a class="btn" href="../landing/features.html#f-groupbook" target="_blank" rel="noopener">ดูวิธีใช้สมุดกลุ่ม</a></div>
+        <div class="card"><h3>👨‍👩‍👧 สมุดกลุ่มและกระเป๋า</h3><p class="hint">ดูและพักสมุดกลุ่มจากหลังบ้าน ส่วนกระเป๋าหลายใบจัดการในแดชบอร์ดของเจ้าของสมุด</p><button class="btn" data-feature-go="groups">จัดการสมุดกลุ่ม</button></div>
         <div class="card"><h3>🧾 ภาษีเงินได้บุคคลธรรมดา</h3><p class="hint">เจ้าของสมุดจัดประเภทรายรับ คำนวณประมาณการ และเตรียม CSV เอง แอดมินส่งลิงก์หน้าภาษีให้สมาชิกได้จากหน้าสมาชิก</p><a class="btn" href="../landing/features.html#f-tax" target="_blank" rel="noopener">ดูวิธีใช้ภาษี</a></div>
       </div>
       <div class="card"><h3>📚 ฟีเจอร์ทั้งหมด</h3><p class="hint">รวมคำสั่ง วิธีใช้ ภาพหน้าจอ และข้อจำกัดของแต่ละฟีเจอร์</p><a class="btn" href="../landing/features.html" target="_blank" rel="noopener">เปิดคู่มือ 30 ฟีเจอร์</a></div>
@@ -541,7 +542,7 @@ const CONFIG = {
     $('#app').hidden = true; $('#gate').hidden = false;
     const box = $('#gateBox');
     if (state === 'login') box.innerHTML = logo + '<h1>หลังบ้าน N\'AOMSIN</h1><p>' + esc(msg || 'สำหรับแอดมินเท่านั้น เข้าสู่ระบบด้วยบัญชี LINE ของแอดมิน') + '</p><button class="btn line" id="loginBtn">เข้าสู่ระบบด้วย LINE</button>';
-    if (state === 'denied') box.innerHTML = logo + '<h1>ไม่มีสิทธิ์เข้าหลังบ้าน</h1><p>บัญชี LINE นี้ยังไม่ได้อยู่ในรายชื่อแอดมิน เพิ่ม userId ด้านล่างใน Script Property <b>ADMIN_USER_IDS</b></p><code>' + esc((msg.match(/U[0-9a-f]{32}/) || [''])[0]) + '</code><div style="margin-top:18px"><button class="btn" id="switchBtn">เปลี่ยนบัญชี</button></div>';
+    if (state === 'denied') box.innerHTML = logo + '<h1>ไม่มีสิทธิ์เข้าหลังบ้าน</h1><p>บัญชี LINE นี้ยังไม่ได้อยู่ในรายชื่อแอดมิน เพิ่ม userId ใน Supabase Edge Function Secret <b>ADMIN_USER_IDS</b></p><code>' + esc((msg.match(/U[0-9a-f]{32}/) || [''])[0]) + '</code><div style="margin-top:18px"><button class="btn" id="switchBtn">เปลี่ยนบัญชี</button></div>';
     if (state === 'error') box.innerHTML = logo + '<h1>เปิดหลังบ้านไม่สำเร็จ</h1><p>' + esc(msg) + '</p><button class="btn pri" onclick="location.reload()">ลองใหม่</button>';
     $('#loginBtn')?.addEventListener('click', () => { try { if (liff.isLoggedIn()) liff.logout(); } catch {} liff.login({ redirectUri: location.href.split('#')[0] }); });
     $('#switchBtn')?.addEventListener('click', () => { liff.logout(); location.reload(); });
