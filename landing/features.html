@@ -271,7 +271,7 @@
       <img class="head-mascot" src="img/mascot/guide.webp" alt="น้องออมสินถือคู่มือ">
       <span class="eyebrow">คู่มือฟีเจอร์</span>
       <h2>ทำอะไรได้บ้าง<br><span class="grad">ครบทั้ง 30 ฟีเจอร์</span></h2>
-      <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย ฟีเจอร์ที่มีป้าย <span class="pro-tag" style="margin:0">PRO</span> ต้องใช้แพ็กเกจ Pro (ช่วงนี้ใช้ฟรี)</p>
+      <p>วิธีใช้ทีละขั้น คำสั่งให้ลองพิมพ์ และภาพหน้าจอจากบอทจริง กดคำสั่งเพื่อคัดลอกได้เลย สิทธิ์ Free/Pro อัปเดตตามการตั้งค่าล่าสุดของระบบ</p>
     </div>
     <button class="m-nav" id="mNav" aria-label="เปิดรายการฟีเจอร์"><span class="m-ic" id="mIc">👋</span><span class="m-t"><small id="mCat">เริ่มต้นใช้งาน</small><b id="mName">สมัครใช้งาน</b></span><span class="m-n" id="mNum">1/30</span><span class="m-chev">▾</span><i class="m-bar" id="mBar"></i></button>
     <div class="g-grid">
@@ -706,7 +706,26 @@ const CONFIG = {
       $('#me span').textContent = profile.displayName;
     }
     initGuide();
+    syncFeatureTiers();
     if (location.hash) $(location.hash)?.scrollIntoView();
+  }
+
+  async function syncFeatureTiers() {
+    try {
+      const res = await fetch('https://ihgdueeaslmfkbdaxqlm.supabase.co/functions/v1/naomsin/pricing?v=' + Math.floor(Date.now() / 30000));
+      if (!res.ok) return;
+      const data = await res.json();
+      const ids = { voice: 'voice', question: 'ask', report: 'report', export: 'export', goals: 'goal', recurring: 'card', coach: 'coach', shop: 'shop', wallet_multi: 'wallet', tax: 'tax' };
+      for (const f of data.features || []) {
+        const id = ids[f.id]; if (!id) continue;
+        const article = $('#f-' + id), nav = $('#gnav a[data-f="' + id + '"]');
+        for (const el of [article?.querySelector('.fe-txt h4'), nav]) {
+          if (!el) continue;
+          el.querySelectorAll('.pro-tag,.pro-dot').forEach((tag) => tag.remove());
+          if (f.tier === 'pro') { const tag = document.createElement(el === nav ? 'i' : 'span'); tag.className = el === nav ? 'pro-dot' : 'pro-tag'; tag.textContent = 'PRO'; el.appendChild(tag); }
+        }
+      }
+    } catch { /* คงป้ายค่าเริ่มต้นเมื่อราคาไม่พร้อม */ }
   }
 
   $('#logout').addEventListener('click', () => { if (window.liff && liff.isLoggedIn()) liff.logout(); location.reload(); });
