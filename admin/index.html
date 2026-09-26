@@ -279,6 +279,7 @@
       <button data-s="billing"><span class="ic">🏷️</span><span>แคมเปญ<span class="hide-m"> & โปรฟรี</span></span></button>
       <button data-s="payments"><span class="ic">💳</span>การชำระ<span class="badge" id="revBadge" hidden></span></button>
       <button data-s="members"><span class="ic">👥</span>สมาชิก</button>
+      <button data-s="features"><span class="ic">🧩</span>ฟีเจอร์</button>
     </nav>
     <div class="me"><img id="meImg" src="../landing/img/brand/avatar-64.png" alt=""><div><b id="meName">แอดมิน</b><button id="logout">ออกจากระบบ</button></div></div>
   </aside>
@@ -372,6 +373,16 @@
           <select id="memF" style="width:auto"><option value="">ทั้งหมด</option><option value="paid">Pro (จ่ายเงิน)</option><option value="promo">Pro ฟรี</option><option value="free">Free</option><option value="blocked">ถูกระงับ</option><option value="pending">รออนุมัติ</option></select></div>
         <div class="scroll"><table class="tbl"><thead><tr><th>สมาชิก</th><th>สถานะ</th><th>แพ็กเกจ</th><th class="hide-m">สมัครเมื่อ</th><th class="hide-m">ใช้ล่าสุด</th><th></th></tr></thead><tbody id="memRows"></tbody></table></div>
       </div>
+    </section>
+    <section class="sec" id="s-features">
+      <div class="top"><div><h1>ศูนย์ฟีเจอร์</h1><p>ภาพรวมความสามารถและทางลัดจัดการระบบปัจจุบัน</p></div></div>
+      <div class="grid g2">
+        <div class="card"><h3>👥 จัดการสมาชิกและการใช้งาน</h3><p class="hint">เปิด/ระงับบัญชี แพ็กเกจ การแจ้งเตือน โค้ช โหมดร้านค้า และส่งลิงก์แดชบอร์ดหรือหน้าภาษีจากหน้าสมาชิก</p><button class="btn pri" data-feature-go="members">เปิดหน้าสมาชิก</button></div>
+        <div class="card"><h3>💎 แพ็กเกจและรายได้</h3><p class="hint">ตั้ง Pro ฟรี แคมเปญ โค้ด โปรโมชั่น และตรวจสลิปที่รออนุมัติ</p><div class="row"><button class="btn" data-feature-go="billing">แคมเปญ</button><button class="btn" data-feature-go="codes">โค้ด</button><button class="btn" data-feature-go="payments">สลิป</button></div></div>
+        <div class="card"><h3>👨‍👩‍👧 สมุดกลุ่มและกระเป๋า</h3><p class="hint">สมาชิกเปิดสมุดกลุ่มด้วย “เปิดสมุดกลุ่ม” ใน LINE ส่วนกระเป๋าหลายใบจัดการในแดชบอร์ดของเจ้าของสมุด</p><a class="btn" href="../landing/features.html#f-groupbook" target="_blank" rel="noopener">ดูวิธีใช้สมุดกลุ่ม</a></div>
+        <div class="card"><h3>🧾 ภาษีเงินได้บุคคลธรรมดา</h3><p class="hint">เจ้าของสมุดจัดประเภทรายรับ คำนวณประมาณการ และเตรียม CSV เอง แอดมินส่งลิงก์หน้าภาษีให้สมาชิกได้จากหน้าสมาชิก</p><a class="btn" href="../landing/features.html#f-tax" target="_blank" rel="noopener">ดูวิธีใช้ภาษี</a></div>
+      </div>
+      <div class="card"><h3>📚 ฟีเจอร์ทั้งหมด</h3><p class="hint">รวมคำสั่ง วิธีใช้ ภาพหน้าจอ และข้อจำกัดของแต่ละฟีเจอร์</p><a class="btn" href="../landing/features.html" target="_blank" rel="noopener">เปิดคู่มือ 30 ฟีเจอร์</a></div>
     </section>
   </main>
 </div>
@@ -555,7 +566,9 @@ const CONFIG = {
 
   /* ---------- นำทาง ---------- */
   const loaded = {};
-  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers };
+  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers, features: loadFeatures };
+  function loadFeatures() { loaded.features = true; }
+  $('#s-features').addEventListener('click', (e) => { const b = e.target.closest('[data-feature-go]'); if (b) show(b.dataset.featureGo); });
   function show(s) {
     $$('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.s === s));
     $$('.sec').forEach((x) => x.classList.toggle('on', x.id === 's-' + s));
@@ -786,10 +799,10 @@ const CONFIG = {
         ubar('วันนี้', d.usage.day, d.usage.limits.day) + ubar('สัปดาห์นี้', d.usage.week, d.usage.limits.week) + ubar('เดือนนี้', d.usage.month, d.usage.limits.month) +
         '<p class="hint">เดือนนี้เรียก AI ' + d.usage.month.calls + ' ครั้ง · ≈ $' + d.usage.month.cost.toFixed(3) + ' · ถ้าโควตาเต็ม ให้เพิ่ม Pro (โควตา ×3)</p></div>' +
       '<div class="dsec"><h4>📒 สมุดบัญชี</h4><div class="kv2"><span>รายการทั้งหมด</span><b>' + d.ledger.txCount.toLocaleString() + ' รายการ</b><span>กระเป๋าเงิน</span><b>' + d.ledger.wallets + ' ใบ</b>' +
-        '<span>เป้าหมาย / ประจำ</span><b>' + d.ledger.goals + ' / ' + d.ledger.recurring + '</b><span>รอบงบ</span><b>วันที่ ' + d.ledger.cycleDay + '</b>' +
+        '<span>เป้าหมาย / ประจำ</span><b>' + d.ledger.goals + ' / ' + d.ledger.recurring + '</b><span>ข้อมูลภาษีเพิ่มเติม</span><b>' + (d.ledger.taxRecords || 0) + ' รายการ</b><span>รอบงบ</span><b>วันที่ ' + d.ledger.cycleDay + '</b>' +
         '<span>เตือนจด</span><b>' + (d.ledger.reminder.enabled ? 'เปิด ' + d.ledger.reminder.hour + ':00' : 'ปิด') + '</b><span>สถานะค้างในแชท</span><b>' + (d.pendingState ? '<span class="chip y">' + esc(d.pendingState) + '</span>' : 'ไม่มี') + '</b></div>' +
-        '<div class="acts2" style="margin-top:12px">' + B('toggleDaily', (d.daily ? '🔕 ปิด' : '🔔 เปิด') + 'สรุปรายวัน') + B('toggleMonthly', (d.monthly ? '🔕 ปิด' : '🔔 เปิด') + 'รายงานรายเดือน') + '</div></div>' +
-      '<div class="dsec"><h4>💬 ติดต่อผู้ใช้</h4><div class="acts2">' + B('message', '✉️ ส่งข้อความ', 'pri') + B('sendDashboard', '📊 ส่งลิงก์แดชบอร์ด') + B('sendHelp', '📚 ส่งวิธีใช้') + '</div></div>' +
+        '<div class="acts2" style="margin-top:12px">' + B('toggleDaily', (d.daily ? '🔕 ปิด' : '🔔 เปิด') + 'สรุปรายวัน') + B('toggleMonthly', (d.monthly ? '🔕 ปิด' : '🔔 เปิด') + 'รายงานรายเดือน') + B('toggleReminder', (d.ledger.reminder.enabled ? '🔕 ปิด' : '🔔 เปิด') + 'เตือนจด') + B('setReminderHour', '🕒 ตั้งเวลาเตือน') + B('toggleCoach', (d.ledger.coach ? '🔕 ปิด' : '🔔 เปิด') + 'โค้ช') + B('toggleShop', (d.ledger.shopMode ? '🔕 ปิด' : '🔔 เปิด') + 'โหมดร้านค้า') + '</div></div>' +
+      '<div class="dsec"><h4>💬 ติดต่อผู้ใช้</h4><div class="acts2">' + B('message', '✉️ ส่งข้อความ', 'pri') + B('sendDashboard', '📊 ส่งลิงก์แดชบอร์ด') + B('sendTaxDashboard', '🧾 ส่งลิงก์ภาษี') + B('sendHelp', '📚 ส่งวิธีใช้') + '</div></div>' +
       '<div class="dsec"><h4>🛠️ แก้ปัญหา</h4><p class="hint" style="margin:-4px 0 10px">บอทไม่ตอบหรือค้างรอคำตอบ → ล้างสถานะค้าง · ชื่อ/รูปเก่า → อัปเดตโปรไฟล์ · สมัครไม่ผ่าน → เปิดใช้งานทันที</p><div class="acts2">' +
         B('clearState', '🧹 ล้างสถานะค้าง') + B('refreshProfile', '🔄 อัปเดตโปรไฟล์ LINE') + (d.status !== 'active' ? B('activate', '✅ เปิดใช้งานทันที', 'ok') : '') + B('restartReg', '↻ ให้สมัครใหม่') + '</div></div>' +
       '<div class="dsec"><h4>🧾 ประวัติ Pro</h4>' + (hist.map((h) => '<div style="font-size:13.5px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)">' + h.t + '<span style="float:right;color:var(--dim)">' + thDT(h.at) + '</span></div>').join('') || '<p class="hint" style="margin:0">ยังไม่มี</p>') + '</div>' +
@@ -809,6 +822,8 @@ const CONFIG = {
         inputValidator: (x) => !x.trim() && 'ใส่โค้ดก่อน' }); return v == null ? null : { code: v.trim() }; }
       case 'setName': { const v = await ask({ title: 'แก้ชื่อที่บอทเรียก', input: 'text', inputValue: d.name, inputAttributes: { maxlength: 30 }, confirmButtonText: 'บันทึก',
         inputValidator: (x) => !x.trim() && 'ใส่ชื่อก่อน' }); return v == null ? null : { name: v.trim() }; }
+      case 'setReminderHour': { const v = await ask({ title: 'เวลาเตือนจด', text: 'กรอกชั่วโมงตามเวลาไทย 0–23', input: 'number', inputValue: d.ledger.reminder.hour, inputAttributes: { min: 0, max: 23 }, confirmButtonText: 'บันทึก',
+        inputValidator: (x) => !Number.isInteger(Number(x)) || Number(x) < 0 || Number(x) > 23 ? 'กรอกชั่วโมง 0–23' : false }); return v == null ? null : { hour: Number(v) }; }
       case 'message': { const v = await ask({ title: 'ส่งข้อความถึง ' + (d.name || d.lineName), text: 'ส่งทาง LINE ในนามน้องออมสิน (ขึ้นต้นว่า "ข้อความจากแอดมิน")', input: 'textarea', inputPlaceholder: 'พิมพ์ข้อความ…', confirmButtonText: 'ส่งข้อความ',
         inputValidator: (x) => !x.trim() && 'พิมพ์ข้อความก่อน' }); return v == null ? null : { text: v }; }
       case 'removePro': return (await ask({ title: 'ยกเลิก Pro?', html: '<b>' + nm + '</b> จะกลับเป็น Free ทันที (ไม่คืนเงินอัตโนมัติ)', icon: 'warning', confirmButtonText: 'ยกเลิก Pro', danger: true })) ? {} : null;
@@ -821,7 +836,7 @@ const CONFIG = {
     return {};
   }
   const ACT_LOADING = { grant: 'กำลังเพิ่ม Pro…', setUntil: 'กำลังบันทึกวันหมด Pro…', removePro: 'กำลังยกเลิก Pro…', redeem: 'กำลังใช้โค้ด…', message: 'กำลังส่งข้อความ…',
-    sendDashboard: 'กำลังส่งลิงก์…', sendHelp: 'กำลังส่งวิธีใช้…', clearState: 'กำลังล้างสถานะ…', refreshProfile: 'กำลังดึงโปรไฟล์ LINE…', activate: 'กำลังเปิดใช้งาน…',
+    sendDashboard: 'กำลังส่งลิงก์…', sendTaxDashboard: 'กำลังส่งลิงก์ภาษี…', sendHelp: 'กำลังส่งวิธีใช้…', clearState: 'กำลังล้างสถานะ…', refreshProfile: 'กำลังดึงโปรไฟล์ LINE…', activate: 'กำลังเปิดใช้งาน…',
     restartReg: 'กำลังส่งการ์ดสมัคร…', block: 'กำลังระงับ…', unblock: 'กำลังปลดระงับ…', approve: 'กำลังอนุมัติ…', deleteAccount: 'กำลังลบข้อมูลทั้งหมด…' };
   $('#drBody').addEventListener('click', async (e) => {
     const cp = e.target.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy);
@@ -904,14 +919,20 @@ const CONFIG = {
         if (a.action === 'redeem' && a.code.toUpperCase() !== 'NAOMSIN2026') throw new Error('❌ ไม่พบโค้ด "' + a.code.toUpperCase() + '" ค่ะ');
         if (a.action === 'block') mm.status = 'blocked'; if (a.action === 'unblock' || a.action === 'activate') mm.status = 'active';
         if (a.action === 'setName') mm.name = a.name; if (a.action === 'toggleDaily') mm.daily = !mm.daily;
+        mm.previewLedger ||= { txCount: 342, wallets: 3, goals: 1, recurring: 2, taxRecords: 2, reminder: { enabled: true, hour: 21 }, coach: false, shopMode: false, cycleDay: 25 };
+        if (a.action === 'toggleMonthly') mm.monthly = !mm.monthly;
+        if (a.action === 'toggleCoach') mm.previewLedger.coach = !mm.previewLedger.coach;
+        if (a.action === 'toggleShop') mm.previewLedger.shopMode = !mm.previewLedger.shopMode;
+        if (a.action === 'toggleReminder') mm.previewLedger.reminder.enabled = !mm.previewLedger.reminder.enabled;
+        if (a.action === 'setReminderHour') mm.previewLedger.reminder.hour = a.hour;
         if (a.action === 'grant') { mm.plan = { tier: 'pro', source: 'paid', until: addD(mm.paidUntil && mm.paidUntil > t ? mm.paidUntil : t, a.days) }; mm.paidUntil = mm.plan.until; }
         if (a.action === 'deleteAccount') M.members = M.members.filter((x) => x !== mm);
         return new Promise((r) => setTimeout(() => r({ ok: true, message: { grant: 'เพิ่ม Pro ' + a.days + ' วันแล้ว', message: 'ส่งข้อความแล้ว', clearState: 'ล้างสถานะค้างแล้ว', deleteAccount: 'ลบบัญชีแล้ว' }[a.action] || 'บันทึกแล้ว' }), 900));
       }
       case 'memberDetail': {
         const mm = M.members.find((x) => x.userId === a.userId);
-        return new Promise((r) => setTimeout(() => r({ ...mm, email: 'user@example.com', phone: '081-234-5678', step: mm.status === 'registering' ? 'email' : '', consentAt: mm.joinedAt, daily: !!mm.daily, monthly: true,
-          ledger: { txCount: 342, wallets: 3, goals: 1, recurring: 2, reminder: { enabled: true, hour: 21 }, coach: false, shopMode: false, cycleDay: 25 },
+        return new Promise((r) => setTimeout(() => r({ ...mm, email: 'user@example.com', phone: '081-234-5678', step: mm.status === 'registering' ? 'email' : '', consentAt: mm.joinedAt, daily: !!mm.daily, monthly: mm.monthly !== false,
+          ledger: mm.previewLedger || { txCount: 342, wallets: 3, goals: 1, recurring: 2, taxRecords: 2, reminder: { enabled: true, hour: 21 }, coach: false, shopMode: false, cycleDay: 25 },
           usage: { day: { tokens: 38000, calls: 14, cost: .02 }, week: { tokens: 120000, calls: 50, cost: .07 }, month: { tokens: 410000, calls: 160, cost: .21 }, limits: { day: 50000, week: 250000, month: 800000 }, mult: 1 },
           payments: mm.plan.source === 'paid' ? [{ at: new Date(Date.now() - 5e8).toISOString(), cycle: 'yearly', amount: 299, by: 'auto' }] : [], codes: [{ at: new Date(Date.now() - 9e8).toISOString(), code: 'NAOMSIN2026', until: addD(t, 20) }],
           pendingState: mm.status === 'active' ? 'payslip' : '' }), 700));
