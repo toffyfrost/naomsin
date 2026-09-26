@@ -279,6 +279,7 @@
       <button data-s="billing"><span class="ic">🏷️</span><span>แคมเปญ<span class="hide-m"> & โปรฟรี</span></span></button>
       <button data-s="payments"><span class="ic">💳</span>การชำระ<span class="badge" id="revBadge" hidden></span></button>
       <button data-s="members"><span class="ic">👥</span>สมาชิก</button>
+      <button data-s="groups"><span class="ic">👨‍👩‍👧</span>กลุ่ม</button>
       <button data-s="features"><span class="ic">🧩</span>ฟีเจอร์</button>
     </nav>
     <div class="me"><img id="meImg" src="../landing/img/brand/avatar-64.png" alt=""><div><b id="meName">แอดมิน</b><button id="logout">ออกจากระบบ</button></div></div>
@@ -384,6 +385,10 @@
       </div>
       <div class="card"><h3>📚 ฟีเจอร์ทั้งหมด</h3><p class="hint">รวมคำสั่ง วิธีใช้ ภาพหน้าจอ และข้อจำกัดของแต่ละฟีเจอร์</p><a class="btn" href="../landing/features.html" target="_blank" rel="noopener">เปิดคู่มือ 30 ฟีเจอร์</a></div>
     </section>
+    <section class="sec" id="s-groups">
+      <div class="top"><div><h1>สมุดกลุ่ม LINE</h1><p>ดูสมุดกลุ่มที่เปิดแล้วและพักหรือเปิดใช้งานอีกครั้ง</p></div><button class="btn" data-reload>↻ รีเฟรช</button></div>
+      <div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>กลุ่ม</th><th>สมาชิกที่จด</th><th>รายการ</th><th>สถานะ</th><th></th></tr></thead><tbody id="groupRows"></tbody></table></div></div>
+    </section>
   </main>
 </div>
 
@@ -461,7 +466,7 @@ const CONFIG = {
   // Apps Script ล่มชั่วคราว (หมดเวลา/เรียกพร้อมกันเกิน/โควตา) จะตอบเป็นหน้า HTML แทน JSON
   // → คำสั่งอ่าน: ลองใหม่อัตโนมัติ 2 ครั้ง · คำสั่งแก้ข้อมูล: ไม่ลองซ้ำ (กันทำซ้ำ) แต่บอกให้ตรวจผลก่อน
   let forceFresh = false;
-  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'billing', 'codes', 'redemptions', 'payments']);
+  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'groups', 'billing', 'codes', 'redemptions', 'payments']);
   const MAX_PARALLEL = 2; let inFlight = 0; const waiting = [];
   const slot = () => new Promise((ok) => { if (inFlight < MAX_PARALLEL) { inFlight++; ok(); } else waiting.push(ok); });
   const release = () => { const next = waiting.shift(); if (next) next(); else inFlight--; };
@@ -566,9 +571,21 @@ const CONFIG = {
 
   /* ---------- นำทาง ---------- */
   const loaded = {};
-  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers, features: loadFeatures };
+  const loaders = { overview: loadOverview, codes: loadCodes, billing: loadBilling, payments: loadPayments, members: loadMembers, groups: loadGroups, features: loadFeatures };
   function loadFeatures() { loaded.features = true; }
   $('#s-features').addEventListener('click', (e) => { const b = e.target.closest('[data-feature-go]'); if (b) show(b.dataset.featureGo); });
+  let groupRows = [];
+  async function loadGroups() {
+    groupRows = await api('groups'); loaded.groups = true;
+    $('#groupRows').innerHTML = groupRows.map((g) => '<tr><td><b>' + esc(g.name) + '</b><div class="mono" style="font-size:11px;color:var(--dim)">' + esc(g.id) + '</div></td><td>' + g.members + '</td><td>' + g.transactions + '</td><td><span class="chip ' + (g.active ? 'g' : 'y') + '">' + (g.active ? 'เปิด' : 'พัก') + '</span></td><td><button class="btn sm ' + (g.active ? 'bad' : 'ok') + '" data-group="' + esc(g.id) + '">' + (g.active ? 'พักสมุด' : 'เปิดสมุด') + '</button></td></tr>').join('') || '<tr><td colspan="5" class="empty">ยังไม่มีสมุดกลุ่ม</td></tr>';
+  }
+  $('#groupRows').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-group]'); if (!b) return;
+    const g = groupRows.find((x) => x.id === b.dataset.group); if (!g) return;
+    const next = !g.active;
+    if (!(await ask({ title: next ? 'เปิดสมุดกลุ่ม?' : 'พักสมุดกลุ่ม?', text: next ? 'สมาชิกจะจดรายการในกลุ่มนี้ได้อีกครั้ง' : 'บอทจะหยุดรับรายการของกลุ่มนี้จนกว่าจะเปิดใหม่', icon: 'question', confirmButtonText: next ? 'เปิดสมุด' : 'พักสมุด' }))) return;
+    await act(b, async () => { const r = await api('groupAction', { id: g.id, active: next }); toast(r.message); await loadGroups(); }, 'กำลังเปลี่ยนสถานะสมุดกลุ่ม…');
+  });
   function show(s) {
     $$('#nav button').forEach((b) => b.classList.toggle('on', b.dataset.s === s));
     $$('.sec').forEach((x) => x.classList.toggle('on', x.id === 's-' + s));
@@ -877,6 +894,8 @@ const CONFIG = {
       reviews: [{ at: new Date().toISOString(), orderId: 'a8f3k2', cycle: 'yearly', amount: 299, reason: 'ยอดในสลิป ฿290 น้อยกว่ายอดที่ต้องชำระ ฿299', link: '#', status: 'pending', userId: U('a'), name: 'มิ้นท์' }],
       payments: [{ at: new Date().toISOString(), orderId: 'x1', name: 'ฝน', cycle: 'yearly', amount: 299, ref: '016268123456ATF01', by: 'auto' },
         { at: new Date(Date.now() - 864e5).toISOString(), orderId: 'x2', name: 'บีม', cycle: 'monthly', amount: 35, ref: '016267998877ATF02', by: 'auto' }],
+      groups: [{ id: 'C' + 'a'.repeat(32), name: 'ครอบครัว', active: true, members: 4, transactions: 128, openedAt: t },
+        { id: 'C' + 'b'.repeat(32), name: 'ทริปเพื่อน', active: false, members: 6, transactions: 42, openedAt: t }],
       members: [['มิ้นท์', 'mint 🌸', 'a', 'active', 'promo'], ['บีม', 'Beam', 'b', 'active', 'paid'], ['ฝน', 'Fon', 'c', 'active', 'paid'], ['ต้อม', 'Tom', 'd', 'pending', 'promo'], ['แป้ง', 'Pang', 'e', 'blocked', 'free'], ['SAND', 'SAND', 'f', 'registering', 'free']]
         .map(([n, l, c, s, p], i) => ({ userId: U(c), name: n, lineName: l, picture: '', status: s, role: i === 0 ? 'admin' : 'member', joinedAt: new Date(Date.now() - i * 5e8).toISOString(), lastUsed: new Date(Date.now() - i * 4e7).toISOString(),
           plan: { tier: p === 'free' ? 'free' : 'pro', source: p, until: p === 'paid' ? addD(t, 200 - i * 50) : '' }, paidUntil: p === 'paid' ? addD(t, 200 - i * 50) : '' })),
@@ -914,6 +933,8 @@ const CONFIG = {
       case 'reviewApprove': M.reviews.find((r) => r.orderId === a.orderId).status = 'approved'; return sleep({ ok: true });
       case 'reviewReject': M.reviews.find((r) => r.orderId === a.orderId).status = 'rejected'; return sleep(true);
       case 'members': return sleep(M.members);
+      case 'groups': return sleep(M.groups);
+      case 'groupAction': { const g = M.groups.find((x) => x.id === a.id); if (!g) throw new Error('ไม่พบสมุดกลุ่ม'); g.active = a.active; return sleep({ ok: true, message: a.active ? 'เปิดสมุดกลุ่มแล้ว' : 'พักสมุดกลุ่มแล้ว' }); }
       case 'memberAction': {
         const mm = M.members.find((x) => x.userId === a.userId);
         if (a.action === 'redeem' && a.code.toUpperCase() !== 'NAOMSIN2026') throw new Error('❌ ไม่พบโค้ด "' + a.code.toUpperCase() + '" ค่ะ');
