@@ -1,29 +1,52 @@
 <!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=block" rel="stylesheet">
 <style>
+:root{--head:'IBM Plex Sans Thai','Noto Sans Thai',sans-serif;--ink:#0B2545;--sub:#4A6485;--blue:#1C7ED6;--sky:#1864AB;--line-green:#06C755;
+--glow:0 0 0 1px rgba(28,126,214,.10),0 28px 60px -24px rgba(24,100,171,.38);--card:0 1px 2px rgba(11,37,69,.05),0 16px 40px -22px rgba(24,100,171,.30)}
 *{box-sizing:border-box;margin:0}
-body{width:1040px;height:1040px;font-family:'IBM Plex Sans Thai',sans-serif;background:linear-gradient(135deg,#1864AB,#1C7ED6 55%,#339AF0);color:#0B2545;padding:36px;display:flex;flex-direction:column;gap:22px}
-.head{color:#fff;padding:6px 8px 0}
-.tag{display:inline-block;background:#63E6BE;color:#087F5B;font-weight:700;font-size:24px;padding:4px 18px;border-radius:99px}
-h1{font-size:64px;font-weight:700;line-height:1.15;margin-top:10px}
-h1 span{color:#A5D8FF}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1}
-.card{background:#F5F9FF;border-radius:28px;padding:28px 30px;display:flex;flex-direction:column;box-shadow:0 6px 0 rgba(0,0,0,.08)}
-.ico{font-size:52px;line-height:1}
-.card h2{font-size:38px;font-weight:700;color:#1864AB;margin-top:12px;line-height:1.2}
-.card p{font-size:23px;font-weight:500;color:#4A6485;margin-top:8px;line-height:1.4}
-.chip{margin-top:auto;align-self:flex-start;background:#E7F1FF;color:#1864AB;font-weight:600;font-size:21px;padding:6px 14px;border-radius:12px}
-.cta{background:#06C755;color:#fff;border-radius:28px;height:118px;display:flex;align-items:center;justify-content:center;gap:18px;font-size:40px;font-weight:700;box-shadow:0 6px 0 #04913E}
-.cta small{font-size:24px;font-weight:500;opacity:.9;display:block}
-.arrow{font-size:48px}
-</style></head><body>
-<div class="head"><span class="tag">N'AOMSIN</span>
-<h1>4 ฟีเจอร์เด็ด <span>น้องออมสิน</span></h1></div>
-<div class="grid">
- <div class="card"><div class="ico">💬</div><h2>จดแค่พิมพ์ภาษาพูด</h2><p>พิมพ์หลายรายการในข้อความเดียว บอทแยกหมวดให้เอง</p><div class="chip">ข้าวสาร 250 ไข่ 120</div></div>
- <div class="card"><div class="ico">🧾</div><h2>หารบิลกับเพื่อน</h2><p>สั่งหารทุกคนหรือเลือกคน แล้วสรุปยอดให้ครบ</p><div class="chip">หมูกระทะ 1200 หารทุกคน</div></div>
- <div class="card"><div class="ico">🤝</div><h2>ใครยืมเงินไม่ลืม</h2><p>จดยืม-คืน แล้วถามได้ทุกเมื่อว่าใครยังค้าง</p><div class="chip">ใครติดเงิน</div></div>
- <div class="card"><div class="ico">🎯</div><h2>งบตามวันเงินเดือน</h2><p>ตั้งรอบงบเริ่มวันไหนก็ได้ พร้อมโค้ชสรุปทุกจันทร์</p><div class="chip">ตั้งรอบงบ วันที่ 25</div></div>
+body{width:1040px;height:1040px;overflow:hidden;font-family:'Noto Sans Thai',sans-serif;color:var(--ink);position:relative;
+background:radial-gradient(700px 520px at 88% 8%,#A5D8FF 0%,rgba(165,216,255,0) 70%),radial-gradient(600px 420px at 0% 100%,#C3FAE8 0%,rgba(195,250,232,0) 70%),linear-gradient(180deg,#EAF4FF,#F5F9FF)}
+body:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(28,126,214,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(28,126,214,.06) 1px,transparent 1px);background-size:64px 64px}
+.wrap{position:relative;height:100%;padding:40px 48px 44px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:14px;font-family:var(--head);font-weight:700;font-size:30px;letter-spacing:.04em}
+.logo{width:64px;height:64px;border-radius:50%;overflow:hidden;box-shadow:0 6px 18px -8px rgba(24,100,171,.6);border:3px solid #fff}
+.logo img{width:106%;height:106%;margin:-3%;object-fit:cover}
+.pill{margin-left:auto;font-family:var(--head);font-size:20px;font-weight:600;color:#087F5B;background:#fff;border:1.5px solid #B2F2BB;padding:6px 16px;border-radius:999px}
+.hero{display:flex;gap:24px;margin-top:18px;height:486px}
+.copy{flex:1;padding-top:34px}
+.eyebrow{font-family:var(--head);color:var(--blue);font-weight:600;font-size:21px;letter-spacing:.18em;display:flex;align-items:center;gap:12px}
+.eyebrow:before{content:"";width:36px;height:2px;background:var(--blue)}
+h1{font-family:var(--head);font-weight:700;font-size:86px;line-height:1.08;margin-top:16px;letter-spacing:-.01em}
+h1 span{display:block;background:linear-gradient(135deg,#1864AB,#339AF0);-webkit-background-clip:text;color:transparent}
+.lead{font-size:25px;color:var(--sub);line-height:1.55;margin-top:20px}
+.pic{position:relative;width:430px}
+.frame{position:absolute;inset:0 0 0 20px;border-radius:36px;background:#fff;padding:9px;box-shadow:var(--glow)}
+.frame div{width:100%;height:100%;border-radius:28px;background:url(assets/mascot-scene.webp) 50% 30%/135% auto no-repeat}
+.float{position:absolute;background:#fff;border-radius:18px;padding:12px 18px;box-shadow:var(--card);font-family:var(--head);font-weight:600;font-size:20px;white-space:nowrap}
+.float small{display:block;font-family:'Noto Sans Thai';font-weight:400;color:var(--sub);font-size:16px}
+.f1{left:-28px;top:150px}.f2{left:-28px;bottom:70px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+.card{background:rgba(255,255,255,.92);border-radius:24px;padding:22px 22px;display:flex;align-items:center;gap:16px;box-shadow:var(--card);border:1px solid rgba(28,126,214,.08)}
+.ic{flex:none;width:62px;height:62px;border-radius:18px;display:grid;place-items:center;font-size:32px}
+.card h3{font-family:var(--head);font-weight:700;font-size:26px;color:var(--sky);line-height:1.2}
+.card p{font-size:18px;color:var(--sub);margin-top:2px}
+.cta{margin-top:auto;height:100px;border-radius:999px;background:var(--line-green);color:#fff;display:flex;align-items:center;justify-content:center;gap:18px;font-family:var(--head);font-weight:700;font-size:38px;box-shadow:0 18px 34px -16px rgba(6,160,70,.75),inset 0 -5px 0 rgba(0,0,0,.12)}
+.cta .ar{width:58px;height:58px;border-radius:50%;background:#fff;color:var(--line-green);display:grid;place-items:center;font-size:34px}
+</style></head><body><div class="wrap">
+<div class="brand"><div class="logo"><img src="assets/logo-badge.jpg"></div>N'AOMSIN<span class="pill">💬 ผู้ช่วยการเงินบน LINE</span></div>
+<div class="hero">
+ <div class="copy"><div class="eyebrow">ฟีเจอร์เด็ด</div>
+ <h1>จดเงินง่าย<span>แค่แชทเดียว</span></h1>
+ <p class="lead">พิมพ์ ส่งสลิป หรือพูดบอก<br>น้องออมสินจัดการให้ครบ</p></div>
+ <div class="pic"><div class="frame"><div></div></div>
+  <div class="float f1">🔥 จดต่อเนื่อง 27 วัน<small>ทำได้ดีมาก!</small></div>
+  <div class="float f2">🎯 เหลืองบ ฿10,107<small>อีก 10 วันถึงรอบใหม่</small></div></div>
 </div>
-<div class="cta"><div>อ่านรายละเอียดเพิ่มเติม<small>แตะที่นี่ น้องออมสินจะอธิบายในแชท</small></div><span class="arrow">👉</span></div>
-</body></html>
+<div class="grid">
+ <div class="card"><div class="ic" style="background:#E7F5FF">💬</div><div><h3>จดด้วยภาษาพูด</h3><p>“ข้าวสาร 250 ไข่ 120”</p></div></div>
+ <div class="card"><div class="ic" style="background:#FFF0F6">🧾</div><div><h3>หารบิลกับเพื่อน</h3><p>“หมูกระทะ 1200 หารทุกคน”</p></div></div>
+ <div class="card"><div class="ic" style="background:#FFF9DB">🤝</div><div><h3>ใครยืมไม่ลืม</h3><p>“ใครติดเงิน” รู้ทันที</p></div></div>
+ <div class="card"><div class="ic" style="background:#E6FCF5">🎯</div><div><h3>งบตามวันเงินเดือน</h3><p>ตั้งรอบงบวันไหนก็ได้</p></div></div>
+</div>
+<div class="cta">แตะอ่านรายละเอียดในแชท <span class="ar">→</span></div>
+</div></body></html>
