@@ -328,6 +328,7 @@ function renderSummary() {
         <div class="mini" style="background:var(--brand-soft)"><div class="sub">ต้นทุน</div><div class="v neg" style="font-size:16px">${money(D.shop.cost)}</div></div>
         <div class="mini" style="background:var(--plain)"><div class="sub">กำไร</div><div class="v" style="font-size:16px">${money(D.shop.profit)}</div></div></div>
       ${D.shop.top.map((x,i) => `<div class="kv"><span class="sub">${i+1}. ${esc(x.name)}${x.qty?' ('+x.qty+' ชิ้น)':''}</span><b>${money(x.revenue)}</b></div>`).join('')}</div>` : ''}
+    ${instCard(false)}
     ${D.settings.goals.length ? `<div class="card"><div class="h2">🎯 เป้าหมายการออม</div>${D.settings.goals.map(goalRow).join('')}</div>` : ''}
     ${D.debts.length ? `<div class="card"><div class="h2">🤝 ยืม-คืน</div>${D.debts.map((x) => `<div class="kv"><span>${esc(x.person)} <span class="muted">${x.balance>0?'ติดเงินเรา':'เราติดเงิน'}</span></span>
       <b class="${x.balance>0?'pos':'neg'}">${money(Math.abs(x.balance))}</b></div>`).join('')}</div>` : ''}
@@ -360,6 +361,93 @@ const donutPct = { id: 'donutPct', afterDatasetsDraw(chart) {
   });
   ctx.restore();
 } };
+
+/* ---------- ผ่อนชำระ: ผ่อนสินค้า / ผ่อนบัตรกดเงินสด / สินเชื่อ ---------- */
+const INST_ICON = { product:'🛍️', cash:'💵', loan:'🏦', other:'📆' };
+const INST_KIND = { product:'ผ่อนสินค้า', cash:'ผ่อนบัตรกดเงินสด', loan:'สินเชื่อ/เงินกู้', other:'ผ่อนอื่นๆ' };
+function instRow(i) {
+  const pct = i.months ? Math.round(i.paid * 100 / i.months) : 0;
+  const tag = i.status === 'done' ? '<span class="pill" style="background:var(--inc)">ครบแล้ว</span>' : i.status === 'closed' ? '<span class="pill" style="background:var(--muted)">ปิดยอด</span>' : '';
+  return `<div class="list-item" onclick="instDetail('${i.id}')"><div class="ico">${INST_ICON[i.kind]||'📆'}</div>
+    <div class="grow" style="min-width:0"><div class="row between"><div class="ellipsis" style="font-weight:600">${esc(i.name)} ${tag}</div><b style="white-space:nowrap">${money(i.perMonth)}<span class="muted">/ด.</span></b></div>
+      <div class="muted">งวด ${i.paid}/${i.months}${i.status==='active' ? ' · เหลือ ' + money(i.remaining) + (i.nextDue ? ' · ถัดไป ' + thDate(i.nextDue) : '') : ''}${i.walletName ? ' · ' + esc(i.walletName) : ''}</div>
+      <div class="bar"><i style="width:${Math.max(2,pct)}%;background:${i.status==='active'?'var(--brand)':'var(--inc)'}"></i></div></div></div>`;
+}
+function instCard(manage) {
+  const all = D.installments || [], act = all.filter((i) => i.status === 'active'), S = D.instSummary || {};
+  if (!manage && !act.length) return '';
+  const list = manage ? all : act;
+  return `<div class="card"><div class="row between"><div class="h2" style="margin:0">💳 ผ่อนชำระ</div>${manage ? '<button class="btn ghost sm" onclick="instForm(\'\')">+ เพิ่ม</button>' : ''}</div>
+    ${act.length ? `<div class="grid2" style="margin-top:10px">
+      <div class="mini" style="background:var(--brand-soft)"><div class="sub">ผ่อนต่อเดือน</div><div class="v neg">${money(S.monthly)}</div><div class="muted">${act.length} รายการ</div></div>
+      <div class="mini" style="background:var(--plain)"><div class="sub">ยอดคงเหลือรวม</div><div class="v">${money(S.remaining)}</div><div class="muted">ต้องจ่ายเดือนนี้ ${money(S.dueThisMonth)}</div></div></div>` : ''}
+    ${list.map(instRow).join('') || '<div class="muted" style="margin-top:8px">ยังไม่มีรายการผ่อน · เพิ่มที่นี่ หรือพิมพ์ในแชท เช่น "ผ่อน iPhone 30000 10 งวด บัตร KTC" หรือ "กดเงินสด KTC 20000 ผ่อน 10 เดือน เดือนละ 2200"</div>'}
+    ${!manage ? '<div class="muted" style="margin-top:8px">แตะรายการเพื่อดูตารางงวด · จัดการทั้งหมดที่หน้า "ตั้งค่า"</div>' : ''}</div>`;
+}
+function instDetail(id) {
+  const i = (D.installments || []).find((x) => x.id === id); if (!i) return;
+  const today = ymd(new Date());
+  openSheet(`<div class="row between"><div class="h2" style="margin:0">${INST_ICON[i.kind]||'📆'} ${esc(i.name)}</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
+    <div class="muted">${INST_KIND[i.kind]}${i.walletName ? ' · ' + esc(i.walletName) : ''}${i.auto ? ' · ตัดงวดอัตโนมัติ' : ' · จ่ายเอง'}</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="mini" style="background:var(--plain)"><div class="sub">${i.kind==='cash'?'ยอดกดเงินสด':'มูลค่า'}</div><div class="v">${money(i.principal)}</div></div>
+      <div class="mini" style="background:var(--plain)"><div class="sub">งวดละ</div><div class="v">${money(i.perMonth)}</div><div class="muted">${i.months} งวด</div></div>
+      <div class="mini" style="background:var(--inc-soft)"><div class="sub">จ่ายแล้ว</div><div class="v pos">${money(i.paidAmount)}</div><div class="muted">${i.paid} งวด</div></div>
+      <div class="mini" style="background:var(--brand-soft)"><div class="sub">คงเหลือ</div><div class="v neg">${money(i.remaining)}</div><div class="muted">${i.leftMonths} งวด</div></div></div>
+    <div class="kv" style="margin-top:8px"><span class="sub">ยอดผ่อนทั้งหมด</span><b>${money(i.total)}</b></div>
+    ${i.interest ? `<div class="kv"><span class="sub">ดอกเบี้ย/ค่าธรรมเนียม</span><b>${money(i.interest)}${i.rate ? ' (' + i.rate + '%/ปี)' : ''}</b></div>` : ''}
+    ${i.note ? `<div class="muted" style="margin-top:6px">📝 ${esc(i.note)}</div>` : ''}
+    <div class="h2" style="margin:14px 0 6px">ตารางงวด</div>
+    <div style="max-height:260px;overflow:auto;border:1px solid var(--line);border-radius:12px">
+      ${i.schedule.map((x) => `<div class="row between" style="padding:8px 12px;border-bottom:1px solid var(--line);${!x.paid && x.date < today ? 'color:var(--danger)' : ''}">
+        <span>${x.paid ? '✅' : x.date < today ? '⚠️' : '⬜'} งวด ${x.n}</span><span class="sub">${thDate(x.date)}</span><b>${money(x.amount)}</b></div>`).join('')}</div>
+    ${i.status === 'active' ? `<div style="margin-top:14px"><button class="btn" onclick="instPay('${i.id}')">✅ จ่ายงวดที่ ${i.paid + 1} (${money(i.perMonth)})</button></div>
+      <div class="muted" style="margin-top:4px">จะจดเป็นรายจ่าย "${esc('ผ่อน ' + i.name)}" จาก ${esc(i.walletName || 'กระเป๋าหลัก')}</div>` : ''}
+    <div class="row" style="gap:8px;margin-top:10px">
+      <button class="btn ghost" onclick="instForm('${i.id}')">✏️ แก้ไข</button>
+      ${i.status === 'active' ? `<button class="btn plain" onclick="instClose('${i.id}')">ปิดยอด</button>` : ''}
+      <button class="btn plain" style="color:var(--danger)" onclick="instDel('${i.id}')">ลบ</button></div>`);
+}
+function instForm(id) {
+  const i = (D.installments || []).find((x) => x.id === id) || { name:'', kind:'product', wallet:D.settings.defaultWallet, principal:'', months:'', perMonth:'', paid:0, firstDue:ymd(new Date()), auto:true, note:'', rate:'' };
+  openSheet(`<div class="row between"><div class="h2" style="margin:0">${id ? 'แก้ไขรายการผ่อน' : 'เพิ่มรายการผ่อน'}</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
+    <label>ประเภท</label><select id="ik">${Object.entries(INST_KIND).map(([k,l]) => `<option value="${k}" ${i.kind===k?'selected':''}>${INST_ICON[k]} ${l}</option>`).join('')}</select>
+    <label>ชื่อรายการ</label><input id="in" value="${esc(i.name)}" placeholder="เช่น iPhone 16, กดเงินสด KTC">
+    <div class="grid2"><div><label>มูลค่า / ยอดกดเงินสด</label><input id="ip" inputmode="decimal" value="${i.principal}"></div>
+      <div><label>จำนวนงวด</label><input id="im" inputmode="numeric" value="${i.months}"></div></div>
+    <div class="grid2"><div><label>งวดละ (ว่าง = หารเท่า)</label><input id="ipm" inputmode="decimal" value="${id ? i.perMonth : ''}"></div>
+      <div><label>ดอกเบี้ย %/ปี (ไม่บังคับ)</label><input id="ir" inputmode="decimal" value="${i.rate || ''}"></div></div>
+    <div class="grid2"><div><label>จ่ายจากบัตร/กระเป๋า</label><select id="iw">${D.settings.wallets.map((w) => `<option value="${w.id}" ${w.id===i.wallet?'selected':''}>${w.icon} ${esc(w.name)}</option>`).join('')}</select></div>
+      <div><label>จ่ายไปแล้ว (งวด)</label><input id="ipd" inputmode="numeric" value="${i.paid}"></div></div>
+    <label>งวดแรกครบกำหนดวันที่</label><input id="ifd" type="date" value="${i.firstDue}">
+    <label>การจดค่างวด</label><select id="ia"><option value="1" ${i.auto?'selected':''}>จดให้อัตโนมัติเมื่อถึงกำหนด</option><option value="0" ${!i.auto?'selected':''}>จ่ายเอง (เตือนก่อน 3 วัน)</option></select>
+    <label>หมายเหตุ (ไม่บังคับ)</label><input id="ino" value="${esc(i.note)}">
+    <div style="margin-top:16px"><button class="btn" onclick="instSave('${id}')">บันทึก</button></div>
+    ${!id ? '<div class="muted" style="margin-top:6px">ถ้างวดแรกคือวันนี้และตั้งจดอัตโนมัติ ระบบจะจดงวดแรกให้ภายในชั่วโมงนี้</div>' : ''}`);
+}
+async function instSave(id) {
+  const p = { id, kind:$('ik').value, name:$('in').value.trim(), principal:$('ip').value, months:$('im').value, perMonth:$('ipm').value, rate:$('ir').value,
+    wallet:$('iw').value, paid:$('ipd').value, firstDue:$('ifd').value, dueDay:Number(($('ifd').value || '').slice(8)) || '', auto:$('ia').value === '1', note:$('ino').value };
+  if (!p.name) return toast('ใส่ชื่อรายการผ่อน');
+  if (!(Number(p.months) >= 1)) return toast('ใส่จำนวนงวด');
+  if (!(Number(String(p.principal).replace(/,/g,'')) > 0) && !(Number(String(p.perMonth).replace(/,/g,'')) > 0)) return toast('ใส่มูลค่า หรือยอดงวดละ');
+  D = await call('dashSave', id ? 'inst_update' : 'inst_add', p, range); closeSheet(); render(); toast(id ? '✅ แก้ไขแล้ว' : '📆 เพิ่มรายการผ่อนแล้ว');
+}
+async function instPay(id) {
+  const i = (D.installments || []).find((x) => x.id === id); if (!i) return;
+  const v = prompt('ยอดที่จ่ายงวดนี้ (บาท)', i.perMonth); if (v === null) return;
+  if (!(Number(String(v).replace(/,/g,'')) > 0)) return toast('ใส่ยอดที่จ่าย');
+  D = await call('dashSave', 'inst_pay', { id, amount: v }, range); closeSheet(); render(); toast('✅ จดค่างวดแล้ว');
+}
+async function instClose(id) {
+  const i = (D.installments || []).find((x) => x.id === id); if (!i) return;
+  const v = prompt('ปิดยอดก่อนกำหนด: ยอดที่จ่ายปิด (บาท)\n(ใส่ 0 ถ้าไม่ต้องการจดเป็นรายจ่าย)', i.remaining); if (v === null) return;
+  D = await call('dashSave', 'inst_close', { id, payoff: v }, range); closeSheet(); render(); toast('🎉 ปิดยอดแล้ว');
+}
+async function instDel(id) {
+  if (!confirm('ลบรายการผ่อนนี้? (รายการที่จดไปแล้วในสมุดยังอยู่)')) return;
+  D = await call('dashSave', 'inst_delete', { id }, range); closeSheet(); render(); toast('🗑️ ลบแล้ว');
+}
 
 function renderAnalysis() {
   const h = D.history, s = summarize(D.txs), cats = D.categories.expense;
@@ -542,6 +630,7 @@ function renderSettings() {
           <div class="muted">${r.freq==='daily'?'ทุกวัน':r.freq==='weekly'?'ทุกวัน'+WD[r.weekday]:'ทุกวันที่ '+r.day} ${String(r.hour).padStart(2,'0')}:00 · ${esc(r.category)}</div></div>
         <button class="del" onclick="delRec('${r.id}')">ลบ</button></div>`).join('') || '<div class="muted">ยังไม่มี เช่น ค่าเช่า ค่าสมาชิก Netflix เงินเดือน</div>'}
       <button class="btn ghost" style="margin-top:10px" onclick="newRec()">➕ เพิ่มรายการประจำ</button></div>
+    ${instCard(true)}
     <div class="card"><div class="row between"><div class="h2" style="margin:0">🎯 เป้าหมายการออม</div><button class="btn ghost sm" onclick="newGoal()">+ เพิ่ม</button></div>
       ${s.goals.map((g) => goalRow(g) + `<div class="row" style="gap:8px;margin-top:-4px"><button class="btn ghost sm" onclick="goalMove('${g.id}',1)">+ ออม</button>
         <button class="btn plain sm" onclick="goalMove('${g.id}',-1)">− ถอน</button><button class="del" onclick="goalDel('${g.id}')">ลบ</button></div>`).join('') || '<div class="muted" style="margin-top:8px">ยังไม่มีเป้าหมาย</div>'}</div>
