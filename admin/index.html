@@ -326,7 +326,11 @@
 
     <!-- แคมเปญ & โปรฟรี -->
     <section class="sec" id="s-billing">
-      <div class="top"><div><h1>แคมเปญ & โปรฟรี</h1><p>ราคาที่ผู้ใช้เห็นในแชทและหน้า landing เปลี่ยนตามทันที</p></div></div>
+      <div class="top"><div><h1>แพ็กเกจ ราคา & โปรโมชัน</h1><p>กำหนดราคาและสิทธิ์ Free / Pro จากหลังบ้าน</p></div></div>
+      <div class="grid g2">
+        <div class="card"><h3>💰 ราคาปกติ Pro</h3><div class="fields"><div><label>รายเดือน (บาท / 30 วัน)</label><input id="baseMonthly" type="number" min="1" max="100000" step="1"></div><div><label>รายปี (บาท / 365 วัน)</label><input id="baseYearly" type="number" min="1" max="100000" step="1"></div></div><p class="hint">รายปีต้องไม่เกินรายเดือน 12 เดือน ราคาใหม่ใช้กับคำสั่งซื้อที่สร้างหลังบันทึก แคมเปญส่วนลดยังคำนวณจากราคาปกติใหม่นี้</p><button class="btn pri" id="priceSave">บันทึกราคา</button></div>
+        <div class="card"><h3>🔐 สิทธิ์ Free / Pro</h3><p class="hint">เปลี่ยนแล้วมีผลกับการใช้งานครั้งถัดไป สมุดกลุ่มและฟังก์ชันพื้นฐานยังใช้ฟรี เพราะกลุ่มยังซื้อ Pro โดยตรงไม่ได้</p><div id="featureTiers"></div></div>
+      </div>
       <div class="grid g2">
         <div class="card">
           <h3>🎁 Pro ฟรีให้ทุกคน <span class="sp"></span><label class="switch"><input type="checkbox" id="fpOn"><span></span></label></h3>
@@ -686,6 +690,8 @@ const CONFIG = {
   async function loadBilling() { bill = await api('billing'); loaded.billing = true; renderBilling(); }
   function renderBilling() {
     const b = bill;
+    $('#baseMonthly').value = b.prices.monthly.price; $('#baseYearly').value = b.prices.yearly.price;
+    $('#featureTiers').innerHTML = b.features.map((f) => '<div class="row" style="justify-content:space-between;margin:9px 0"><span>' + esc(f.name) + '</span><select data-tier="' + esc(f.id) + '" style="width:auto"><option value="free"' + (f.tier === 'free' ? ' selected' : '') + '>Free</option><option value="pro"' + (f.tier === 'pro' ? ' selected' : '') + '>Pro</option></select></div>').join('');
     $('#fpOn').checked = b.freePro.on; $('#fpUntil').value = b.freePro.until || ''; $('#fpNote').value = b.freePro.note || '';
     $('#fpState').textContent = b.freeProActive ? '🟢 ผู้ใช้ทุกคนได้ Pro ฟรีอยู่ตอนนี้' : b.freePro.on ? '⏰ ตั้งเปิดไว้แต่หมดเวลาแล้ว' : '⚪ ปิดอยู่ ผู้ใช้ต้องจ่ายหรือใช้โค้ด';
     const pl = (c, label) => { const p = b.current[c]; return '<div class="row" style="margin-bottom:12px"><span style="width:70px;color:var(--sub)">' + label + '</span><b style="font-family:var(--head);font-size:22px">' + money(p.price) + '</b>' +
@@ -706,6 +712,18 @@ const CONFIG = {
     $('#kPreview').textContent = 'ตัวอย่างราคา: ' + (c === 'all' ? f('monthly') + ' · ' + f('yearly') : f(c));
   }
   ['#kPct', '#kCyc'].forEach((s) => $(s).addEventListener('input', kPreview));
+  $('#priceSave').addEventListener('click', async (e) => {
+    const monthly = Number($('#baseMonthly').value), yearly = Number($('#baseYearly').value);
+    if (![monthly, yearly].every((v) => Number.isInteger(v) && v >= 1 && v <= 100000) || yearly > monthly * 12) return toast('ราคาต้องเป็นจำนวนเต็ม และรายปีต้องไม่เกินรายเดือน 12 เดือน', 'error');
+    if (!(await ask({ title: 'บันทึกราคาแพ็กเกจ?', text: 'รายเดือน ฿' + monthly + ' · รายปี ฿' + yearly + ' ราคาคำสั่งซื้อใหม่จะเปลี่ยนทันที', icon: 'question', confirmButtonText: 'บันทึกราคา' }))) return;
+    act(e.target, async () => { bill = await api('priceSet', { monthly, yearly }); renderBilling(); toast('อัปเดตราคาแล้ว'); }, 'กำลังบันทึกราคา…');
+  });
+  $('#featureTiers').addEventListener('change', async (e) => {
+    const el = e.target.closest('[data-tier]'); if (!el) return;
+    const id = el.dataset.tier, tier = el.value, prev = bill.features.find((f) => f.id === id);
+    if (!(await ask({ title: 'เปลี่ยนสิทธิ์ ' + prev.name + '?', text: 'กำหนดเป็น ' + (tier === 'pro' ? 'เฉพาะ Pro' : 'Free') + ' มีผลกับการใช้งานครั้งถัดไป', icon: 'question', confirmButtonText: 'เปลี่ยนสิทธิ์' }))) { el.value = prev.tier; return; }
+    act(el, async () => { bill = await api('featureSet', { id, tier }); renderBilling(); toast('อัปเดตสิทธิ์ฟีเจอร์แล้ว'); }, 'กำลังบันทึกสิทธิ์…');
+  });
   $('#prSave').addEventListener('click', (e) => act(e.target, async () => { bill = await api('promo', { code: $('#prCode').value.trim(), text: $('#prText').value.trim() }); renderBilling(); toast('บันทึกโปรโมชั่นแล้ว'); }));
   $('#prOff').addEventListener('click', (e) => act(e.target, async () => { bill = await api('promo', {}); renderBilling(); toast('ปิดโปรโมชั่นแล้ว'); }));
   $('#fpSave').addEventListener('click', (e) => act(e.target, async () => { bill = await api('freePro', { on: $('#fpOn').checked, until: $('#fpUntil').value, note: $('#fpNote').value }); renderBilling(); toast('บันทึกแล้ว'); loaded.overview = false; }));
