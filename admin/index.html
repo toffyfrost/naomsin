@@ -152,8 +152,11 @@
   .ubar { margin:8px 0; font-size:13px; } .ubar .prog { height:7px; margin-top:4px; }
   .skel { height:14px; border-radius:7px; background:linear-gradient(90deg,var(--panel),var(--panel2),var(--panel)); background-size:200% 100%; animation:sk 1.2s infinite; margin:10px 0; }
   @keyframes sk { to { background-position:-200% 0; } }
-  .cmdref { font-size:13.5px; } .cmdref code { background:rgba(0,0,0,.3); padding:1px 7px; border-radius:6px; color:var(--sky); font-size:13px; }
-  .cmdref td { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:top; }
+  .admin-menu { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin:8px 0 18px; }
+  .admin-menu button { text-align:left; white-space:normal; line-height:1.4; min-height:52px; }
+  .admin-menu h4 { grid-column:1/-1; margin:12px 0 0; }
+  .cmdref { font-size:13px; width:100%; } .cmdref td { padding:7px 5px; border-bottom:1px solid var(--stroke); }
+  @media(max-width:520px) { .admin-menu { grid-template-columns:1fr; } }
 
   /* modal + toast */
   .modal { position:fixed; inset:0; z-index:50; background:rgba(3,6,15,.7); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -247,8 +250,6 @@
   .skel { background:linear-gradient(90deg,#EEF4FB,#E0ECF8,#EEF4FB); background-size:200% 100%; }
   .drawer-bg, .modal, .swal2-container.swal2-backdrop-show { background:rgba(11,37,69,.35); }
   .modal .box { background:#fff; border-color:rgba(28,126,214,.14); box-shadow:0 40px 80px -30px rgba(11,37,69,.45); }
-  .cmdref code { background:#E7F2FD; color:#1864AB; }
-  .cmdref td { border-bottom-color:rgba(28,126,214,.08); }
   .tst { background:#fff; border-color:rgba(28,126,214,.14); color:var(--ink); box-shadow:0 18px 40px -16px rgba(11,37,69,.35); }
   .tst.loading .ti { border-color:rgba(28,126,214,.2); border-top-color:var(--blue); }
   .tst.error .ti { color:#fff; }
@@ -373,7 +374,7 @@
 
     <!-- สมาชิก -->
     <section class="sec" id="s-members">
-      <div class="top"><div><h1>สมาชิก</h1><p id="memCount"></p></div><div class="row"><button class="btn sm" id="cmdRef">📖 คำสั่งแอดมิน</button><button class="btn sm" data-reload>↻</button><button class="btn sm" id="memCsv">⬇ CSV</button></div></div>
+      <div class="top"><div><h1>สมาชิก</h1><p id="memCount"></p></div><div class="row"><button class="btn sm" id="cmdRef">🧰 เมนูแอดมิน</button><button class="btn sm" data-reload>↻</button><button class="btn sm" id="memCsv">⬇ CSV</button></div></div>
       <div class="card">
         <div class="row" style="margin-bottom:12px"><input class="grow" id="memQ" placeholder="ค้นหาชื่อ หรือ userId">
           <select id="memF" style="width:auto"><option value="">ทั้งหมด</option><option value="paid">Pro (จ่ายเงิน)</option><option value="promo">Pro ฟรี</option><option value="free">Free</option><option value="blocked">ถูกระงับ</option><option value="pending">รออนุมัติ</option></select></div>
@@ -471,7 +472,7 @@ const CONFIG = {
   // Apps Script ล่มชั่วคราว (หมดเวลา/เรียกพร้อมกันเกิน/โควตา) จะตอบเป็นหน้า HTML แทน JSON
   // → คำสั่งอ่าน: ลองใหม่อัตโนมัติ 2 ครั้ง · คำสั่งแก้ข้อมูล: ไม่ลองซ้ำ (กันทำซ้ำ) แต่บอกให้ตรวจผลก่อน
   let forceFresh = false;
-  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'groups', 'billing', 'codes', 'redemptions', 'payments']);
+  const READ_ACTIONS = new Set(['overview', 'members', 'memberDetail', 'groups', 'billing', 'codes', 'redemptions', 'payments', 'aiUsage', 'salesMonth']);
   const MAX_PARALLEL = 2; let inFlight = 0; const waiting = [];
   const slot = () => new Promise((ok) => { if (inFlight < MAX_PARALLEL) { inFlight++; ok(); } else waiting.push(ok); });
   const release = () => { const next = waiting.shift(); if (next) next(); else inFlight--; };
@@ -888,14 +889,51 @@ const CONFIG = {
     }, ACT_LOADING[a]);
   });
 
-  // คู่มือคำสั่งแอดมินในแชท
-  $('#cmdRef').addEventListener('click', () => {
-    const rows = [['#สมาชิก', 'สรุปจำนวนสมาชิก + 10 คนล่าสุด'], ['#อนุมัติ <userId>', 'อนุมัติสมาชิก'], ['#บล็อก <userId>', 'ระงับการใช้งาน'], ['#ปลดบล็อก <userId>', 'ปลดระงับ'],
-      ['#อัปเกรด <userId> <วัน>', 'เพิ่มวัน Pro'], ['#ai', 'การใช้ AI ทั้งระบบ'], ['#โปรฟรี [เปิด [YYYY-MM-DD] ข้อความ | ปิด]', 'Pro ฟรีให้ทุกคน'],
-      ['#แคมเปญ [เพิ่ม ชื่อ ลด% เริ่ม จบ รอบ | ลบ รหัส]', 'แคมเปญลดราคา'], ['#โค้ด [สร้าง ระยะ คน หมดอายุ x จำนวน ชื่อ | ดู | ปิด | เปิด]', 'โค้ดพิเศษ'],
-      ['#โปรโมชั่น [โค้ด CODE ข้อความ | ปิด]', 'โปรในการ์ดชวนอัปเกรด'], ['#ยอดขาย [YYYY-MM]', 'สรุปยอดขาย']];
-    modal('<h3>📖 คำสั่งแอดมินในแชท LINE</h3><p class="hint" style="margin:-6px 0 12px">ทุกคำสั่งทำได้จากหน้านี้เช่นกัน (กด "จัดการ" ที่สมาชิก หรือเมนูด้านซ้าย)</p><table class="cmdref">' +
-      rows.map((r) => '<tr><td><code>' + esc(r[0]) + '</code></td><td>' + esc(r[1]) + '</td></tr>').join('') + '</table><div class="row" style="margin-top:16px;justify-content:flex-end"><button class="btn" data-close>ปิด</button></div>');
+  // เมนูแบบกดใช้งานแทนคู่มือคำสั่งในแชท
+  $('#cmdRef').addEventListener('click', () => modal('<h3>🧰 เมนูแอดมิน</h3><p class="hint">เลือกงานที่ต้องการได้เลย</p><div class="admin-menu">' +
+    '<h4>👥 สมาชิก</h4><button class="btn" data-menu="recent">สมาชิก 10 คนล่าสุด</button><button class="btn" data-menu="pending">อนุมัติสมาชิกที่รอ</button>' +
+    '<button class="btn" data-menu="blocked">ปลดระงับสมาชิก</button><button class="btn" data-menu="members">ระงับสมาชิก / เพิ่ม Pro</button>' +
+    '<h4>💰 รายได้และสิทธิ์</h4><button class="btn" data-menu="sales">ยอดขายรายเดือน</button><button class="btn" data-menu="payments">ตรวจสลิป / ประวัติชำระเงิน</button>' +
+    '<button class="btn" data-menu="billing">ราคาแพ็กเกจ / Pro ฟรี / แคมเปญ / โปรโมชั่น</button><button class="btn" data-menu="codes">สร้างและจัดการโค้ด Pro</button>' +
+    '<button class="btn" data-menu="features">สิทธิ์ฟีเจอร์ Free / Pro</button>' +
+    '<h4>⚙️ ระบบ</h4><button class="btn" data-menu="ai">การใช้ AI ทั้งระบบ</button><button class="btn" data-menu="groups">จัดการสมุดกลุ่ม</button>' +
+    '<button class="btn" data-menu="richmenu">อัปเดต LINE Rich Menu ให้ทุกคน</button></div><div class="row" style="justify-content:flex-end"><button class="btn" data-close>ปิด</button></div>'));
+  $('#modalBox').addEventListener('click', async (e) => {
+    const member = e.target.closest('[data-recent-member]');
+    if (member) { closeModal(); show('members'); return openMember(member.dataset.recentMember, member); }
+    const b = e.target.closest('[data-menu]'); if (!b) return;
+    const action = b.dataset.menu;
+    if (['members', 'pending', 'blocked', 'payments', 'billing', 'codes', 'features', 'groups'].includes(action)) {
+      closeModal();
+      if (['members', 'pending', 'blocked'].includes(action)) { $('#memQ').value = ''; $('#memF').value = action === 'members' ? '' : action; loaded.members = false; show('members'); }
+      else { loaded[action] = false; show(action); }
+      return;
+    }
+    if (action === 'recent') return act(b, async () => {
+      await loadMembers();
+      const recent = [...mems].filter((m) => m.joinedAt).sort((x, y) => y.joinedAt.localeCompare(x.joinedAt)).slice(0, 10);
+      modal('<h3>👥 สมาชิก 10 คนล่าสุด</h3><div class="admin-menu" style="grid-template-columns:1fr">' +
+        recent.map((m) => '<button class="btn" data-recent-member="' + esc(m.userId) + '">' + esc(m.name || m.lineName || m.userId) + ' · ' + esc((STATUS[m.status] || [m.status])[0]) + ' · ' + thDT(m.joinedAt) + '</button>').join('') +
+        '</div><button class="btn" data-close>ปิด</button>');
+    }, 'กำลังโหลดสมาชิกล่าสุด…');
+    if (action === 'ai') return act(b, async () => {
+      const d = await api('aiUsage');
+      const line = (label, x) => '<tr><td>' + label + '</td><td>' + x.calls.toLocaleString() + ' ครั้ง</td><td>' + x.tokens.toLocaleString() + ' tokens</td><td>$' + x.cost.toFixed(3) + '</td></tr>';
+      modal('<h3>🤖 การใช้ AI ทั้งระบบ</h3><p class="hint">โมเดล ' + esc(d.model) + '</p><table class="cmdref">' + line('วันนี้', d.usage.day) + line('สัปดาห์นี้', d.usage.week) + line('เดือนนี้', d.usage.month) + '</table>' +
+        '<p>เดือนนี้ประมาณ ' + money(d.usage.month.cost * d.usdThb) + (d.budgetUsd ? ' · งบ $' + d.budgetUsd + ' · ใช้ไป ' + Math.round(d.usage.month.cost * 100 / d.budgetUsd) + '%' : '') + '</p><p class="hint">ยอดเครดิตจริงตรวจในบัญชีผู้ให้บริการ AI</p><button class="btn" data-close>ปิด</button>');
+    }, 'กำลังโหลดการใช้ AI…');
+    if (action === 'sales') return modal('<h3>💰 ยอดขายรายเดือน</h3><div class="row"><input type="month" id="adminSalesMonth" value="' + today().slice(0, 7) + '"><button class="btn pri" data-sales-load>ดูยอดขาย</button></div><div id="adminSalesResult" style="margin-top:14px"></div><button class="btn" data-close style="margin-top:14px">ปิด</button>');
+    if (action === 'richmenu') {
+      if (!(await ask({ title: 'อัปเดต LINE Rich Menu?', text: 'ระบบจะเปลี่ยนเมนู 2 แท็บด้านล่างแชทให้ผู้ใช้ทุกคน', icon: 'question', confirmButtonText: 'อัปเดตเมนู' }))) return;
+      return act(b, async () => { const r = await api('richmenuUpdate'); closeModal(); toast(r.message); }, 'กำลังอัปเดต LINE Rich Menu…');
+    }
+  });
+  $('#modalBox').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-sales-load]'); if (!b) return;
+    act(b, async () => {
+      const d = await api('salesMonth', { month: $('#adminSalesMonth').value });
+      $('#adminSalesResult').innerHTML = '<b>' + esc(d.month) + ': ' + d.count + ' รายการ · ' + money(d.amount) + '</b><p>ตรวจอัตโนมัติ ' + d.auto + ' · แอดมินอนุมัติ ' + d.manual + '<br>รายเดือน ' + d.monthly + ' · รายปี ' + d.yearly + '</p>';
+    }, 'กำลังสรุปยอดขาย…');
   });
   $('#memCsv').addEventListener('click', () => csv('members', [['ชื่อ', 'ชื่อ LINE', 'userId', 'สถานะ', 'แพ็กเกจ', 'Pro ถึง', 'สมัครเมื่อ', 'ใช้ล่าสุด'], ...mems.map((m) => [m.name, m.lineName, m.userId, m.status, m.plan.source, m.plan.until, m.joinedAt, m.lastUsed])]));
 
@@ -922,6 +960,9 @@ const CONFIG = {
     const stateOf = (c) => c.status !== 'active' ? 'ปิดแล้ว' : c.expires && c.expires < t ? 'หมดอายุ' : c.used >= c.maxUses ? 'ใช้ครบแล้ว' : 'ใช้ได้';
     const sleep = (v) => new Promise((r) => setTimeout(() => r(v), 250));
     switch (action) {
+      case 'aiUsage': return sleep({ model: 'gemini-preview', usage: { day: { calls: 12, tokens: 44000, cost: 0.02 }, week: { calls: 70, tokens: 240000, cost: 0.12 }, month: { calls: 280, tokens: 960000, cost: 0.48 } }, budgetUsd: 10, usdThb: 35 });
+      case 'salesMonth': { const rows = M.payments.filter((p) => p.at.slice(0, 7) === a.month); return sleep({ month: a.month, count: rows.length, amount: rows.reduce((n, p) => n + p.amount, 0), auto: rows.filter((p) => p.by === 'auto').length, manual: rows.filter((p) => p.by !== 'auto').length, monthly: rows.filter((p) => p.cycle === 'monthly').length, yearly: rows.filter((p) => p.cycle === 'yearly').length }); }
+      case 'richmenuUpdate': return sleep({ ok: true, message: 'อัปเดต Rich Menu ให้ผู้ใช้ทุกคนแล้ว (ตัวอย่าง)' });
       case 'overview': return sleep({ members: { total: 1284, byStatus: { active: 1240, pending: 12, blocked: 4, registering: 28 }, newThisMonth: 186, activeToday: 402 },
         pro: { paidActive: 64, freePro: M.bill.freePro.on ? M.bill.freePro : null }, sales: { thisMonth: { amount: 4830, count: 52 },
           months: [0, 1, 2, 3, 4, 5].map((i) => ({ month: addD(t, -150 + i * 30).slice(0, 7), amount: [0, 420, 1250, 2310, 3620, 4830][i], count: 0 })) },
