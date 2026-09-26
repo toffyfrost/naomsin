@@ -311,6 +311,34 @@
   .final { background:radial-gradient(900px 500px at 50% 0%,rgba(77,171,247,.28),transparent 70%),linear-gradient(180deg,#fff,#E3F0FF); }
   .final .aurora i { opacity:.35; }
   footer { background:#fff; }
+
+  /* ฟีเจอร์ใหม่ล่าสุด */
+  .newf { background:linear-gradient(180deg,#fff 0%,#EEF6FF 55%,#fff 100%); }
+  .nf { display:grid; grid-template-columns:1fr 1.05fr; gap:56px; align-items:center; padding:44px; margin-bottom:34px; border-radius:36px; background:#fff;
+        border:1px solid rgba(28,126,214,.10); box-shadow:0 1px 2px rgba(11,37,69,.05),0 30px 70px -40px rgba(24,100,171,.45); position:relative; overflow:hidden; }
+  .nf::before { content:""; position:absolute; width:520px; height:520px; border-radius:50%; background:radial-gradient(circle,rgba(116,192,252,.35),transparent 65%); right:-160px; top:-160px; pointer-events:none; }
+  .nf.rev { grid-template-columns:1.05fr 1fr; }
+  .nf.rev .nf-txt { order:2; } .nf.rev::before { left:-160px; right:auto; }
+  .nf-txt { position:relative; }
+  .nf-badge { display:inline-block; font-size:14px; font-weight:600; padding:6px 14px; border-radius:999px; color:#fff; background:linear-gradient(135deg,#1864AB,#1C7ED6,#4DABF7); box-shadow:0 8px 18px -10px rgba(24,100,171,.8); }
+  .nf h3 { font-size:clamp(28px,3.2vw,40px); line-height:1.22; margin:18px 0 14px; }
+  .nf p { color:var(--sub); font-size:17px; margin:0 0 16px; }
+  .nf ul { list-style:none; padding:0; margin:0 0 24px; display:flex; flex-wrap:wrap; gap:8px; }
+  .nf li { font-size:14px; padding:6px 12px; border-radius:999px; background:#EEF6FF; color:#1864AB; }
+  .nf li::before { content:"✓ "; font-weight:700; color:#0CA678; }
+  .nf-shots { position:relative; display:flex; justify-content:center; align-items:flex-start; gap:18px; }
+  .nf-shots img { width:48%; max-width:270px; max-height:520px; object-fit:cover; object-position:top; border-radius:26px; border:6px solid #fff;
+                  box-shadow:0 0 0 1px rgba(28,126,214,.12),0 30px 60px -28px rgba(24,100,171,.6); }
+  .nf-shots img:nth-child(2) { margin-top:56px; }
+  .nf-shots.one img { width:70%; max-width:320px; }
+  .nf-code { display:flex; align-items:center; gap:10px; margin:0 0 22px; padding:8px 8px 8px 18px; border-radius:18px; background:#F2F8FF; border:1px dashed rgba(28,126,214,.45); width:max-content; max-width:100%; }
+  .nf-code code { font-family:ui-monospace,Menlo,monospace; font-size:18px; font-weight:700; color:#1864AB; letter-spacing:.05em; }
+  .nf-code .btn { padding:8px 16px; font-size:14px; }
+  @media (max-width:900px) {
+    .nf, .nf.rev { grid-template-columns:1fr; gap:30px; padding:28px 22px; border-radius:28px; }
+    .nf.rev .nf-txt { order:0; }
+    .nf-shots img { max-height:440px; }
+  }
 </style>
 <script>document.documentElement.classList.add('js'); /* ถ้า JS ไม่ทำงาน เนื้อหาจะแสดงตามปกติ ไม่ถูกซ่อน */</script>
 </head>
@@ -320,7 +348,7 @@
 <header id="hdr">
   <div class="wrap">
     <a class="logo" href="#top"><img src="img/brand/avatar-64.png" alt="">N'AOMSIN</a>
-    <nav class="menu"><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="features.html">คู่มือ</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
+    <nav class="menu"><a href="#new">ใหม่ ✨</a><a href="#story">เรื่องราว</a><a href="#features">ฟีเจอร์</a><a href="features.html">คู่มือ</a><a href="#pricing">ราคา</a><a href="#faq">คำถาม</a></nav>
     <a class="btn pri" href="#add">เพิ่มเพื่อน</a>
   </div>
 </header>
@@ -376,7 +404,7 @@
       <div class="chap">
         <span class="num">02 / สลิปและเสียง</span>
         <h2>ขี้เกียจพิมพ์?<br><span class="grad">ส่งรูปหรือพูดเลย</span></h2>
-        <p>กดไมค์พูดบอก น้องออมสินถอดเสียงแล้วจดให้ หรือส่งรูปสลิป ใบเสร็จ PDF เก็บไว้เป็นหลักฐาน แล้วพิมพ์บอกรายการในไฟล์</p>
+        <p>ส่งรูปสลิปหรือใบเสร็จ น้องออมสินอ่านยอดและผู้รับให้เอง แล้วถามแค่ว่าเป็นค่าอะไร หรือกดไมค์พูดบอกก็จดได้ ทุกสลิปเก็บเข้าคลังให้ค้นย้อนหลัง</p>
         <div class="tags"><span>ข้อความเสียง</span><span>รูปสลิป / ใบเสร็จ</span><span>ไฟล์ PDF</span></div>
         <img class="m-shot" src="img/chat/chat-voice.webp" alt="" loading="lazy">
       </div>
@@ -423,6 +451,50 @@
   </div>
 </div>
 
+<!-- NEW: ฟีเจอร์ใหม่ล่าสุด -->
+<section id="new" class="newf">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow rv">ใหม่ล่าสุด ✨</span>
+      <h2 class="rv" style="--d:.1s">อัปเดตใหม่<br><span class="grad">ที่อยากให้ลอง</span></h2>
+      <p class="rv" style="--d:.2s">ฟีเจอร์ล่าสุดของน้องออมสิน ภาพจากหน้าจอบอทจริง</p>
+    </div>
+
+    <div class="nf rv">
+      <div class="nf-txt">
+        <span class="nf-badge">🧾 อ่านสลิปอัตโนมัติ</span>
+        <h3>ส่งสลิปมา<br><span class="grad">ที่เหลือน้องออมสินจัดให้</span></h3>
+        <p>อ่านยอด ผู้รับ ธนาคาร และเวลาให้เอง แล้วถามแค่ว่าเป็นค่าอะไร ใบเสร็จแยกทุกรายการ ทุกสลิปเก็บเข้าคลัง ค้นย้อนหลังด้วยชื่อ ยอดเงิน หรือช่วงเวลา แล้วเปิดดูไฟล์ต้นฉบับได้</p>
+        <ul><li>ส่งหลายสลิปแล้วตอบทีเดียวได้</li><li>สลิปซ้ำไม่บันทึกซ้ำ</li><li>พิมพ์ <b>"สลิป"</b> ดูคลังสลิป</li></ul>
+        <a class="btn ghost" href="features.html#f-slips">ดูวิธีใช้ →</a>
+      </div>
+      <div class="nf-shots"><img src="img/chat/chat-slipread.webp" alt="น้องออมสินอ่านสลิปและถามว่าเป็นค่าอะไร" loading="lazy"><img src="img/chat/chat-sliparchive.webp" alt="คลังสลิปค้นย้อนหลัง" loading="lazy"></div>
+    </div>
+
+    <div class="nf rev rv">
+      <div class="nf-txt">
+        <span class="nf-badge">💎 แพ็กเกจ Pro</span>
+        <h3>จ่ายผ่านพร้อมเพย์<br><span class="grad">เปิด Pro ให้อัตโนมัติ</span></h3>
+        <p>เดือนละ ฿35 หรือปีละ ฿299 (ประหยัด ฿121) สแกน QR ที่ใส่ยอดไว้ให้แล้ว ส่งสลิปในแชท ระบบตรวจกับธนาคารและเปิด Pro ภายในไม่กี่วินาที ไม่ต้องรอแอดมิน</p>
+        <ul><li>ไม่ตัดเงินอัตโนมัติ</li><li>เตือนก่อนหมดอายุ 3 วัน</li><li>โควตา AI 3 เท่า</li></ul>
+        <a class="btn ghost" href="#pricing">ดูราคา →</a>
+      </div>
+      <div class="nf-shots"><img src="img/chat/chat-pay.webp" alt="ชำระพร้อมเพย์และเปิด Pro อัตโนมัติ" loading="lazy"><img src="img/chat/chat-upgrade.webp" alt="การ์ดแพ็กเกจ Pro" loading="lazy"></div>
+    </div>
+
+    <div class="nf rv">
+      <div class="nf-txt">
+        <span class="nf-badge">🎟️ โค้ดพิเศษ</span>
+        <h3>มีโค้ด?<br><span class="grad">พิมพ์ในแชท รับ Pro ฟรี</span></h3>
+        <p>ได้โค้ดจากแคมเปญ เพจ หรือเพื่อน พิมพ์ "โค้ด" ตามด้วยโค้ดในแชท LINE รับ Pro ฟรีตามจำนวนวันทันที ถ้ามี Pro อยู่แล้วจะต่อจากวันหมดเดิม</p>
+        <div class="nf-code"><code>โค้ด NEWPRO</code><button class="btn pri nf-copy" data-copy="โค้ด NEWPRO">คัดลอก</button></div>
+        <a class="btn ghost" href="features.html#f-code">ดูวิธีใช้ →</a>
+      </div>
+      <div class="nf-shots one"><img src="img/chat/chat-code.webp" alt="ใช้โค้ดรับ Pro ฟรี" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
 <!-- FEATURES -->
 <section id="features">
   <div class="wrap">
@@ -442,7 +514,7 @@
       <div class="cell rv" style="--d:.2s"><div class="ic">🏪</div><h3>โหมดร้านค้า</h3><p>จดยอดขาย ต้นทุน และดูกำไรของร้าน</p></div>
     </div>
     <div class="more rv">
-      <p>ยังมีอีกเยอะ รวม 26 ฟีเจอร์ พร้อมวิธีใช้ทีละขั้นและภาพหน้าจอจริง</p>
+      <p>ยังมีอีกเยอะ รวม 29 ฟีเจอร์ พร้อมวิธีใช้ทีละขั้นและภาพหน้าจอจริง</p>
       <a class="btn pri" href="features.html">ดูฟีเจอร์ทั้งหมด →</a>
       <small>เข้าสู่ระบบด้วย LINE และเพิ่มเพื่อนน้องออมสินก่อนดู</small>
     </div>
@@ -520,7 +592,7 @@
     <div class="faq rv">
       <details open><summary>N'AOMSIN คืออะไร?</summary><p>น้องออมสินคือผู้ช่วยจดรายรับรายจ่ายบน LINE แค่พิมพ์บอกเหมือนคุยกับเพื่อน ไม่ต้องเปิดแอปหรือกรอกฟอร์ม</p></details>
       <details><summary>ต้องโหลดแอปไหม?</summary><p>ไม่ต้อง ใช้ผ่าน LINE ที่มีอยู่แล้ว ส่วนแดชบอร์ดเปิดผ่านเบราว์เซอร์และเพิ่มไว้หน้าจอโฮมได้</p></details>
-      <details><summary>ส่งรูปสลิปแล้วอ่านยอดให้เองไหม?</summary><p>ตอนนี้น้องออมสินเก็บรูปหรือไฟล์ไว้เป็นหลักฐาน แล้วถามว่ามีรายการอะไรบ้าง พิมพ์บอกสั้นๆ เช่น "ค่าไฟ 1,245" ก็จดให้ทันที</p></details>
+      <details><summary>ส่งรูปสลิปแล้วอ่านยอดให้เองไหม?</summary><p>อ่านให้เองค่ะ น้องออมสินอ่านยอด ผู้รับ ธนาคาร และเวลาจากสลิป แล้วถามแค่ว่าเป็นค่าอะไร ใบเสร็จจะแยกทุกรายการให้กดยืนยัน ทุกสลิปเก็บไว้ในคลัง พิมพ์ "สลิป" เพื่อค้นย้อนหลังได้</p></details>
       <details><summary>จดย้อนหลังได้ไหม?</summary><p>ได้ พิมพ์วันที่ไปด้วย เช่น "เมื่อวาน ค่าไฟ 1280" หรือแก้วันที่ในแดชบอร์ด</p></details>
       <details><summary>จดผิดแก้ได้ไหม?</summary><p>ได้ กดปุ่ม ✏️ หรือ ✖️ ใต้การ์ดที่จด หรือพิมพ์ "ลบรายการล่าสุด"</p></details>
       <details><summary>Free กับ Pro ต่างกันยังไง?</summary><p>Free จดบันทึก ดูสรุป ตั้งงบ ใช้แดชบอร์ด และจดในกลุ่มได้ครบ ส่วน Pro เพิ่มจดด้วยเสียง ถามเรื่องเงินกับ AI รายงาน PDF ส่งออก Excel เป้าหมายการออม รายการประจำ บัตร/ผ่อน โค้ช โหมดร้านค้า และโควตา AI 3 เท่า</p></details>
@@ -651,6 +723,9 @@
   }));
   paint();
   if (!/YOUR_/.test(PRICING_URL)) fetch(PRICING_URL).then((r) => r.ok ? r.json() : null).then((d) => { if (d && d.monthly) { P = d; paint(); } }).catch(() => {});
+  $$('.nf-copy').forEach((b) => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); const t = b.textContent; b.textContent = '✓ คัดลอกแล้ว'; setTimeout(() => b.textContent = t, 1400); } catch (e) { /* ไม่รองรับ */ }
+  }));
 })();
 </script>
 </body>
