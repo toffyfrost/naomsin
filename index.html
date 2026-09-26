@@ -2,8 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1C7ED6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="N'AOMSIN">
@@ -14,7 +13,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
 <style>
   :root { --brand:#1C7ED6; --brand-soft:#E7F2FD; --bg:#F4F8FD; --card:#fff; --ink:#1F2937; --sub:#6B7280; --muted:#9CA3AF;
           --line:#E2EAF3; --inc:#0D9488; --inc-soft:#E6F6F4; --danger:#DC2626; --seg:#EEF3F9; --plain:#F3F4F6; --track:#E6EEF7;
@@ -33,9 +31,6 @@
   .wrap { padding:0 16px; max-width:560px; margin:0 auto; }
   .card { background:var(--card); border-radius:18px; padding:16px; margin:12px 0; box-shadow:0 1px 2px rgba(28,126,214,.06),0 6px 20px rgba(28,126,214,.05); }
   .row { display:flex; align-items:center; gap:10px; }
-  .daterange { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:8px; }
-  input[type=date] { min-width:0; max-width:100%; -webkit-appearance:none; appearance:none; text-align:left; }
-  input[type=date]::-webkit-date-and-time-value { text-align:left; }
   .between { justify-content:space-between; }
   .muted { color:var(--muted); font-size:12px; } .sub { color:var(--sub); font-size:13px; }
   .big { font-size:32px; font-weight:700; letter-spacing:-.5px; }
@@ -79,53 +74,76 @@
   .sheet { position:fixed; left:0; right:0; bottom:0; background:var(--card); border-radius:22px 22px 0 0; padding:18px 18px calc(18px + env(safe-area-inset-bottom));
            z-index:21; max-height:88vh; overflow:auto; transform:translateY(105%); transition:transform .22s ease; max-width:560px; margin:0 auto; }
   .sheet.open { transform:none; }
-  /* toast สไตล์ Sonner */
-  .toasts { position:fixed; left:50%; top:14px; transform:translateX(-50%); z-index:10000; display:flex; flex-direction:column; gap:8px; width:min(92vw,380px); pointer-events:none; }
-  .toast { display:flex; align-items:center; gap:10px; background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:14px;
-           padding:12px 14px; font-size:14px; box-shadow:0 10px 30px rgba(15,23,42,.14); pointer-events:auto; animation:tin .28s cubic-bezier(.21,1.02,.73,1); }
-  .toast.out { animation:tout .22s ease forwards; }
-  .toast .ti { flex:0 0 20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:16px; }
-  .toast.t-success .ti { color:#12B886; } .toast.t-error .ti { color:var(--danger,#E03131); }
-  .toast .tsub { font-size:12px; color:var(--sub,#6B7280); margin-top:1px; }
-  @keyframes tin { from { opacity:0; transform:translateY(-14px) scale(.96); } }
-  @keyframes tout { to { opacity:0; transform:translateY(-10px) scale(.96); } }
-  .spin { width:16px; height:16px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; display:inline-block; animation:sp .7s linear infinite; vertical-align:-3px; }
-  @keyframes sp { to { transform:rotate(360deg); } }
-  /* ปุ่มขณะรอ */
-  .is-busy { opacity:.75; cursor:progress !important; pointer-events:none; }
-  .is-busy .spin { margin-right:6px; }
-  body.busy .btn, body.busy .del, body.busy .fab, body.busy .chip, body.busy .seg button, body.busy nav button { pointer-events:none; }
-  body.busy .btn:not(.is-busy), body.busy .del:not(.is-busy) { opacity:.55; }
-  .busybar { position:fixed; top:0; left:0; right:0; height:3px; z-index:10001; overflow:hidden; display:none; }
-  body.busy .busybar { display:block; }
-  .busybar i { position:absolute; height:100%; width:40%; background:var(--brand); border-radius:3px; animation:bb 1.1s ease-in-out infinite; }
-  @keyframes bb { from { left:-40%; } to { left:100%; } }
-  .swal2-popup { font-family:'Noto Sans Thai',sans-serif !important; border-radius:20px !important; }
-  .swal2-confirm { border-radius:12px !important; }
-  .swal2-cancel { border-radius:12px !important; }
+  .toast { position:fixed; left:50%; top:16px; transform:translateX(-50%); background:#111827; color:#fff; padding:10px 16px; border-radius:12px;
+           font-size:14px; z-index:30; display:none; max-width:90%; }
   .loading { text-align:center; padding:60px 0; color:var(--sub); }
   .hero { background:linear-gradient(135deg,var(--brand),#5AB0F0); color:#fff; }
   .hero .muted, .hero .sub { color:#DDEEFD; }
   .stack { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:10px 0 4px; background:var(--track); }
-  #app { transition:opacity .2s; } #app.refreshing { opacity:.45; pointer-events:none; }
-  .chip.wait::after { content:""; display:inline-block; width:11px; height:11px; margin-left:6px; vertical-align:-1px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; animation:sp .7s linear infinite; }
-  .avatar.sm { width:30px; height:30px; font-size:13px; }
-  .avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
-  .avatar { overflow:hidden; flex:0 0 auto; box-shadow:0 0 0 2px var(--card),0 0 0 3px var(--line); width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
+  .avatar { width:44px; height:44px; border-radius:50%; background:var(--brand-soft); color:var(--brand); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; }
   .badge { background:#FFF4E5; color:#B45309; border-radius:999px; padding:3px 10px; font-size:12px; font-weight:600; }
   .empty { text-align:center; color:var(--muted); padding:28px 0; font-size:14px; }
   .del { color:var(--danger); background:none; border:0; font:inherit; font-size:13px; cursor:pointer; }
+
+  /* ---------- Landing page (เปิดเว็บโดยไม่มีลิงก์จาก LINE) ---------- */
+  body.lp-on { padding-bottom:0; }
+  body.lp-on nav, body.lp-on .fab, body.lp-on .top { display:none !important; }
+  .lp { --w:1120px; overflow-x:hidden; }
+  .lp a { color:inherit; text-decoration:none; }
+  .lp-in { max-width:var(--w); margin:0 auto; padding:0 16px; }
+  .lp-head { position:sticky; top:0; z-index:5; background:var(--topbg); backdrop-filter:blur(8px); }
+  .lp-head .lp-in { display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .lp-logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:17px; }
+  .lp-logo img { width:32px; height:32px; border-radius:9px; }
+  .lp-line { text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#06C755; color:#fff !important; font-weight:700;
+             border-radius:999px; padding:12px 22px; font-size:15px; box-shadow:0 8px 22px rgba(6,199,85,.28); white-space:nowrap; }
+  .lp-line.sm { padding:8px 14px; font-size:13px; box-shadow:none; }
+  .lp-line svg { width:20px; height:20px; fill:#fff; flex:0 0 20px; }
+  .lp-hero { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; padding:56px 0 40px; }
+  .lp-hero h1 { font-size:clamp(30px,5.2vw,54px); line-height:1.2; margin:0 0 14px; font-weight:700; letter-spacing:-.5px; }
+  .lp-hero h1 em { font-style:normal; color:var(--brand); }
+  .lp-hero p { font-size:clamp(15px,1.8vw,18px); color:var(--sub); line-height:1.7; margin:0 0 24px; max-width:34em; }
+  .lp-cta { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .lp-note { font-size:13px; color:var(--muted); }
+  .lp-phone { justify-self:center; width:min(320px,100%); background:var(--card); border-radius:30px; padding:16px; box-shadow:0 20px 60px rgba(28,126,214,.16); }
+  .lp-bub { max-width:85%; padding:10px 14px; border-radius:16px; font-size:14px; line-height:1.5; margin:8px 0; }
+  .lp-bub.me { margin-left:auto; background:#06C755; color:#fff; border-bottom-right-radius:4px; }
+  .lp-bub.bot { background:var(--brand-soft); border-bottom-left-radius:4px; }
+  .lp-sec { padding:44px 0; }
+  .lp-sec h2 { font-size:clamp(22px,3.4vw,32px); text-align:center; margin:0 0 8px; }
+  .lp-sec .lp-lead { text-align:center; color:var(--sub); margin:0 auto 28px; max-width:36em; }
+  .lp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .lp-card { background:var(--card); border-radius:18px; padding:20px; border:1px solid var(--line); }
+  .lp-card .e { font-size:28px; } .lp-card h3 { margin:8px 0 6px; font-size:17px; } .lp-card p { margin:0; color:var(--sub); font-size:14px; line-height:1.6; }
+  .lp-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; counter-reset:s; }
+  .lp-step { text-align:center; padding:8px; } .lp-step b { display:inline-flex; width:40px; height:40px; border-radius:50%; background:var(--brand); color:#fff;
+             align-items:center; justify-content:center; font-size:18px; margin-bottom:8px; }
+  .lp-step p { color:var(--sub); font-size:14px; margin:4px 0 0; }
+  .lp-final { background:var(--brand); color:#fff; border-radius:24px; padding:36px 20px; text-align:center; margin:20px 0 40px; }
+  .lp-final h2 { color:#fff; } .lp-final p { opacity:.9; margin:0 0 20px; }
+  .lp-qr { display:inline-block; background:#fff; padding:10px; border-radius:14px; margin-top:18px; }
+  .lp-qr img { display:block; width:140px; height:140px; }
+  .lp-foot { text-align:center; color:var(--muted); font-size:12px; padding:0 0 calc(24px + env(safe-area-inset-bottom)); }
+  @media (max-width: 900px) { .lp-grid { grid-template-columns:1fr 1fr; } }
+  @media (max-width: 720px) {
+    .lp-hero { grid-template-columns:1fr; text-align:center; padding:32px 0 16px; gap:28px; }
+    .lp-hero p { margin-left:auto; margin-right:auto; } .lp-cta { justify-content:center; }
+    .lp-grid, .lp-steps { grid-template-columns:1fr; } .lp-sec { padding:32px 0; }
+    .lp-card { display:grid; grid-template-columns:40px 1fr; column-gap:12px; padding:14px 16px; } .lp-card .e { grid-row:span 2; font-size:26px; }
+    .lp-card h3 { margin:0 0 2px; font-size:16px; }
+    .lp-qr { display:none; } .lp-cta .lp-line { width:100%; }
+  }
+  @media (max-width: 360px) { .lp-logo span { display:none; } }
 </style>
 </head>
 <body>
-<div class="top"><div class="row" style="gap:10px;min-width:0"><span id="meAvatar"></span><h1 id="title">สรุป</h1></div><span class="muted" id="rangeLabel"></span></div>
+<div class="top"><h1 id="title">สรุป</h1><span class="muted" id="rangeLabel"></span></div>
 <div class="wrap" id="app"><div class="loading">กำลังโหลด…</div></div>
 <button class="fab" id="fab" title="เพิ่มรายการ">+</button>
 <nav id="nav"></nav>
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="sheet"></div>
-<div class="toasts" id="toasts"></div>
-<div class="busybar"><i></i></div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ข้อมูลเริ่มต้นมาจากลิงก์ที่บอทส่งให้: ?t=<token>&tab=<แท็บ>&api=<URL Apps Script Web App>
@@ -135,8 +153,9 @@ let SAVED = {}; try { SAVED = JSON.parse(localStorage.getItem('naomsin') || '{}'
 const BOOT = { token: Q.get('t') || SAVED.t || '', tab: Q.get('tab') || 'summary', api: Q.get('api') || SAVED.api || '', brand: '#1C7ED6', botName: 'น้องออมสิน' };
 if (Q.get('t')) { try { localStorage.setItem('naomsin', JSON.stringify({ t: BOOT.token, api: BOOT.api })); } catch (e) {}
   history.replaceState(null, '', location.pathname); } // ไม่ให้ token ค้างในแถบที่อยู่
-const API_OK = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(BOOT.api);
-const PALETTE = ['#1C7ED6','#4DABF7','#F783AC','#E8590C','#FD7E14','#FAB005','#12B886','#15AABF','#4C6EF5','#7950F2','#AE3EC9','#868E96'];
+// API ต้องเป็น Edge Function ของ Supabase เท่านั้น (กันลิงก์ที่ถูกดัดแปลงให้ส่ง token ไปที่อื่น)
+const API_OK = /^https:\/\/[a-z0-9]{20}\.supabase\.co\/functions\/v1\/naomsin\/api$/.test(BOOT.api);
+const PALETTE = ['#1C7ED6','#F06595','#F783AC','#E8590C','#FD7E14','#FAB005','#12B886','#15AABF','#4C6EF5','#7950F2','#AE3EC9','#868E96'];
 const TABS = [
   ['summary','สรุป','<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>'],
   ['analysis','วิเคราะห์','<path d="M5 20V10M12 20V4M19 20v-7"/>'],
@@ -155,113 +174,31 @@ const money = (n, dec) => { n = Number(n) || 0; return (n < 0 ? '-' : '') + '฿
 const thDate = (ymd) => { const p = ymd.split('-').map(Number); return p[2] + ' ' + TH_M[p[1]-1] + ' ' + String(p[0] + 543).slice(2); };
 const ymd = (d) => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 const catColor = (c, list) => PALETTE[Math.max(0, list.indexOf(c)) % PALETTE.length];
-/** รูปโปรไฟล์ LINE (โหลดไม่ได้ → ตัวอักษรแรกของชื่อ) */
-const avatarHtml = (o, cls) => {
-  const initial = esc((o.name || '?').trim().slice(0, 1) || '?');
-  return /^https:\/\//.test(o.picture || '')
-    ? `<div class="avatar ${cls||''}"><img src="${esc(o.picture)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.parentNode.textContent='${initial}'"></div>`
-    : `<div class="avatar ${cls||''}">${initial}</div>`;
-};
 const wallet = (id) => (D.settings.wallets.find((w) => w.id === id) || null);
 
-/* ---------- Toast สไตล์ Sonner: loading → success / error ในกล่องเดิม ---------- */
-let liveToast = null; // toast "กำลังดำเนินการ" ที่ยังค้างอยู่ จะถูกเปลี่ยนเป็นผลลัพธ์แทนการเด้งกล่องใหม่
-function toastEl(kind, msg, sub, el) {
-  el = el || document.createElement('div');
-  el.className = 'toast t-' + kind;
-  const icon = kind === 'loading' ? '<span class="spin"></span>' : kind === 'success' ? '✓' : kind === 'error' ? '!' : '•';
-  el.innerHTML = `<div class="ti">${icon}</div><div><div>${esc(msg)}</div>${sub ? `<div class="tsub">${esc(sub)}</div>` : ''}</div>`;
-  if (!el.parentNode) $('toasts').appendChild(el);
-  clearTimeout(el._h);
-  if (kind !== 'loading') el._h = setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 230); }, kind === 'error' ? 4200 : 2400);
-  return el;
-}
-function toast(msg) {
-  const m = String(msg), kind = /^⚠️/.test(m) ? 'error' : /^(✅|🗑️|🎯)/.test(m) ? 'success' : 'info';
-  const text = m.replace(/^(⚠️|✅)\s*/, '');
-  if (liveToast) { const el = liveToast; liveToast = null; return toastEl(kind, text, '', el); }
-  return toastEl(kind, text);
-}
-/* ---------- SweetAlert2: ยืนยัน / กรอกตัวเลข ---------- */
-async function ask(title, text, danger) {
-  if (!window.Swal) return confirm(title);
-  const r = await Swal.fire({ title, text, icon: danger ? 'warning' : 'question', showCancelButton: true, reverseButtons: true,
-    confirmButtonText: danger ? 'ลบเลย' : 'ยืนยัน', cancelButtonText: 'ยกเลิก', confirmButtonColor: danger ? '#E03131' : BOOT.brand });
-  return r.isConfirmed;
-}
-async function askAmount(title) {
-  if (!window.Swal) return prompt(title);
-  const r = await Swal.fire({ title, input: 'number', inputAttributes: { min: '0', step: '0.01', inputmode: 'decimal' }, inputPlaceholder: '0',
-    showCancelButton: true, reverseButtons: true, confirmButtonText: 'ตกลง', cancelButtonText: 'ยกเลิก',
-    inputValidator: (v) => !(Number(v) > 0) && 'กรุณาใส่จำนวนเงินมากกว่า 0' });
-  return r.isConfirmed ? r.value : null;
-}
-/* ---------- สถานะกำลังทำงาน: ปุ่มที่กดถูกล็อก + หมุน + แถบโหลด ป้องกันกดซ้ำ ---------- */
-let lastBtn = null, busy = false;
-document.addEventListener('click', (e) => { if (e.target.closest('.swal2-container')) return; const b = e.target.closest('button, .del'); if (b) lastBtn = b; }, true);
-function setBusy(on, btn) {
-  busy = on; document.body.classList.toggle('busy', on);
-  if (!btn || !btn.isConnected) return;
-  if (on) { btn._html = btn.innerHTML; btn.disabled = true; btn.classList.add('is-busy');
-    btn.innerHTML = '<span class="spin"></span>' + (btn.classList.contains('del') || btn.classList.contains('sm') ? 'รอสักครู่…' : 'กำลังดำเนินการ…'); }
-  else { btn.disabled = false; btn.classList.remove('is-busy'); if (btn._html != null) btn.innerHTML = btn._html; }
-}
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 2600); }
 
 /** เรียก API บน Apps Script (POST แบบ text/plain = ไม่ต้อง preflight CORS) */
 async function call(fn, ...args) {
-  const action = fn !== 'dashLoad'; // โหลดข้อมูลมีหน้า "กำลังโหลด" อยู่แล้ว · ส่วนการบันทึก/ลบ/ส่งออก ใช้สถานะรอ
-  if (action && busy) { toastEl('info', 'กำลังดำเนินการรายการก่อนหน้าอยู่', 'กรุณารอสักครู่นะคะ'); throw new Error('busy'); }
-  const btn = action ? lastBtn : null;
-  if (action) { setBusy(true, btn); liveToast = toastEl('loading', fn === 'dashExport' ? 'กำลังสร้างไฟล์…' : 'กำลังดำเนินการ กรุณารอสักครู่', 'ระบบกำลังบันทึกข้อมูล อาจใช้เวลาสักครู่'); }
   try {
-    const res = await fetch(BOOT.api, { method: 'POST', body: JSON.stringify({ api: fn, t: BOOT.token, args }) });
+    const res = await fetch(BOOT.api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ api: fn, t: BOOT.token, args }) });
     const j = await res.json();
     if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
-    if (action && fn !== 'dashExport') invalidateCache(j.data && j.data.range ? j.data : null);
     return j.data;
   } catch (e) {
-    toast('⚠️ ' + (e.message === 'Failed to fetch' ? 'เชื่อมต่อไม่ได้ ลองใหม่อีกครั้งนะคะ' : (e.message || e)));
+    toast('⚠️ ' + (e.message || e));
     throw e;
-  } finally {
-    if (action) { setBusy(false, btn); // ถ้าโค้ดที่เรียกไม่ได้ขึ้นข้อความผลลัพธ์ ให้ปิด toast รอเป็น "เรียบร้อย"
-      setTimeout(() => { if (liveToast) toast('✅ เรียบร้อย'); }, 0); }
   }
 }
 function fatal(msg) {
-  $('app').innerHTML = `<div class="loading"><div style="font-size:48px">🔒</div><h3>${esc(msg)}</h3><div class="muted">พิมพ์ "แดชบอร์ด" ในแชท LINE เพื่อขอลิงก์ใหม่</div></div>`;
+  $('app').innerHTML = `<div class="loading"><div style="font-size:48px">🔒</div><h3>${esc(msg)}</h3><div class="muted">พิมพ์ "แดชบอร์ด" ในแชท LINE เพื่อขอลิงก์ใหม่</div><div style="margin-top:20px"><a class="lp-line" href="${LINE_URL}" target="_blank" rel="noopener">${LINE_ICON}เปิดแชท LINE</a></div></div>`;
   $('nav').innerHTML = ''; $('fab').style.display = 'none';
 }
 
-/* ---------- โหลดข้อมูลตามช่วงวันที่: จำไว้ + โหลดล่วงหน้า ให้กดตัวกรองแล้วเปลี่ยนทันที ---------- */
-const CACHE = {}; // 'start|end' → ข้อมูลแดชบอร์ด
-const rkey = (r) => r.start + '|' + r.end;
-let loadSeq = 0;
-async function fetchLoad(r) { // ดึงเงียบๆ (ไม่ขึ้น toast/ไม่ล็อกปุ่ม) ใช้กับโหลดล่วงหน้า
-  const res = await fetch(BOOT.api, { method: 'POST', body: JSON.stringify({ api: 'dashLoad', t: BOOT.token, args: [r] }) });
-  const j = await res.json(); if (!j.ok) throw new Error(j.error || 'โหลดไม่สำเร็จ');
-  return j.data;
-}
 async function load() {
   try { D = await call('dashLoad', range); } catch (e) { return fatal(e.message || 'โหลดข้อมูลไม่สำเร็จ'); }
-  range = D.range; CACHE[rkey(range)] = D;
+  range = D.range;
   render();
-  prefetch();
-}
-let prefetching = false;
-async function prefetch() {
-  if (prefetching) return; prefetching = true;
-  try {
-    for (const [, , s, e] of presets()) {
-      const r = { start: s, end: e };
-      if (CACHE[rkey(r)]) continue;
-      try { CACHE[rkey(r)] = await fetchLoad(r); } catch (err) { break; }
-    }
-  } finally { prefetching = false; }
-}
-function invalidateCache(fresh) { // หลังบันทึก/แก้/ลบ ข้อมูลช่วงอื่นเก่าแล้ว
-  Object.keys(CACHE).forEach((k) => delete CACHE[k]);
-  if (fresh && fresh.range) CACHE[rkey(fresh.range)] = fresh;
-  setTimeout(prefetch, 1500);
 }
 
 function summarize(txs) {
@@ -292,26 +229,9 @@ function rangeChips() {
   let marked = false; // รอบงบกับเดือนนี้อาจเป็นช่วงเดียวกัน ไฮไลต์แค่อันแรก
   return '<div class="chips" style="margin-top:4px">' + presets().map(([k,l,s,e]) => {
     const on = !marked && range.start === s && range.end === e; if (on) marked = true;
-    return `<span class="chip ${on?'on':''}" onclick="setRange('${s}','${e}',this)">${l}</span>`; }).join('') + '</div>';
+    return `<span class="chip ${on?'on':''}" onclick="setRange('${s}','${e}')">${l}</span>`; }).join('') + '</div>';
 }
-async function setRange(s, e, el) {
-  const r = { start: s, end: e }, k = rkey(r), seq = ++loadSeq;
-  if (CACHE[k]) { D = CACHE[k]; range = D.range; render(); return; } // มีแล้ว → เปลี่ยนทันที
-  // ยังไม่มี → คงหน้าเดิมไว้ หรี่จอ + หมุนที่ชิปที่กด (ไม่ขึ้นหน้าว่าง)
-  document.querySelectorAll('.chip.on').forEach((c) => c.classList.remove('on'));
-  if (el) { el.classList.add('on', 'wait'); }
-  $('app').classList.add('refreshing'); document.body.classList.add('busy');
-  try {
-    const data = await fetchLoad(r);
-    CACHE[k] = data;
-    if (seq !== loadSeq) return; // ผู้ใช้กดช่วงอื่นไปแล้ว
-    D = data; range = D.range; render();
-  } catch (err) {
-    if (seq === loadSeq) { toast('⚠️ ' + (err.message || err)); render(); }
-  } finally {
-    if (seq === loadSeq) { $('app').classList.remove('refreshing'); document.body.classList.remove('busy'); }
-  }
-}
+async function setRange(s, e) { range = { start:s, end:e }; $('app').innerHTML = '<div class="loading">กำลังโหลด…</div>'; await load(); }
 
 /* ---------- แท็บ ---------- */
 function render() {
@@ -319,7 +239,6 @@ function render() {
   $('nav').innerHTML = TABS.map(([k,l,svg]) => `<button class="${tab===k?'on':''}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${svg}</svg>${l}</button>`).join('');
   $('title').textContent = TABS.find((t) => t[0] === tab)[1];
   $('rangeLabel').textContent = thDate(range.start) + ' – ' + thDate(range.end);
-  if (!$('meAvatar').firstChild) $('meAvatar').innerHTML = avatarHtml(D.owner, 'sm');
   $('fab').style.display = tab === 'list' || tab === 'summary' ? 'block' : 'none';
   ({ summary:renderSummary, analysis:renderAnalysis, budget:renderBudget, list:renderList, settings:renderSettings })[tab]();
   window.scrollTo(0, 0);
@@ -332,7 +251,7 @@ function renderSummary() {
   const top = sorted(s.byCat);
   $('app').innerHTML = `
     <div class="card row between">
-      <div class="row">${avatarHtml(D.owner)}
+      <div class="row"><div class="avatar">${esc((D.owner.name||'?').slice(0,1))}</div>
         <div><div style="font-weight:700;font-size:18px">${esc(D.owner.name)}</div><div class="muted">${D.owner.isGroup?'สมุดกลุ่ม':'สมุดส่วนตัว'}</div></div></div>
       <span class="badge">🔥 ${D.streak} วัน</span>
     </div>
@@ -361,7 +280,7 @@ function renderSummary() {
         </div>
       </div>
       ${top.slice(0,5).map(([c,v]) => `<div class="row" style="margin-top:8px"><span class="dot" style="background:${catColor(c,cats)}"></span>
-        <span class="grow ellipsis sub">${esc(c)}</span><span class="muted" style="font-size:12px;margin-right:4px">${pctOf(v, top.map((x)=>x[1]))}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
+        <span class="grow ellipsis sub">${esc(c)}</span><b>${money(v)}</b></div>`).join('') || '<div class="empty">ยังไม่มีรายจ่ายในช่วงนี้</div>'}
     </div>
     ${D.shop ? `<div class="card"><div class="h2">🏪 ร้านค้า</div>
       <div class="grid2" style="grid-template-columns:1fr 1fr 1fr">
@@ -380,24 +299,8 @@ function renderSummary() {
     </div>`;
   if (top.length) charts.push(new Chart($('donut'), { type:'doughnut',
     data:{ labels: top.map((x)=>x[0]), datasets:[{ data: top.map((x)=>x[1]), backgroundColor: top.map((x)=>catColor(x[0],cats)), borderWidth:2, borderColor:'#fff' }] },
-    options:{ cutout:'58%', plugins:{ legend:{ display:false },
-      tooltip:{ callbacks:{ label:(c) => ' ' + c.label + ': ' + money(c.raw) + ' (' + pctOf(c.raw, c.dataset.data) + ')' } } } },
-    plugins:[donutPct] }));
+    options:{ cutout:'62%', plugins:{ legend:{ display:false } } } }));
 }
-
-/** เขียน % บนแต่ละชิ้นของโดนัท (ชิ้นเล็กกว่า 4% ไม่เขียน กันตัวหนังสือซ้อน) */
-function pctOf(v, arr) { const t = arr.reduce((a, b) => a + b, 0); const p = t ? v * 100 / t : 0; return (p >= 10 || p === 0 ? Math.round(p) : p.toFixed(1)) + '%'; }
-const donutPct = { id:'donutPct', afterDatasetsDraw(chart) {
-  const { ctx } = chart, ds = chart.data.datasets[0], total = ds.data.reduce((a, b) => a + b, 0);
-  if (!total) return;
-  chart.getDatasetMeta(0).data.forEach((arc, i) => {
-    const p = ds.data[i] * 100 / total; if (p < 4) return;
-    const { x, y } = arc.tooltipPosition();
-    ctx.save(); ctx.font = '700 12px "Noto Sans Thai", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.25)'; ctx.shadowBlur = 3;
-    ctx.fillText(pctOf(ds.data[i], ds.data), x, y); ctx.restore();
-  });
-} };
 
 function renderAnalysis() {
   const h = D.history, s = summarize(D.txs), cats = D.categories.expense;
@@ -482,7 +385,7 @@ function renderList() {
   txs.forEach((t) => (byDay[t.date] = byDay[t.date] || []).push(t));
   $('app').innerHTML = `
     <div class="card">
-      <div class="daterange"><input type="date" id="ls" value="${range.start}"><span class="muted">–</span><input type="date" id="le" value="${range.end}"></div>
+      <div class="row"><input type="date" id="ls" value="${range.start}"><span class="muted">–</span><input type="date" id="le" value="${range.end}"></div>
       <div class="row" style="margin-top:10px">
         <div class="chips grow">${[['all','ทั้งหมด'],['expense','รายจ่าย'],['income','รายรับ'],['transfer','โอน']].map(([k,l]) =>
           `<span class="chip ${ui.listType===k?'on':''}" onclick="ui.listType='${k}';render()">${l}</span>`).join('')}</div>
@@ -506,7 +409,8 @@ function txRow(t) {
     <div class="amt ${t.type==='income'?'pos':t.type==='transfer'?'':'neg'}">${sign}${money(t.amount).replace('-','')}</div></div>`;
 }
 async function exportFile(fmt) {
-    const url = await call('dashExport', range.start, range.end, fmt);
+  toast('กำลังสร้างไฟล์…');
+  const url = await call('dashExport', range.start, range.end, fmt);
   openSheet(`<div class="h2">✅ สร้างไฟล์ ${fmt.toUpperCase()} แล้ว</div><div class="muted">ลิงก์ใช้ได้ 3 วัน</div>
     <a class="btn" style="display:block;text-align:center;text-decoration:none;margin-top:14px" href="${esc(url)}" target="_blank" rel="noopener">⬇️ ดาวน์โหลด</a>
     <button class="btn plain" style="margin-top:8px" onclick="closeSheet()">ปิด</button>`);
@@ -550,7 +454,7 @@ async function saveTx(id) {
   closeSheet(); render(); toast(id ? '✅ แก้ไขแล้ว' : '✅ เพิ่มรายการแล้ว');
 }
 async function delTx(id) {
-  if (!await ask('ลบรายการนี้?', 'ลบแล้วกู้คืนไม่ได้นะคะ', true)) return;
+  if (!confirm('ลบรายการนี้?')) return;
   D = await call('dashTx', 'delete', { id }, range); closeSheet(); render(); toast('🗑️ ลบแล้ว');
 }
 
@@ -618,11 +522,11 @@ async function saveGoal() {
   D = await call('dashSave', 'goal_add', p, range); closeSheet(); render(); toast('🎯 ตั้งเป้าแล้ว');
 }
 async function goalMove(id, sign) {
-  const v = await askAmount(sign > 0 ? 'ออมเพิ่มกี่บาท?' : 'ถอนออกกี่บาท?'); if (!v || !(Number(v) > 0)) return;
+  const v = prompt(sign > 0 ? 'ออมเพิ่มกี่บาท?' : 'ถอนออกกี่บาท?'); if (!v || !(Number(v) > 0)) return;
   D = await call('dashSave', 'goal_move', { id, amount: sign * Number(v) }, range); render(); toast('✅ อัปเดตแล้ว');
 }
-async function goalDel(id) { if (!await ask('ลบเป้าหมายนี้?', '', true)) return; D = await call('dashSave', 'goal_delete', { id }, range); render(); }
-async function debtClear(person) { if (!await ask('เคลียร์ยอดกับ ' + person + '?', 'ยอดค้างทั้งหมดจะถือว่าชำระครบแล้ว')) return; D = await call('dashSave', 'debt_clear', { person }, range); render(); toast('✅ เคลียร์แล้ว'); }
+async function goalDel(id) { if (!confirm('ลบเป้าหมายนี้?')) return; D = await call('dashSave', 'goal_delete', { id }, range); render(); }
+async function debtClear(person) { if (!confirm('เคลียร์ยอดกับ ' + person + '?')) return; D = await call('dashSave', 'debt_clear', { person }, range); render(); toast('✅ เคลียร์แล้ว'); }
 async function toggle(key, val) { const p = {}; p[key] = val; D = await call('dashSave', 'toggles', p, range); render(); toast('✅ บันทึกแล้ว'); }
 
 function editWallet(id) {
@@ -641,12 +545,12 @@ async function saveWallet(id) {
   D = await call('dashSave', id ? 'wallet_update' : 'wallet_add', p, range); closeSheet(); render(); toast('✅ บันทึกแล้ว');
 }
 async function walletOp(op, id) {
-  if (op === 'wallet_delete' && !await ask('ลบกระเป๋านี้?', 'รายการเดิมยังอยู่ครบค่ะ', true)) return;
+  if (op === 'wallet_delete' && !confirm('ลบกระเป๋านี้? (รายการเดิมยังอยู่)')) return;
   D = await call('dashSave', op, { id }, range); closeSheet(); render(); toast('✅ เรียบร้อย');
 }
 async function saveReminder() { D = await call('dashSave', 'reminder', { enabled: $('ren').value === '1', hour: Number($('rhr').value) }, range); render(); toast('✅ บันทึกแล้ว'); }
 async function recompute() { D = await call('dashSave', 'recompute', {}, range); render(); toast('✅ คำนวณยอดใหม่แล้ว'); }
-async function delRec(id) { if (!await ask('ลบรายการประจำนี้?', '', true)) return; D = await call('dashSave', 'recurring_delete', { id }, range); render(); }
+async function delRec(id) { if (!confirm('ลบรายการประจำนี้?')) return; D = await call('dashSave', 'recurring_delete', { id }, range); render(); }
 function newRec() {
   const WD = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสฯ','ศุกร์','เสาร์'];
   openSheet(`<div class="row between"><div class="h2" style="margin:0">เพิ่มรายการประจำ</div><span class="muted" onclick="closeSheet()" style="cursor:pointer;font-size:22px">✕</span></div>
@@ -673,9 +577,49 @@ async function saveRec() {
   D = await call('dashSave', 'recurring_add', p, range); closeSheet(); render(); toast('✅ ตั้งรายการประจำแล้ว');
 }
 
+
+const LINE_URL = 'https://lin.ee/Tb6ftD1A';
+const LINE_ICON = '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 3.9 3.5 7.2 8.3 7.9.3.1.8.2.9.5.1.3.1.7 0 1l-.1.9c0 .3-.2 1 .9.5s6-3.5 8.2-6.1c1.5-1.6 2.2-3.2 2.2-4.8C22 6.6 17.5 3 12 3z"/></svg>';
+function landing() {
+  document.body.classList.add('lp-on');
+  const btn = (cls = '') => `<a class="lp-line ${cls}" href="${LINE_URL}" target="_blank" rel="noopener">${LINE_ICON}เพิ่มเพื่อนใน LINE</a>`;
+  const F = [['💬','จดด้วยแชท','พิมพ์ "ข้าวมันไก่ 50" ก็บันทึกให้ทันที พิมพ์ยาวๆ หลายรายการก็แยกให้เอง'],
+    ['🧾','ส่งสลิป / ใบเสร็จ','แนบรูปหรือไฟล์ แล้วบอกรายละเอียด น้องออมสินจดให้ถูกต้องตามที่คุณบอก'],
+    ['🎙️','สั่งด้วยเสียง','ส่งข้อความเสียง ไม่ต้องพิมพ์ให้เมื่อย'],
+    ['👛','กระเป๋าเงินหลายใบ','เงินสด บัญชีธนาคาร บัตรเครดิต รู้ยอดคงเหลือทุกกระเป๋า'],
+    ['📊','สรุปและรายงาน','แดชบอร์ดกราฟสวย รายงานรายเดือนพิมพ์เป็น PDF ได้ ส่งออก Excel'],
+    ['🎯','งบ เป้าหมาย และเตือน','ตั้งงบรายหมวด ออมตามเป้า เตือนจด เตือนบัตรครบกำหนด'],
+    ['🤖','ถามอะไรก็ได้','"เดือนนี้กินกาแฟไปเท่าไหร่" น้องออมสินค้นและตอบให้'],
+    ['👥','หารบิลในกลุ่ม','ชวนเข้ากลุ่ม LINE แล้วให้ช่วยคิดว่าใครต้องโอนให้ใคร'],
+    ['🔐','ข้อมูลเป็นความลับ','เข้ารหัส AES-256 ทุกรายการ มีแค่คุณที่เห็นข้อมูลของตัวเอง']];
+  $('app').outerHTML = `<div class="lp">
+  <header class="lp-head"><div class="lp-in"><div class="lp-logo"><img src="icon-192.png" alt=""><span>น้องออมสิน</span></div>${btn('sm')}</div></header>
+  <main class="lp-in">
+    <section class="lp-hero"><div>
+      <h1>จดรายรับรายจ่าย<br><em>แค่แชท LINE</em></h1>
+      <p>ผู้ช่วยการเงินส่วนตัวด้วย AI พิมพ์ ส่งรูป หรือพูด แล้วน้องออมสินจะจด สรุป และเตือนให้ ไม่ต้องโหลดแอปเพิ่ม</p>
+      <div class="lp-cta">${btn()}<span class="lp-note">ฟรี · สมัครในแชทไม่ถึง 1 นาที</span></div>
+      <div class="lp-qr"><img alt="QR เพิ่มเพื่อน" src="https://qr-official.line.me/sid/L/Tb6ftD1A.png" onerror="this.parentNode.style.display='none'"></div>
+    </div>
+    <div class="lp-phone" aria-hidden="true">
+      <div class="lp-bub me">ข้าวมันไก่ 50 กาแฟ 65</div>
+      <div class="lp-bub bot">บันทึกแล้วค่ะ ✅<br>🍜 อาหาร ฿50<br>☕ เครื่องดื่ม ฿65<br>วันนี้ใช้ไป ฿115</div>
+      <div class="lp-bub me">เดือนนี้เหลือเท่าไหร่</div>
+      <div class="lp-bub bot">เดือนนี้รับ ฿32,000 จ่าย ฿18,450<br>คงเหลือ <b>฿13,550</b> 🎉</div>
+    </div></section>
+    <section class="lp-sec"><h2>ทำอะไรได้บ้าง</h2><p class="lp-lead">ครบทุกอย่างที่ต้องใช้จัดการเงินในแต่ละวัน</p>
+      <div class="lp-grid">${F.map(([e,h,p]) => `<div class="lp-card"><div class="e">${e}</div><h3>${h}</h3><p>${p}</p></div>`).join('')}</div></section>
+    <section class="lp-sec"><h2>เริ่มใช้ใน 3 ขั้น</h2><p class="lp-lead">&nbsp;</p>
+      <div class="lp-steps"><div class="lp-step"><b>1</b><h3>เพิ่มเพื่อน</h3><p>กดปุ่มเพิ่มเพื่อน LINE</p></div>
+        <div class="lp-step"><b>2</b><h3>สมัครในแชท</h3><p>ตอบชื่อ อีเมล เบอร์โทร ทีละขั้น</p></div>
+        <div class="lp-step"><b>3</b><h3>เริ่มจด</h3><p>พิมพ์รายการแรก แล้วดูสรุปได้ทันที</p></div></div></section>
+    <section class="lp-final"><h2>เริ่มออมตั้งแต่วันนี้</h2><p>เปิดแดชบอร์ดของคุณได้จากเมนูในแชท LINE</p>${btn()}</section>
+  </main>
+  <footer class="lp-foot">© ${new Date().getFullYear()} N'AOMSIN · ข้อมูลของคุณเข้ารหัสและเป็นความลับ</footer></div>`;
+}
 Chart.defaults.font.family = 'Noto Sans Thai';
-if (!BOOT.token) fatal('เปิดแดชบอร์ดจากลิงก์ในแชท LINE นะคะ');
-else if (!API_OK) fatal('ลิงก์ไม่สมบูรณ์ (ที่อยู่ API ต้องลงท้ายด้วย /exec)');
+if (!BOOT.token) landing();
+else if (!API_OK) fatal('ลิงก์ไม่สมบูรณ์ พิมพ์ "แดชบอร์ด" ในแชท LINE เพื่อขอลิงก์ใหม่นะคะ');
 else load();
 </script>
 </body>
